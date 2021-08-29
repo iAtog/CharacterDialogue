@@ -16,8 +16,8 @@ public class WaitMethod extends DialogMethod {
 	public void cast(Player player, String arg) {
 		long seconds = Long.valueOf(arg);
 		try {
-			TimeUnit.SECONDS.sleep(seconds);
-			System.out.println(player.getName()+": waited "+seconds+" seconds");
+		    TimeUnit.SECONDS.sleep(seconds);
+		    System.out.println(player.getName()+": waited "+seconds+" seconds");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
