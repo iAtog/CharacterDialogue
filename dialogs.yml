@@ -1,0 +1,7 @@
+dialogs:
+  npcs:
+    '0':
+      - 'SEND: Hola peter'
+      - 'SOUND: NOTE_PLING,0.1,0.5'
+      - 'WAIT: 5'
+      - 'BROADCAST: broadcasted'

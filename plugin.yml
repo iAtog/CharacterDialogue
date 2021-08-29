@@ -1,0 +1,4 @@
+main: me.iatog.conditionaldialog.ConditionalDialogPlugin
+version: 0.1
+name: ConditionalDialog
+author: iAtog
