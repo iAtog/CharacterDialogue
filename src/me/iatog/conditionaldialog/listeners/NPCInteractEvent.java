@@ -10,8 +10,10 @@ import org.bukkit.event.Listener;
 
 import me.iatog.conditionaldialog.ConditionalDialogPlugin;
 import me.iatog.conditionaldialog.dialogs.DialogMethod;
+import me.iatog.conditionaldialog.enums.ClickType;
 import me.iatog.conditionaldialog.interfaces.FileFactory;
 import me.iatog.conditionaldialog.libraries.YamlFile;
+import net.citizensnpcs.api.event.NPCClickEvent;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;
@@ -26,6 +28,15 @@ public class NPCInteractEvent implements Listener {
 	
 	@EventHandler
 	public void onNPCRightClick(NPCRightClickEvent event) {
+		runEvent(event);
+	}
+	
+	@EventHandler
+	public void onNPCLeftClick(NPCLeftClickEvent event) {
+		runEvent(event);
+	}
+	
+	private void runEvent(NPCClickEvent event) {
 		Player player = event.getClicker();
 		NPC npc = event.getNPC();
 		int id = npc.getId();
@@ -34,7 +45,11 @@ public class NPCInteractEvent implements Listener {
 		if(!dialogsFile.contains("dialogs.npcs."+id)) {
 			return;
 		}
-		List<String> dialogs = dialogsFile.getStringList("dialogs.npcs."+id);
+		ClickType clickType = ClickType.valueOf(dialogsFile.getString("dialogs.npcs."+id+".click"));
+		if((event instanceof NPCRightClickEvent && clickType != ClickType.RIGHT) || (event instanceof NPCLeftClickEvent && clickType != ClickType.LEFT)) {
+			return;
+		}
+		List<String> dialogs = dialogsFile.getStringList("dialogs.npcs."+id+".dialog");
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		Runnable task = () -> {
 			for(int i=0;i<dialogs.size();i++) {
@@ -56,11 +71,6 @@ public class NPCInteractEvent implements Listener {
 		
 		executor.submit(task);
 		executor.shutdown();
-	}
-	
-	//@EventHandler
-	public void onNPCLeftClick(NPCLeftClickEvent event) {
-		
 	}
 	
 }
