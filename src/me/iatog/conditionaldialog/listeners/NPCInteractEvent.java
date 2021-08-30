@@ -44,7 +44,7 @@ public class NPCInteractEvent implements Listener {
 				}
 				String[] splitted = dialog.split(":");
 				String methodName = splitted[0].toUpperCase().trim();
-				String arg = splitted[1].trim();
+				String arg = dialog.substring(methodName.length() + 1).trim();
 				if(!main.getCache().getMethods().containsKey(methodName)) {
 					main.getLogger().warning("The method \"" + methodName + "\" doesn't exist");
 					return;
