@@ -1,7 +1,6 @@
 package me.iatog.conditionaldialog.loader.cache;
 
 import me.iatog.conditionaldialog.ConditionalDialogPlugin;
-import me.iatog.conditionaldialog.dialogs.DialogMethod;
 import me.iatog.conditionaldialog.dialogs.method.BroadcastMethod;
 import me.iatog.conditionaldialog.dialogs.method.CommandMethod;
 import me.iatog.conditionaldialog.dialogs.method.DispatchCommandMethod;
