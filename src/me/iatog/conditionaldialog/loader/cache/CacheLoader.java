@@ -3,8 +3,11 @@ package me.iatog.conditionaldialog.loader.cache;
 import me.iatog.conditionaldialog.ConditionalDialogPlugin;
 import me.iatog.conditionaldialog.dialogs.DialogMethod;
 import me.iatog.conditionaldialog.dialogs.method.BroadcastMethod;
+import me.iatog.conditionaldialog.dialogs.method.CommandMethod;
+import me.iatog.conditionaldialog.dialogs.method.DispatchCommandMethod;
 import me.iatog.conditionaldialog.dialogs.method.SendMethod;
 import me.iatog.conditionaldialog.dialogs.method.SoundMethod;
+import me.iatog.conditionaldialog.dialogs.method.TeleportMethod;
 import me.iatog.conditionaldialog.dialogs.method.WaitMethod;
 import me.iatog.conditionaldialog.loader.Loader;
 
@@ -22,7 +25,10 @@ public class CacheLoader implements Loader {
 				new SendMethod(),
 				new SoundMethod(main),
 				new BroadcastMethod(),
-				new WaitMethod()
+				new WaitMethod(),
+				new DispatchCommandMethod(),
+				new CommandMethod(),
+				new TeleportMethod()
 				);
 	}
 
@@ -32,9 +38,7 @@ public class CacheLoader implements Loader {
 	}
 	
 	private void registerMethods(DialogMethod... methods) {
-		for(DialogMethod method : methods) {
-			main.getCache().getMethods().put(method.getID(), method);
-		}
+		main.registerMethods(methods);
 	}
 	
 }
