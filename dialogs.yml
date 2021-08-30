@@ -1,11 +1,15 @@
 dialogs:
   npcs:
     '0':
-      - 'SEND: &8[&cNPC&8]&b pene&f: ¡Hola aventurero!'
+      - 'SEND: &e[NPC] &bComandante pene&f: ¡Hola aventurero!'
       - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.5'
       - 'WAIT: 1'
-      - 'SEND: &8[&cNPC&8]&b pene&f: ¿Eres nuevo por aquí no?'
+      - 'SEND: &e[NPC] &bComandante pene&f: ¿Eres nuevo por aquí no?'
       - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.6'
       - 'WAIT: 1'
-      - 'SEND: &8[&cNPC&8]&b pene&f: Te recomiendo ir al sur para encontrar la ciudad.'
+      - 'SEND: &e[NPC] &bComandante pene&f: Te recomiendo ir al &bsur &fpara encontrar la ciudad.'
       - 'SOUND: ENTITY_VILLAGER_YES,1,0.4'
+      - 'WAIT: 2'
+      - 'SEND: &7'
+      - 'SEND: &eSiguiente objetivo: &fentrar a la ciudad.'
+      - 'SOUND: BLOCK_NOTE_PLING,1,0.1'
