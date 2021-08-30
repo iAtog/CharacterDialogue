@@ -1,7 +1,11 @@
 dialogs:
   npcs:
     '0':
-      - 'SEND: Hola peter'
-      - 'SOUND: NOTE_PLING,0.1,0.5'
-      - 'WAIT: 5'
-      - 'BROADCAST: broadcasted'
+      - 'SEND: &8[&cNPC&8]&b pene&f: ¡Hola aventurero!'
+      - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.5'
+      - 'WAIT: 1'
+      - 'SEND: &8[&cNPC&8]&b pene&f: ¿Eres nuevo por aquí no?'
+      - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.6'
+      - 'WAIT: 1'
+      - 'SEND: &8[&cNPC&8]&b pene&f: Te recomiendo ir al sur para encontrar la ciudad.'
+      - 'SOUND: ENTITY_VILLAGER_YES,1,0.4'
