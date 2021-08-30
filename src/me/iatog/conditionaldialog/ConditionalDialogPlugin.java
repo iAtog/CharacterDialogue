@@ -53,7 +53,7 @@ public class ConditionalDialogPlugin extends JavaPlugin {
 	}
 
 	/**
-	 * I only use this method for third party plugins, I do not use this method and
+	 * I only set this method for third party plugins, I do not use this method and
 	 * even less abuse it. <br>
 	 * <br>
 	 * Get the main class of the ConditionalDialog.
