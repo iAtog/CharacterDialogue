@@ -21,7 +21,7 @@ public class CacheLoader implements Loader {
 	
 	@Override
 	public void load() {
-		registerMethods(
+		main.registerMethods(
 				new SendMethod(),
 				new SoundMethod(main),
 				new BroadcastMethod(),
@@ -36,9 +36,4 @@ public class CacheLoader implements Loader {
 	public void unload() {
 		main.getCache().clearAll();
 	}
-	
-	private void registerMethods(DialogMethod... methods) {
-		main.registerMethods(methods);
-	}
-	
 }
