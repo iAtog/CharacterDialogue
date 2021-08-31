@@ -1,6 +1,6 @@
 package me.iatog.characterdialogue.loader.plugin;
 
-import me.iatog.characterdialogue.ConditionalDialogPlugin;
+import me.iatog.characterdialogue.CharacterDialogPlugin;
 import me.iatog.characterdialogue.loader.Loader;
 import me.iatog.characterdialogue.loader.cache.CacheLoader;
 import me.iatog.characterdialogue.loader.file.FileLoader;
@@ -8,9 +8,9 @@ import me.iatog.characterdialogue.loader.listener.ListenerLoader;
 
 public class PluginLoader implements Loader {
 	
-	private ConditionalDialogPlugin main;
+	private CharacterDialogPlugin main;
 	
-	public PluginLoader(ConditionalDialogPlugin main) {
+	public PluginLoader(CharacterDialogPlugin main) {
 		this.main = main;
 	}
 	

@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.iatog.characterdialogue.ConditionalDialogPlugin;
+import me.iatog.characterdialogue.CharacterDialogPlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.interfaces.FileFactory;
@@ -20,9 +20,9 @@ import net.citizensnpcs.api.npc.NPC;
 
 public class NPCInteractListener implements Listener {
 	
-	private ConditionalDialogPlugin main;
+	private CharacterDialogPlugin main;
 	
-	public NPCInteractListener(ConditionalDialogPlugin main) {
+	public NPCInteractListener(CharacterDialogPlugin main) {
 		this.main = main;
 	}
 	

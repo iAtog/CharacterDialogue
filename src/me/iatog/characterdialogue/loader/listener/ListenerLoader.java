@@ -4,15 +4,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 
-import me.iatog.characterdialogue.ConditionalDialogPlugin;
+import me.iatog.characterdialogue.CharacterDialogPlugin;
 import me.iatog.characterdialogue.listeners.NPCInteractListener;
 import me.iatog.characterdialogue.loader.Loader;
 
 public class ListenerLoader implements Loader {
 	
-	private ConditionalDialogPlugin main;
+	private CharacterDialogPlugin main;
 	
-	public ListenerLoader(ConditionalDialogPlugin main) {
+	public ListenerLoader(CharacterDialogPlugin main) {
 		this.main = main;
 	}
 	

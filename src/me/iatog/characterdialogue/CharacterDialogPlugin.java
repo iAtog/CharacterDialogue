@@ -9,13 +9,13 @@ import me.iatog.characterdialogue.interfaces.FileFactory;
 import me.iatog.characterdialogue.libraries.Cache;
 import me.iatog.characterdialogue.loader.plugin.PluginLoader;
 
-public class ConditionalDialogPlugin extends JavaPlugin {
+public class CharacterDialogPlugin extends JavaPlugin {
 
 	private PluginLoader loader;
 	private FileFactory fileFactory;
 	private Cache cache;
 
-	private static ConditionalDialogPlugin instance;
+	private static CharacterDialogPlugin instance;
 
 	@Override
 	public void onEnable() {
@@ -60,7 +60,7 @@ public class ConditionalDialogPlugin extends JavaPlugin {
 	 * 
 	 * @return the plugin main class
 	 */
-	public static ConditionalDialogPlugin getInstance() {
+	public static CharacterDialogPlugin getInstance() {
 		return instance;
 	}
 

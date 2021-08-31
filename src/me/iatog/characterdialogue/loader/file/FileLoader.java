@@ -1,14 +1,14 @@
 package me.iatog.characterdialogue.loader.file;
 
-import me.iatog.characterdialogue.ConditionalDialogPlugin;
+import me.iatog.characterdialogue.CharacterDialogPlugin;
 import me.iatog.characterdialogue.libraries.FileFactoryImpl;
 import me.iatog.characterdialogue.loader.Loader;
 
 public class FileLoader implements Loader {
 	
-	private ConditionalDialogPlugin main;
+	private CharacterDialogPlugin main;
 	
-	public FileLoader(ConditionalDialogPlugin main) {
+	public FileLoader(CharacterDialogPlugin main) {
 		this.main = main; 
 	}
 	
