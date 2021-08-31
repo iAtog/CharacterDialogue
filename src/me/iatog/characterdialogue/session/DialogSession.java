@@ -42,12 +42,17 @@ public class DialogSession {
 				main.getLogger().warning("The method \"" + methodName + "\" doesn't exist");
 				return;
 			}
-
+			Player target = Bukkit.getPlayer(uuid);
+			if(target == null || !target.isOnline()) {
+				destroy();
+				break;
+			}
+			
 			DialogMethod method = main.getCache().getMethods().get(methodName);
 			method.execute(Bukkit.getPlayer(uuid), arg, this);
 		}
 	}
-
+	
 	public void setCurrentIndex(int index) {
 		this.index = index;
 	}
