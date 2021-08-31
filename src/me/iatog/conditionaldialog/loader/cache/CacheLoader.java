@@ -7,6 +7,7 @@ import me.iatog.conditionaldialog.dialogs.method.DispatchCommandMethod;
 import me.iatog.conditionaldialog.dialogs.method.SendMethod;
 import me.iatog.conditionaldialog.dialogs.method.SoundMethod;
 import me.iatog.conditionaldialog.dialogs.method.TeleportMethod;
+import me.iatog.conditionaldialog.dialogs.method.TitleMethod;
 import me.iatog.conditionaldialog.dialogs.method.WaitMethod;
 import me.iatog.conditionaldialog.loader.Loader;
 
@@ -27,7 +28,8 @@ public class CacheLoader implements Loader {
 				new WaitMethod(),
 				new DispatchCommandMethod(),
 				new CommandMethod(),
-				new TeleportMethod()
+				new TeleportMethod(),
+				new TitleMethod()
 				);
 	}
 
