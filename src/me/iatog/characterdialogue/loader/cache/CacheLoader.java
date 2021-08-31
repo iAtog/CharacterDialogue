@@ -25,7 +25,7 @@ public class CacheLoader implements Loader {
 				new SendMethod(),
 				new SoundMethod(main),
 				new BroadcastMethod(),
-				new WaitMethod(),
+				new WaitMethod(main),
 				new DispatchCommandMethod(),
 				new CommandMethod(),
 				new TeleportMethod(),
