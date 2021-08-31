@@ -1,5 +1,5 @@
 main: me.iatog.characterdialogue.CharacterDialogPlugin
-version: 0.3.1
+version: 0.3.2
 name: CharacterDialogue
 author: iAtog
 depend: [Citizens]

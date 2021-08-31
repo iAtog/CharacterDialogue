@@ -45,6 +45,10 @@ public class DialogSession {
 			
 			DialogMethod method = main.getCache().getMethods().get(methodName);
 			method.execute(Bukkit.getPlayer(uuid), arg, this);
+			if(i == dialogs.size() - 1) {
+				destroy();
+				break;
+			}
 		}
 	}
 	
