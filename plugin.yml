@@ -1,4 +1,4 @@
-main: me.iatog.conditionaldialog.ConditionalDialogPlugin
+main: me.iatog.characterdialogue.CharacterDialogPlugin
 version: 0.2
 name: CharacterDialogue
 author: iAtog
