@@ -5,7 +5,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 
 import me.iatog.characterdialogue.ConditionalDialogPlugin;
-import me.iatog.characterdialogue.listeners.NPCInteractEvent;
+import me.iatog.characterdialogue.listeners.NPCInteractListener;
 import me.iatog.characterdialogue.loader.Loader;
 
 public class ListenerLoader implements Loader {
@@ -19,7 +19,7 @@ public class ListenerLoader implements Loader {
 	@Override
 	public void load() {
 		registerListeners(
-				new NPCInteractEvent(main)
+				new NPCInteractListener(main)
 				);
 	}
 	

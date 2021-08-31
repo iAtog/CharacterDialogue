@@ -18,11 +18,11 @@ import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;
 
-public class NPCInteractEvent implements Listener {
+public class NPCInteractListener implements Listener {
 	
 	private ConditionalDialogPlugin main;
 	
-	public NPCInteractEvent(ConditionalDialogPlugin main) {
+	public NPCInteractListener(ConditionalDialogPlugin main) {
 		this.main = main;
 	}
 	
@@ -50,27 +50,21 @@ public class NPCInteractEvent implements Listener {
 			return;
 		}
 		List<String> dialogs = dialogsFile.getStringList("dialogs.npcs."+id+".dialog");
-		ExecutorService executor = Executors.newSingleThreadExecutor();
-		Runnable task = () -> {
-			for(int i=0;i<dialogs.size();i++) {
-				String dialog = dialogs.get(i);
-				if(!dialog.contains(":")) {
-					continue;
-				}
-				String[] splitted = dialog.split(":");
-				String methodName = splitted[0].toUpperCase().trim();
-				String arg = dialog.substring(methodName.length() + 1).trim();
-				if(!main.getCache().getMethods().containsKey(methodName)) {
-					main.getLogger().warning("The method \"" + methodName + "\" doesn't exist");
-					return;
-				}
-				DialogMethod method = main.getCache().getMethods().get(methodName);
-				method.cast(player, arg);
+		for(int i=0;i<dialogs.size();i++) {
+			String dialog = dialogs.get(i);
+			if(!dialog.contains(":")) {
+				continue;
 			}
-		};
-		
-		executor.submit(task);
-		executor.shutdown();
+			String[] splitted = dialog.split(":");
+			String methodName = splitted[0].toUpperCase().trim();
+			String arg = dialog.substring(methodName.length() + 1).trim();
+			if(!main.getCache().getMethods().containsKey(methodName)) {
+				main.getLogger().warning("The method \"" + methodName + "\" doesn't exist");
+				return;
+			}
+			DialogMethod method = main.getCache().getMethods().get(methodName);
+			method.cast(player, arg);
+		}
 	}
 	
 }
