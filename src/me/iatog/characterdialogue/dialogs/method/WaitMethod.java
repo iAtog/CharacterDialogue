@@ -25,7 +25,7 @@ public class WaitMethod extends DialogMethod {
 
 			@Override
 			public void run() {
-				if(next < session.getDialogs().size()) {
+				if(next < session.getDialogs().size() && (player != null && player.isOnline())) {
 					session.start(next);
 					System.out.println(player.getName()+": waited "+seconds+" seconds");
 				}
