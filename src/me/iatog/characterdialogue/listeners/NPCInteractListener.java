@@ -1,18 +1,16 @@
 package me.iatog.characterdialogue.listeners;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.iatog.characterdialogue.CharacterDialogPlugin;
-import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.interfaces.FileFactory;
 import me.iatog.characterdialogue.libraries.YamlFile;
+import me.iatog.characterdialogue.session.DialogSession;
 import net.citizensnpcs.api.event.NPCClickEvent;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
@@ -50,21 +48,8 @@ public class NPCInteractListener implements Listener {
 			return;
 		}
 		List<String> dialogs = dialogsFile.getStringList("dialogs.npcs."+id+".dialog");
-		for(int i=0;i<dialogs.size();i++) {
-			String dialog = dialogs.get(i);
-			if(!dialog.contains(":")) {
-				continue;
-			}
-			String[] splitted = dialog.split(":");
-			String methodName = splitted[0].toUpperCase().trim();
-			String arg = dialog.substring(methodName.length() + 1).trim();
-			if(!main.getCache().getMethods().containsKey(methodName)) {
-				main.getLogger().warning("The method \"" + methodName + "\" doesn't exist");
-				return;
-			}
-			DialogMethod method = main.getCache().getMethods().get(methodName);
-			method.cast(player, arg);
-		}
+		DialogSession session = new DialogSession(main, player, dialogs);
+		main.getCache().getSessions().put(player.getUniqueId(), session);
+		session.start(0);
 	}
-	
 }
