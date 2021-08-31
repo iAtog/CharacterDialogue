@@ -1,0 +1,32 @@
+package me.iatog.characterdialogue.loader.listener;
+
+import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.PluginManager;
+
+import me.iatog.characterdialogue.ConditionalDialogPlugin;
+import me.iatog.characterdialogue.listeners.NPCInteractEvent;
+import me.iatog.characterdialogue.loader.Loader;
+
+public class ListenerLoader implements Loader {
+	
+	private ConditionalDialogPlugin main;
+	
+	public ListenerLoader(ConditionalDialogPlugin main) {
+		this.main = main;
+	}
+	
+	@Override
+	public void load() {
+		registerListeners(
+				new NPCInteractEvent(main)
+				);
+	}
+	
+	public void registerListeners(Listener... listeners) {
+		PluginManager pluginManager = Bukkit.getPluginManager();
+		for(Listener listener : listeners) {
+			pluginManager.registerEvents(listener, main);
+		}
+	}
+}
