@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.session.DialogSession;
 
 public class SendMethod extends DialogMethod {
 
@@ -12,7 +13,7 @@ public class SendMethod extends DialogMethod {
 	}
 
 	@Override
-	public void cast(Player player, String arg) {
+	public void execute(Player player, String arg, DialogSession session) {
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', arg));
 	}
 

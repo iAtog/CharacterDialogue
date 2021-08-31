@@ -6,6 +6,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.session.DialogSession;
 
 public class TeleportMethod extends DialogMethod {
 
@@ -14,7 +15,7 @@ public class TeleportMethod extends DialogMethod {
 	}
 
 	@Override
-	public void cast(Player player, String arg) {
+	public void execute(Player player, String arg, DialogSession session) {
 		// TELEPORT: world,x,y,z,yaw,pitch
 		String[] part = arg.split(",");
 		Location location = player.getLocation();

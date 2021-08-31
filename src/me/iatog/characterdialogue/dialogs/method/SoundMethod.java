@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import me.iatog.characterdialogue.CharacterDialogPlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.session.DialogSession;
 
 public class SoundMethod extends DialogMethod {
 	
@@ -18,7 +19,7 @@ public class SoundMethod extends DialogMethod {
 	}
 
 	@Override
-	public void cast(Player player, String arg) {
+	public void execute(Player player, String arg, DialogSession session) {
 		String[] part = arg.split(",");
 		Sound sound = null;
 		

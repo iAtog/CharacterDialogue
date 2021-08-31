@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.nms.TitleBuilder;
+import me.iatog.characterdialogue.session.DialogSession;
 
 public class TitleMethod extends DialogMethod {
 
@@ -12,7 +13,7 @@ public class TitleMethod extends DialogMethod {
 	}
 
 	@Override
-	public void cast(Player player, String arg) {
+	public void execute(Player player, String arg, DialogSession session) {
 		// TITLE: Title || Subtitle || 20 || 60 || 20
 		String[] part = arg.split("||");
 		

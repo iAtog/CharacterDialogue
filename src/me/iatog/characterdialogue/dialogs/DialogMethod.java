@@ -3,6 +3,8 @@ package me.iatog.characterdialogue.dialogs;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.iatog.characterdialogue.session.DialogSession;
+
 public abstract class DialogMethod {
 	
 	private String id;
@@ -22,7 +24,7 @@ public abstract class DialogMethod {
 	 * @param player the interacting player
 	 * @param arg the arguments with which it works
 	 */
-	public abstract void cast(Player player, String arg);
+	public abstract void execute(Player player, String arg, DialogSession session);
 	
 	/**
 	 * Get the id of the method

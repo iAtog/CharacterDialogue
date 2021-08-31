@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.session.DialogSession;
 
 public class DispatchCommandMethod extends DialogMethod {
 
@@ -12,7 +13,7 @@ public class DispatchCommandMethod extends DialogMethod {
 	}
 
 	@Override
-	public void cast(Player player, String arg) {
+	public void execute(Player player, String arg, DialogSession session) {
 		Bukkit.dispatchCommand(player, arg);
 	}
 
