@@ -3,15 +3,15 @@ dialogs:
     '0':
       click: RIGHT
       dialog:
-        - 'SEND: &e[NPC] &bComandante pene&f: ¡Hola aventurero!'
+        - 'SEND: &e[NPC] &bSoldier&f: Hello adventurer!'
         - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.5'
         - 'WAIT: 1'
-        - 'SEND: &e[NPC] &bComandante pene&f: ¿Eres nuevo por aquí no?'
+        - "SEND: &e[NPC] &bSoldier&f: You are new around here, aren't you?"
         - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.6'
         - 'WAIT: 1'
-        - 'SEND: &e[NPC] &bComandante pene&f: Te recomiendo ir al &bsur &fpara encontrar la ciudad.'
+        - 'SEND: &e[NPC] &bSoldier&f: I recommend going &bsouth &fto find the city.'
         - 'SOUND: ENTITY_VILLAGER_YES,1,0.4'
         - 'WAIT: 2'
         - 'SEND: &7'
-        - 'SEND: &eSiguiente objetivo: &fentrar a la ciudad.'
+        - 'SEND: &7          &7&lNext objective&f: enter the city.'
         - 'SOUND: BLOCK_NOTE_PLING,1,0.1'
