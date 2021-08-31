@@ -40,13 +40,20 @@ public class NPCInteractListener implements Listener {
 		int id = npc.getId();
 		FileFactory files = main.getFileFactory();
 		YamlFile dialogsFile = files.getDialogs();
+		
+		if(main.getCache().getSessions().containsKey(player.getUniqueId())) {
+			return;
+		}
+		
 		if(!dialogsFile.contains("dialogs.npcs."+id)) {
 			return;
 		}
+		
 		ClickType clickType = ClickType.valueOf(dialogsFile.getString("dialogs.npcs."+id+".click"));
 		if((event instanceof NPCRightClickEvent && clickType != ClickType.RIGHT) || (event instanceof NPCLeftClickEvent && clickType != ClickType.LEFT)) {
 			return;
 		}
+		
 		List<String> dialogs = dialogsFile.getStringList("dialogs.npcs."+id+".dialog");
 		DialogSession session = new DialogSession(main, player, dialogs);
 		main.getCache().getSessions().put(player.getUniqueId(), session);
