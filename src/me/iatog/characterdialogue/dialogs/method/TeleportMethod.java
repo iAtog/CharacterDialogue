@@ -20,7 +20,7 @@ public class TeleportMethod extends DialogMethod {
 		String[] part = arg.split(",");
 		Location location = player.getLocation();
 		
-		World world = part[0].equals("CURRENT_PLAYER_WORLD") ? player.getWorld() : Bukkit.getWorld(part[0]);
+		World world = part[0].equals("current") ? player.getWorld() : Bukkit.getWorld(part[0]);
 		double x = Double.valueOf(part[1]);
 		double y = Double.valueOf(part[2]);
 		double z = Double.valueOf(part[3]);
