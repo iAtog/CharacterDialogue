@@ -3,6 +3,7 @@ package me.iatog.characterdialogue.loader.plugin;
 import me.iatog.characterdialogue.CharacterDialogPlugin;
 import me.iatog.characterdialogue.loader.Loader;
 import me.iatog.characterdialogue.loader.cache.CacheLoader;
+import me.iatog.characterdialogue.loader.command.CommandLoader;
 import me.iatog.characterdialogue.loader.file.FileLoader;
 import me.iatog.characterdialogue.loader.listener.ListenerLoader;
 
@@ -19,7 +20,8 @@ public class PluginLoader implements Loader {
 		loadLoaders(
 				new ListenerLoader(main),
 				new FileLoader(main),
-				new CacheLoader(main)
+				new CacheLoader(main),
+				new CommandLoader(main)
 				);
 		
 		main.getLogger().info("§aPlugin loaded §7"+main.getDescription().getVersion());
