@@ -3,3 +3,5 @@ version: 0.3.3
 name: CharacterDialogue
 author: iAtog
 depend: [Citizens]
+
+commands:
