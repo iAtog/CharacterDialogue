@@ -4,8 +4,10 @@ import java.util.Map;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.iatog.characterdialogue.api.CharacterDialogueAPI;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.interfaces.FileFactory;
+import me.iatog.characterdialogue.libraries.ApiImplementation;
 import me.iatog.characterdialogue.libraries.Cache;
 import me.iatog.characterdialogue.loader.plugin.PluginLoader;
 
@@ -14,7 +16,8 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 	private PluginLoader loader;
 	private FileFactory fileFactory;
 	private Cache cache;
-
+	private CharacterDialogueAPI api;
+	
 	private static CharacterDialoguePlugin instance;
 
 	@Override
@@ -22,6 +25,7 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 		instance = this;
 		this.loader = new PluginLoader(this);
 		this.cache = new Cache();
+		this.api = new ApiImplementation(this);
 
 		loader.load();
 	}
@@ -37,6 +41,10 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 
 	public Cache getCache() {
 		return cache;
+	}
+	
+	public CharacterDialogueAPI getApi() {
+		return api;
 	}
 
 	public void setDefaultFileFactory(FileFactory factory) {
