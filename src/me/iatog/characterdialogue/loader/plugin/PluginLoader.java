@@ -1,6 +1,6 @@
 package me.iatog.characterdialogue.loader.plugin;
 
-import me.iatog.characterdialogue.CharacterDialogPlugin;
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.loader.Loader;
 import me.iatog.characterdialogue.loader.cache.CacheLoader;
 import me.iatog.characterdialogue.loader.command.CommandLoader;
@@ -9,9 +9,9 @@ import me.iatog.characterdialogue.loader.listener.ListenerLoader;
 
 public class PluginLoader implements Loader {
 	
-	private CharacterDialogPlugin main;
+	private CharacterDialoguePlugin main;
 	
-	public PluginLoader(CharacterDialogPlugin main) {
+	public PluginLoader(CharacterDialoguePlugin main) {
 		this.main = main;
 	}
 	

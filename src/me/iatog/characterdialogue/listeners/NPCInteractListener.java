@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.iatog.characterdialogue.CharacterDialogPlugin;
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.interfaces.FileFactory;
 import me.iatog.characterdialogue.libraries.YamlFile;
@@ -18,9 +18,9 @@ import net.citizensnpcs.api.npc.NPC;
 
 public class NPCInteractListener implements Listener {
 	
-	private CharacterDialogPlugin main;
+	private CharacterDialoguePlugin main;
 	
-	public NPCInteractListener(CharacterDialogPlugin main) {
+	public NPCInteractListener(CharacterDialoguePlugin main) {
 		this.main = main;
 	}
 	

@@ -5,15 +5,15 @@ import java.util.logging.Level;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-import me.iatog.characterdialogue.CharacterDialogPlugin;
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.DialogSession;
 
 public class SoundMethod extends DialogMethod {
 	
-	private CharacterDialogPlugin main;
+	private CharacterDialoguePlugin main;
 	
-	public SoundMethod(CharacterDialogPlugin main) {
+	public SoundMethod(CharacterDialoguePlugin main) {
 		super("sound");
 		this.main = main;
 	}

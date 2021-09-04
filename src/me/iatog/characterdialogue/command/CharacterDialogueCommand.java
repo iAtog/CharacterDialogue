@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
-import me.iatog.characterdialogue.CharacterDialogPlugin;
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.libraries.YamlFile;
 
 @Command(names = {
@@ -16,10 +16,10 @@ import me.iatog.characterdialogue.libraries.YamlFile;
 })
 public class CharacterDialogueCommand implements CommandClass {
 	
-	private CharacterDialogPlugin main;
+	private CharacterDialoguePlugin main;
 	private YamlFile language;
 	
-	public CharacterDialogueCommand(CharacterDialogPlugin main) {
+	public CharacterDialogueCommand(CharacterDialoguePlugin main) {
 		this.main = main;
 		this.language = this.main.getFileFactory().getLang();
 	}

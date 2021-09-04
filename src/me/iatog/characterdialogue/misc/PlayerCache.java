@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import me.iatog.characterdialogue.CharacterDialogPlugin;
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.libraries.YamlFile;
 
 public class PlayerCache {
@@ -17,13 +17,14 @@ public class PlayerCache {
 	private List<String> readedDialogs;
 	private YamlFile file;
 	
-	public PlayerCache(CharacterDialogPlugin main, UUID uuid, String readedDialogs) {
+	public PlayerCache(CharacterDialoguePlugin main, UUID uuid) {
 		this.uuid = uuid;
-		this.readedDialogs = new ArrayList<>();
 		this.file = new YamlFile(main, uuid.toString(), "cache");
 		
-		for(String dialog : readedDialogs.split(",")) {
-			this.readedDialogs.add(dialog);
+		if(file.contains("readed")) {
+			this.readedDialogs = file.getStringList("readed");
+		} else {
+			this.readedDialogs = new ArrayList<>();
 		}
 	}
 	
@@ -49,6 +50,11 @@ public class PlayerCache {
 	
 	public YamlFile getFile() {
 		return file;
+	}
+	
+	public void save() {
+		file.set("readed", readedDialogs);
+		file.save();
 	}
 	
 }

@@ -1,6 +1,6 @@
 package me.iatog.characterdialogue.loader.cache;
 
-import me.iatog.characterdialogue.CharacterDialogPlugin;
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.method.BroadcastMethod;
 import me.iatog.characterdialogue.dialogs.method.CommandMethod;
 import me.iatog.characterdialogue.dialogs.method.DispatchCommandMethod;
@@ -13,9 +13,9 @@ import me.iatog.characterdialogue.loader.Loader;
 
 public class CacheLoader implements Loader {
 	
-	private CharacterDialogPlugin main;
+	private CharacterDialoguePlugin main;
 	
-	public CacheLoader(CharacterDialogPlugin main) {
+	public CacheLoader(CharacterDialoguePlugin main) {
 		this.main = main;
 	}
 	

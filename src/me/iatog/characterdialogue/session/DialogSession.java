@@ -6,18 +6,18 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import me.iatog.characterdialogue.CharacterDialogPlugin;
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 
 public class DialogSession {
 
-	private CharacterDialogPlugin main;
+	private CharacterDialoguePlugin main;
 	private UUID uuid;
 	private List<String> dialogs;
 	private int index;
 	private boolean stop;
 
-	public DialogSession(CharacterDialogPlugin main, Player player, List<String> dialogs) {
+	public DialogSession(CharacterDialoguePlugin main, Player player, List<String> dialogs) {
 		this.main = main;
 		this.uuid = player.getUniqueId();
 		this.dialogs = dialogs;

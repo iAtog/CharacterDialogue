@@ -1,6 +1,6 @@
 package me.iatog.characterdialogue.libraries;
 
-import me.iatog.characterdialogue.CharacterDialogPlugin;
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.interfaces.FileFactory;
 
 public class FileFactoryImpl implements FileFactory {
@@ -9,7 +9,7 @@ public class FileFactoryImpl implements FileFactory {
 	private YamlFile dialogs;
 	private YamlFile lang;
 	
-	public FileFactoryImpl(CharacterDialogPlugin main) {
+	public FileFactoryImpl(CharacterDialoguePlugin main) {
 		this.config = new YamlFile(main, "config");
 		this.dialogs = new YamlFile(main, "dialogs");
 		this.lang = new YamlFile(main, "lang");

@@ -4,15 +4,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 
-import me.iatog.characterdialogue.CharacterDialogPlugin;
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.listeners.NPCInteractListener;
 import me.iatog.characterdialogue.loader.Loader;
 
 public class ListenerLoader implements Loader {
 	
-	private CharacterDialogPlugin main;
+	private CharacterDialoguePlugin main;
 	
-	public ListenerLoader(CharacterDialogPlugin main) {
+	public ListenerLoader(CharacterDialoguePlugin main) {
 		this.main = main;
 	}
 	
