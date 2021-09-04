@@ -1,4 +1,4 @@
-main: me.iatog.characterdialogue.CharacterDialogPlugin
+main: me.iatog.characterdialogue.CharacterDialoguePlugin
 version: 0.3.3
 name: CharacterDialogue
 author: iAtog
