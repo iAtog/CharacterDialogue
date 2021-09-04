@@ -1,7 +1,8 @@
 dialogs:
   npcs:
-    '0':
+    soldier:
       click: RIGHT
+      npc-id: 0
       dialog:
         - 'SEND: &e[NPC] &bSoldier&f: Hello adventurer!'
         - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.5'
