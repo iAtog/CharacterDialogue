@@ -20,7 +20,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		for(String name : dialogsFile.getConfigurationSection("dialogs.npcs").getKeys(false)) {
 			String path = "dialogs.npcs."+name;
 			if(dialogsFile.getInt(path+".npc-id") == id) {
-				optional = Optional.ofNullable(name);
+				optional = Optional.ofNullable(path);
 				break;
 			}
 		}
