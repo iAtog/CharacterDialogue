@@ -23,8 +23,9 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		instance = this;
-		this.loader = new PluginLoader(this);
 		this.cache = new Cache();
+		this.loader = new PluginLoader(this);
+		
 		this.api = new ApiImplementation(this);
 
 		loader.load();
