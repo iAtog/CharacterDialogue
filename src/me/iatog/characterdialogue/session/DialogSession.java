@@ -7,7 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.api.events.ExecuteMethodEvent;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.enums.ClickType;
 
 public class DialogSession {
 
@@ -15,12 +17,18 @@ public class DialogSession {
 	private UUID uuid;
 	private List<String> dialogs;
 	private int index;
+	private ClickType clickType;
+	private int npcId;
+	private String dialogName;
 	private boolean stop;
 
-	public DialogSession(CharacterDialoguePlugin main, Player player, List<String> dialogs) {
+	public DialogSession(CharacterDialoguePlugin main, Player player, List<String> dialogs, ClickType clickType, int npcId, String dialogName) {
 		this.main = main;
 		this.uuid = player.getUniqueId();
 		this.dialogs = dialogs;
+		this.clickType = clickType;
+		this.npcId = npcId;
+		this.dialogName = dialogName;
 	}
 
 	public void start(int index) {
@@ -44,7 +52,13 @@ public class DialogSession {
 			}
 			
 			DialogMethod method = main.getCache().getMethods().get(methodName);
-			method.execute(Bukkit.getPlayer(uuid), arg, this);
+			ExecuteMethodEvent event = new ExecuteMethodEvent(getPlayer(), method, clickType, npcId, dialogName);
+			Bukkit.getPluginManager().callEvent(event);
+			
+			if(!event.isCancelled()) {
+				method.execute(Bukkit.getPlayer(uuid), arg, this);
+			}
+			
 			if(i == dialogs.size() - 1) {
 				destroy();
 				break;
@@ -63,6 +77,10 @@ public class DialogSession {
 	public List<String> getDialogs() {
 		return dialogs;
 	}
+	
+	public Player getPlayer() {
+		return Bukkit.getPlayer(uuid);
+	}
 
 	public void cancel() {
 		this.stop = true;
@@ -72,5 +90,17 @@ public class DialogSession {
 		if(main.getCache().getSessions().containsKey(uuid)) {
 			main.getCache().getSessions().remove(uuid);
 		}
+	}
+
+	public ClickType getClickType() {
+		return clickType;
+	}
+
+	public int getNPCId() {
+		return npcId;
+	}
+
+	public String getDialogName() {
+		return dialogName;
 	}
 }

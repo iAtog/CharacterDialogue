@@ -1,12 +1,15 @@
 package me.iatog.characterdialogue.listeners;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.api.CharacterDialogueAPI;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.interfaces.FileFactory;
 import me.iatog.characterdialogue.libraries.YamlFile;
@@ -40,22 +43,27 @@ public class NPCInteractListener implements Listener {
 		int id = npc.getId();
 		FileFactory files = main.getFileFactory();
 		YamlFile dialogsFile = files.getDialogs();
+		CharacterDialogueAPI api = main.getApi();
+		Optional<String> search = api.searchDialogueByNPCId(id);
+		
+		if(!search.isPresent()) {
+			return;
+		}
 		
 		if(main.getCache().getSessions().containsKey(player.getUniqueId())) {
 			return;
 		}
 		
-		if(!dialogsFile.contains("dialogs.npcs."+id)) {
-			return;
-		}
+		ConfigurationSection dialogueSection = dialogsFile.getConfigurationSection(search.get());
 		
-		ClickType clickType = ClickType.valueOf(dialogsFile.getString("dialogs.npcs."+id+".click"));
+		ClickType clickType = ClickType.valueOf(dialogueSection.getString("click"));
 		if((event instanceof NPCRightClickEvent && clickType != ClickType.RIGHT) || (event instanceof NPCLeftClickEvent && clickType != ClickType.LEFT)) {
 			return;
 		}
 		
-		List<String> dialogs = dialogsFile.getStringList("dialogs.npcs."+id+".dialog");
-		DialogSession session = new DialogSession(main, player, dialogs);
+		List<String> dialogs = dialogueSection.getStringList("dialog");
+		
+		DialogSession session = new DialogSession(main, player, dialogs, clickType, id, "soldier");
 		main.getCache().getSessions().put(player.getUniqueId(), session);
 		session.start(0);
 	}
