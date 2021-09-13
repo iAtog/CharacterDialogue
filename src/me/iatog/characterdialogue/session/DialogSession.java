@@ -48,7 +48,7 @@ public class DialogSession {
 			if(main.getHooks().isPlaceHolderAPIEnabled()) {
 				arg = main.getHooks().getPlaceHolderAPIHook().translatePlaceHolders(getPlayer(), arg);
 			} else {
-				arg = arg.replace("%player%", getPlayer().getName());
+				arg = arg.replace("%player_name%", getPlayer().getName());
 			}
 			
 			if (!main.getCache().getMethods().containsKey(methodName)) {
