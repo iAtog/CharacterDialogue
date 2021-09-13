@@ -1,7 +1,8 @@
 main: me.iatog.characterdialogue.CharacterDialoguePlugin
-version: 0.3.3
+version: 0.4
 name: CharacterDialogue
 author: iAtog
 depend: [Citizens]
+softdepend: [PlaceHolderAPI]
 
 commands:
