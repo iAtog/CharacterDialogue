@@ -4,7 +4,8 @@ import org.bukkit.event.block.Action;
 
 public enum ClickType {
 	LEFT(Action.LEFT_CLICK_AIR, Action.LEFT_CLICK_BLOCK),
-	RIGHT(Action.RIGHT_CLICK_AIR, Action.RIGHT_CLICK_BLOCK);
+	RIGHT(Action.RIGHT_CLICK_AIR, Action.RIGHT_CLICK_BLOCK),
+	ALL(Action.LEFT_CLICK_AIR, Action.LEFT_CLICK_BLOCK, Action.RIGHT_CLICK_AIR, Action.RIGHT_CLICK_BLOCK);
 	
 	private Action[] actions;
 	
