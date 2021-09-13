@@ -45,7 +45,12 @@ public class DialogSession {
 			String[] splitted = dialog.split(":");
 			String methodName = splitted[0].toUpperCase().trim();
 			String arg = dialog.substring(methodName.length() + 1).trim();
-
+			if(main.getHooks().isPlaceHolderAPIEnabled()) {
+				arg = main.getHooks().getPlaceHolderAPIHook().translatePlaceHolders(getPlayer(), arg);
+			} else {
+				arg = arg.replace("%player%", getPlayer().getName());
+			}
+			
 			if (!main.getCache().getMethods().containsKey(methodName)) {
 				main.getLogger().warning("The method \"" + methodName + "\" doesn't exist");
 				return;
