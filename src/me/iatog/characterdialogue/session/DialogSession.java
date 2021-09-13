@@ -53,7 +53,9 @@ public class DialogSession {
 			
 			if (!main.getCache().getMethods().containsKey(methodName)) {
 				main.getLogger().warning("The method \"" + methodName + "\" doesn't exist");
-				return;
+				this.stop = true;
+				destroy();
+				break;
 			}
 			
 			DialogMethod method = main.getCache().getMethods().get(methodName);
