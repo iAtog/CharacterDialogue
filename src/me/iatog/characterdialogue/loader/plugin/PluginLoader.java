@@ -28,11 +28,7 @@ public class PluginLoader implements Loader {
 				new CacheLoader(main),
 				new CommandLoader(main)
 				);
-		/*
-		if(Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
-			loadLoaders(new HologramLoader(main));
-		}
-		*/
+		
 		main.getLogger().info("§a"+main.getDescription().getName()+" loaded. §7"+main.getDescription().getVersion());
 	}
 	
