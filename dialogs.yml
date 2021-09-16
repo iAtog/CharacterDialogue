@@ -2,9 +2,10 @@ dialogs:
   npcs:
     soldier:
       click: RIGHT
+      display-name: Soldier
       npc-id: 0
       dialog:
-        - 'SEND: &e[NPC] &bSoldier&f: Hello adventurer!'
+        - 'SEND: &e[NPC] &bSoldier&f: Hello %player_name%!'
         - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.5'
         - 'WAIT: 1'
         - "SEND: &e[NPC] &bSoldier&f: You are new around here, aren't you?"
@@ -16,3 +17,10 @@ dialogs:
         - 'SEND: &7'
         - 'SEND: &7          &7&lNext objective&f: enter the city.'
         - 'SOUND: BLOCK_NOTE_PLING,1,0.1'
+      hologram:
+        enabled: false
+        # Optional
+        y-position: 0.6
+        lines:
+          - '&b%npc_name%'
+          - '&6&lCLICK'
