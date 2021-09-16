@@ -1,3 +1,4 @@
 help-message:
-  - 'Hello!'
-reload-message: "&aFiles reloaded correctly"
+  - '&6&l> &8[&fCharacterDialogue&8] &7help'
+  - '&7/characterdialogue reload &f- &eReload the plugin'
+reload-message: "&aPlugin reloaded correctly"
