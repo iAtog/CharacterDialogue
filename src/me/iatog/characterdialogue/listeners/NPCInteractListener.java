@@ -63,7 +63,7 @@ public class NPCInteractListener implements Listener {
 		
 		List<String> dialogs = dialogueSection.getStringList("dialog");
 		
-		DialogSession session = new DialogSession(main, player, dialogs, clickType, id, "dummy");
+		DialogSession session = new DialogSession(main, player, dialogs, clickType, id, dialogueSection.getString("display-name", "John the NPC"));
 		main.getCache().getSessions().put(player.getUniqueId(), session);
 		session.start(0);
 	}
