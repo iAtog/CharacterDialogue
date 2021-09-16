@@ -22,8 +22,4 @@ public class Hooks {
 		return Bukkit.getPluginManager().isPluginEnabled("PlaceHolderAPI");
 	}
 	
-	public boolean isHoloDisplaysEnabled() {
-		return Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
-	}
-	
 }
