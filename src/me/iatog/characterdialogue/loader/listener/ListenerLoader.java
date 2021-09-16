@@ -6,6 +6,7 @@ import org.bukkit.plugin.PluginManager;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.listeners.NPCInteractListener;
+import me.iatog.characterdialogue.listeners.NPCSpawnListener;
 import me.iatog.characterdialogue.loader.Loader;
 
 public class ListenerLoader implements Loader {
@@ -19,7 +20,8 @@ public class ListenerLoader implements Loader {
 	@Override
 	public void load() {
 		registerListeners(
-				new NPCInteractListener(main)
+				new NPCInteractListener(main),
+				new NPCSpawnListener(main)
 				);
 	}
 	

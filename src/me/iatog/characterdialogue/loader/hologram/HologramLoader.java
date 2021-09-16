@@ -44,6 +44,7 @@ public class HologramLoader implements Loader {
 			Hologram hologram = HologramsAPI.createHologram(main, location);
 			hologram.appendTextLine("§bSoldier");
 			hologram.appendTextLine("§e§lCLICK");
+			npc.get().setAlwaysUseNameHologram(false);
 		});
 	}
 	

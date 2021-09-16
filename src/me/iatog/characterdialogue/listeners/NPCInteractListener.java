@@ -57,13 +57,13 @@ public class NPCInteractListener implements Listener {
 		ConfigurationSection dialogueSection = dialogsFile.getConfigurationSection(search.get());
 		
 		ClickType clickType = ClickType.valueOf(dialogueSection.getString("click"));
-		if((event instanceof NPCRightClickEvent && clickType != ClickType.RIGHT) || (event instanceof NPCLeftClickEvent && clickType != ClickType.LEFT)) {
+		if((event instanceof NPCRightClickEvent && clickType != ClickType.RIGHT) || (event instanceof NPCLeftClickEvent && clickType != ClickType.LEFT) && clickType != ClickType.ALL) {
 			return;
 		}
 		
 		List<String> dialogs = dialogueSection.getStringList("dialog");
 		
-		DialogSession session = new DialogSession(main, player, dialogs, clickType, id, "soldier");
+		DialogSession session = new DialogSession(main, player, dialogs, clickType, id, "dummy");
 		main.getCache().getSessions().put(player.getUniqueId(), session);
 		session.start(0);
 	}
