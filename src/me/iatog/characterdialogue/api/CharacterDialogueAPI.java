@@ -10,4 +10,9 @@ public interface CharacterDialogueAPI {
 	 * @return the path of the dialogue
 	 */
 	Optional<String> searchDialogueByNPCId(int id);
+	
+	/**
+	 * reload all character holograms.
+	 */
+	void reloadHolograms();
 }
