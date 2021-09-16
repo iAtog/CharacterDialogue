@@ -14,7 +14,7 @@ public class SendMethod extends DialogMethod {
 
 	@Override
 	public void execute(Player player, String arg, DialogSession session) {
-		player.sendMessage(ChatColor.translateAlternateColorCodes('&', arg));
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&', arg.replace("%npc_displayname%", session.getDisplayName())));
 	}
 
 }
