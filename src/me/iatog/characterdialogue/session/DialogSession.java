@@ -107,7 +107,7 @@ public class DialogSession {
 		return npcId;
 	}
 
-	public String getDialogName() {
+	public String getDisplayName() {
 		return dialogName;
 	}
 }
