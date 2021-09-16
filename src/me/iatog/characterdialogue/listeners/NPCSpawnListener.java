@@ -41,11 +41,11 @@ public class NPCSpawnListener implements Listener {
 			Location location = npc.getStoredLocation();
 			location.add(0, 2 + section.getDouble("hologram.y-position", 0.6), 0);
 			Hologram hologram = HologramsAPI.createHologram(main, location);
-			String npcName = section.getString("name");
+			String npcName = section.getString("display-name", "John the NPC");
 			List<String> lines = section.getStringList("hologram.lines");
 			
 			for(String line : lines) {
-				hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line.replace("%npc_name%", npcName)));
+				hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line.replace("%npc_displayname%", npcName)));
 			}
 			
 			npc.setAlwaysUseNameHologram(false);
