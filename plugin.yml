@@ -3,6 +3,6 @@ version: 0.4.2
 name: CharacterDialogue
 author: iAtog
 depend: [Citizens]
-softdepend: [PlaceHolderAPI]
+softdepend: [PlaceHolderAPI, HolographicDisplays]
 
 commands:
