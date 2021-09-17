@@ -15,4 +15,10 @@ public interface CharacterDialogueAPI {
 	 * reload all character holograms.
 	 */
 	void reloadHolograms();
+	
+	/**
+	 * load npc hologram
+	 * @param npcId the id of the npc
+	 */
+	void loadHologram(int npcId);
 }
