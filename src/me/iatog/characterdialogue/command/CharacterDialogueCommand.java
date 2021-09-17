@@ -3,6 +3,7 @@ package me.iatog.characterdialogue.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -29,9 +30,13 @@ public class CharacterDialogueCommand implements CommandClass {
 		sender.sendMessage(translateList(language.getStringList("help-message")).stream().toArray(String[]::new));
 	}
 	
-	@Command(names = "reload", desc = "Reload all files")
+	@Command(names = "reload", desc = "Reload the plugin")
 	public void reloadCommand(CommandSender sender) {
 		main.getFileFactory().reload();
+		if(Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+			main.getApi().reloadHolograms();
+		}
+		
 		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', language.getString("reload-message")));
 	}
 	
