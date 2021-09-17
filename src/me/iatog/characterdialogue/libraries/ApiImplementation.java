@@ -3,6 +3,7 @@ package me.iatog.characterdialogue.libraries;
 import java.util.List;
 import java.util.Optional;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -39,14 +40,17 @@ public class ApiImplementation implements CharacterDialogueAPI {
 
 	@Override
 	public void reloadHolograms() {
+		if(!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+			return;
+		}
+		
 		YamlFile dialogsFile = main.getFileFactory().getDialogs();
 		String dialoguesPath = "dialogs.npcs";
+		
 		for(Hologram hologram : HologramsAPI.getHolograms(main)) {
 			hologram.delete();
 		}
-		
-		HologramsAPI.getHolograms(main).clear();
-		
+				
 		dialogsFile.getConfigurationSection(dialoguesPath).getKeys(false).forEach((dialogName) -> {
 			ConfigurationSection dialog = dialogsFile.getConfigurationSection(dialoguesPath + "." + dialogName);
 			if(!dialog.contains("npc-id")) {
@@ -55,25 +59,36 @@ public class ApiImplementation implements CharacterDialogueAPI {
 			
 			int npcId = dialog.getInt("npc-id");
 			
-			Optional<NPC> npc = Optional.ofNullable(CitizensAPI.getNPCRegistry().getById(npcId));
-			
-			if(!npc.isPresent()) {
-				return;
-			}
-			
-			Location location = npc.get().getStoredLocation();
-			location.add(0, 2 + dialog.getDouble("hologram.y-position", 0.6), 0);
+			this.loadHologram(npcId);
+		});
+	}
+
+	@Override
+	public void loadHologram(int npcId) {
+		YamlFile dialogsFile = main.getFileFactory().getDialogs();
+		Optional<NPC> citizensNpc = Optional.ofNullable(CitizensAPI.getNPCRegistry().getById(npcId));
+		Optional<String> npc = this.searchDialogueByNPCId(npcId);
+		
+		if(!npc.isPresent() || !citizensNpc.isPresent()) {
+			return;
+		}
+		
+		ConfigurationSection dialog = dialogsFile.getConfigurationSection(npc.get());
+		
+		if(dialog.getBoolean("hologram.enabled", false)) {
+			Location location = citizensNpc.get().getStoredLocation();
+			location.add(0, 2 + dialog.getDouble("hologram.y-position", 0.4), 0);
 			Hologram hologram = HologramsAPI.createHologram(main, location);
-			String npcName = dialog.getString("name");
+			String npcName = dialog.getString("display-name", "John the NPC");
 			List<String> lines = dialog.getStringList("hologram.lines");
 			
 			for(String line : lines) {
 				hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line.replace("%npc_name%", npcName)));
 			}
 			
-			npc.get().setAlwaysUseNameHologram(false);
-			npc.get().getEntity().setCustomNameVisible(false);
-		});
+			citizensNpc.get().setAlwaysUseNameHologram(false);
+			citizensNpc.get().getEntity().setCustomNameVisible(false);
+		}
 	}
 
 }
