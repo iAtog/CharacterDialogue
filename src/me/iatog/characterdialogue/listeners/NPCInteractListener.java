@@ -57,7 +57,7 @@ public class NPCInteractListener implements Listener {
 		ConfigurationSection dialogueSection = dialogsFile.getConfigurationSection(search.get());
 		
 		ClickType clickType = ClickType.valueOf(dialogueSection.getString("click"));
-		if((event instanceof NPCRightClickEvent && clickType != ClickType.RIGHT) || (event instanceof NPCLeftClickEvent && clickType != ClickType.LEFT) && clickType != ClickType.ALL) {
+		if(((event instanceof NPCRightClickEvent && clickType != ClickType.RIGHT) || (event instanceof NPCLeftClickEvent && clickType != ClickType.LEFT)) && clickType != ClickType.ALL) {
 			return;
 		}
 		
