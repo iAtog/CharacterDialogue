@@ -65,6 +65,10 @@ public class ApiImplementation implements CharacterDialogueAPI {
 
 	@Override
 	public void loadHologram(int npcId) {
+		if(!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+			return;
+		}
+		
 		YamlFile dialogsFile = main.getFileFactory().getDialogs();
 		Optional<NPC> citizensNpc = Optional.ofNullable(CitizensAPI.getNPCRegistry().getById(npcId));
 		Optional<String> npc = this.searchDialogueByNPCId(npcId);
