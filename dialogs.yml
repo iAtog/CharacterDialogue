@@ -5,13 +5,13 @@ dialogs:
       display-name: Soldier
       npc-id: 0
       dialog:
-      - 'SEND: &e[NPC] &bSoldier&f: Hello %player_name%!'
+      - 'SEND: &e[NPC] &b%npc_name%&f: Hello %player_name%!'
       - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.5'
       - 'WAIT: 1'
-      - "SEND: &e[NPC] &bSoldier&f: You are new around here, aren't you?"
+      - "SEND: &e[NPC] &b%npc_name%&f: You are new around here, aren't you?"
       - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.6'
       - 'WAIT: 1'
-      - 'SEND: &e[NPC] &bSoldier&f: I recommend going &bsouth &fto find the city.'
+      - 'SEND: &e[NPC] &b%npc_name%&f: I recommend going &bsouth &fto find the city.'
       - 'SOUND: ENTITY_VILLAGER_YES,1,0.4'
       - 'WAIT: 2'
       - 'SEND: &7'
