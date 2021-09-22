@@ -50,7 +50,7 @@ public class DialogSession {
 			} else {
 				arg = arg.replace("%player_name%", getPlayer().getName());
 			}
-			
+			arg = arg.replace("%npc_name%", getDisplayName());
 			if (!main.getCache().getMethods().containsKey(methodName)) {
 				main.getLogger().warning("The method \"" + methodName + "\" doesn't exist");
 				this.stop = true;
