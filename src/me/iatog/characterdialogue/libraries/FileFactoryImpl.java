@@ -10,7 +10,7 @@ public class FileFactoryImpl implements FileFactory {
 	private YamlFile lang;
 	
 	public FileFactoryImpl(CharacterDialoguePlugin main) {
-		this.config = new YamlFile(main, "config");
+		//this.config = new YamlFile(main, "config");
 		this.dialogs = new YamlFile(main, "dialogs");
 		this.lang = new YamlFile(main, "lang");
 	}
@@ -32,7 +32,7 @@ public class FileFactoryImpl implements FileFactory {
 	
 	@Override
 	public void reload() {
-		config.reload();
+		//config.reload();
 		dialogs.reload();
 		lang.reload();
 	}
