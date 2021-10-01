@@ -22,12 +22,13 @@ public class EffectMethod extends DialogMethod {
 
 	@Override
 	public void execute(Player player, String arg, DialogSession session) {
-		String[] split = arg.split(" ");
+		String[] split = arg.split(",");
 		if(arg.toLowerCase().startsWith("clear")) {
-			if(split[1] == null || split[1].isEmpty()) {
-				player.getActivePotionEffects().clear();
+			String[] separator = arg.split(" ");
+			if(separator.length < 2) {
+				player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 			} else {
-				String effectName = split[1];
+				String effectName = separator[1];
 				Optional<PotionEffectType> effect = Optional.ofNullable(PotionEffectType.getByName(effectName));
 				if(!effect.isPresent()) {
 					main.getLogger().log(Level.WARNING, "The name of the \""+effectName+"\" effect has not been found.");
