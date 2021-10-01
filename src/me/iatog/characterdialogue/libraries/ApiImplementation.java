@@ -91,7 +91,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 			}
 			
 			citizensNpc.get().setAlwaysUseNameHologram(false);
-			citizensNpc.get().getEntity().setCustomNameVisible(false);
+			//citizensNpc.get().getEntity().setCustomNameVisible(false);
 		}
 	}
 
