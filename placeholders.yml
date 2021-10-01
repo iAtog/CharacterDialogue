@@ -1,0 +1,3 @@
+placeholders:
+  npc_start_placeholder: "&e[NPC] &b%npc_name%&f:"
+  hello: "Hello %player_name%!"

@@ -24,3 +24,11 @@ dialogs:
         lines:
           - '&b%npc_name%'
           - '&6&lCLICK'
+    placeholder-example:
+      click: RIGHT
+      display-name: EXAMPLE
+      npc-id: 999
+      dialog:
+      - 'SEND: %npc_start_placeholder% %hello%'
+      - 'SEND: %npc_start_placeholder% this is a example from the placeholders.'
+      - 'SEND: %npc_start_placeholder% You can add and use it on methods! (only works in arguments, no in the method name)'
