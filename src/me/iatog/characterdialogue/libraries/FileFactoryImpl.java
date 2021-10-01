@@ -8,11 +8,13 @@ public class FileFactoryImpl implements FileFactory {
 	private YamlFile config;
 	private YamlFile dialogs;
 	private YamlFile lang;
+	private YamlFile placeholders;
 	
 	public FileFactoryImpl(CharacterDialoguePlugin main) {
 		//this.config = new YamlFile(main, "config");
 		this.dialogs = new YamlFile(main, "dialogs");
 		this.lang = new YamlFile(main, "lang");
+		this.placeholders = new YamlFile(main, "placeholders");
 	}
 	
 	@Override
@@ -31,10 +33,15 @@ public class FileFactoryImpl implements FileFactory {
 	}
 	
 	@Override
+	public YamlFile getPlaceholders() {
+		return placeholders;
+	}
+	
+	@Override
 	public void reload() {
 		//config.reload();
 		dialogs.reload();
 		lang.reload();
+		placeholders.reload();
 	}
-	
 }
