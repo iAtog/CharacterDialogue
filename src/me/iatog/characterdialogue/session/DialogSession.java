@@ -10,6 +10,7 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.events.ExecuteMethodEvent;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.enums.ClickType;
+import me.iatog.characterdialogue.libraries.YamlFile;
 
 public class DialogSession {
 
@@ -32,6 +33,11 @@ public class DialogSession {
 	}
 
 	public void start(int index) {
+		if(dialogs.size() < 1) {
+			this.destroy();
+			return;
+		}
+		
 		for (int i = index; i < dialogs.size(); i++) {
 			if (stop) {
 				this.stop = false;
@@ -45,6 +51,13 @@ public class DialogSession {
 			String[] splitted = dialog.split(":");
 			String methodName = splitted[0].toUpperCase().trim();
 			String arg = dialog.substring(methodName.length() + 1).trim();
+			YamlFile placeholders = main.getFileFactory().getPlaceholders();
+			
+			for(String name : placeholders.getConfigurationSection("placeholders").getKeys(false)) {
+				String value = placeholders.getString("placeholders."+name);
+				arg = arg.replace("%" + name + "%", value);
+			}
+			
 			if(main.getHooks().isPlaceHolderAPIEnabled()) {
 				arg = main.getHooks().getPlaceHolderAPIHook().translatePlaceHolders(getPlayer(), arg);
 			} else {
@@ -71,6 +84,10 @@ public class DialogSession {
 				break;
 			}
 		}
+	}
+	
+	public void start() {
+		this.start(0);;
 	}
 	
 	public void setCurrentIndex(int index) {
