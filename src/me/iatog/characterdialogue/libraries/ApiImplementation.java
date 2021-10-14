@@ -7,12 +7,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.CharacterDialogueAPI;
+import me.iatog.characterdialogue.enums.ClickType;
+import me.iatog.characterdialogue.session.DialogSession;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 
@@ -93,6 +96,19 @@ public class ApiImplementation implements CharacterDialogueAPI {
 			citizensNpc.get().setAlwaysUseNameHologram(false);
 			//citizensNpc.get().getEntity().setCustomNameVisible(false);
 		}
+	}
+
+	@Override
+	public void executeDialog(List<String> dialog, Player player, ClickType clickType, int npcId, String displayName) {
+		DialogSession session = new DialogSession(main, player, dialog, clickType, npcId, displayName == null ? "John the NPC" : displayName);
+		
+		main.getCache().getSessions().put(player.getUniqueId(), session);
+		session.start(0);
+	}
+
+	@Override
+	public void executeDialog(List<String> dialog, Player player, String displayName) {
+		executeDialog(dialog, player, ClickType.ALL, -1, displayName);
 	}
 
 }
