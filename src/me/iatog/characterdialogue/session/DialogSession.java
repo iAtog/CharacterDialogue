@@ -43,11 +43,14 @@ public class DialogSession {
 				this.stop = false;
 				break;
 			}
+			
 			String dialog = dialogs.get(i);
 			this.index = i;
+			
 			if (!dialog.contains(":")) {
 				continue;
 			}
+			
 			String[] splitted = dialog.split(":");
 			String methodName = splitted[0].toUpperCase().trim();
 			String arg = dialog.substring(methodName.length() + 1).trim();
@@ -63,6 +66,7 @@ public class DialogSession {
 			} else {
 				arg = arg.replace("%player_name%", getPlayer().getName());
 			}
+			
 			arg = arg.replace("%npc_name%", getDisplayName());
 			if (!main.getCache().getMethods().containsKey(methodName)) {
 				main.getLogger().warning("The method \"" + methodName + "\" doesn't exist");
@@ -111,6 +115,7 @@ public class DialogSession {
 	}
 	
 	public void destroy() {
+		cancel();
 		if(main.getCache().getSessions().containsKey(uuid)) {
 			main.getCache().getSessions().remove(uuid);
 		}
