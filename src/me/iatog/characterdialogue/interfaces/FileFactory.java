@@ -7,6 +7,7 @@ public interface FileFactory {
 	YamlFile getDialogs();
 	YamlFile getLang();
 	YamlFile getPlaceholders();
+	YamlFile getPlayerCache();
 	
 	void reload();
 }
