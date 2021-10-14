@@ -26,7 +26,8 @@ public class SoundMethod extends DialogMethod {
 		try {
 			sound = Sound.valueOf(part[0]);
 		} catch(Exception exception) {
-			main.getLogger().log(Level.SEVERE, "Unknown sound \"" + part[0] + "\"", exception);
+			main.getLogger().log(Level.SEVERE, "Unknown sound \"" + part[0] + "\", stopping dialogue.", exception);
+			session.destroy();
 			return;
 		}
 		
@@ -34,10 +35,27 @@ public class SoundMethod extends DialogMethod {
 			return;
 		}
 		
-		float volume = Float.valueOf(part[1]);
-		float pitch = Float.valueOf(part[2]);
+		float volume = tryPaste(part, 1, 1);
+		float pitch = tryPaste(part, 2, 1);
 		
 		player.playSound(player.getLocation(), sound, volume, pitch);
+	}
+	
+	private float tryPaste(String[] value, int index, float defaultValue) {
+		if(index >= value.length) {
+			return defaultValue;
+		} else {
+			return isInt(value[index]) ? Float.valueOf(value[index]) : defaultValue;
+		}
+	}
+	
+	private boolean isInt(String value) {
+		try {
+			Integer.parseInt(value);
+			return true;
+		} catch(NumberFormatException ex) {
+			return false;
+		}
 	}
 	
 }
