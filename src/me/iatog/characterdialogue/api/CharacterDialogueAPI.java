@@ -1,6 +1,11 @@
 package me.iatog.characterdialogue.api;
 
+import java.util.List;
 import java.util.Optional;
+
+import org.bukkit.entity.Player;
+
+import me.iatog.characterdialogue.enums.ClickType;
 
 public interface CharacterDialogueAPI {
 	
@@ -21,4 +26,9 @@ public interface CharacterDialogueAPI {
 	 * @param npcId the id of the npc
 	 */
 	void loadHologram(int npcId);
+	
+	
+	void executeDialog(List<String> dialog, Player player, ClickType type, int npcId, String displayName);
+	
+	void executeDialog(List<String> dialog, Player player, String displayName);
 }
