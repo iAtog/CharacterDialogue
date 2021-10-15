@@ -43,4 +43,4 @@ dialogs:
         enabled: true
         dialog:
          - 'SEND: &c[NPC] &b%npc_name%&f: What you want? dumb.'
-      
+    
