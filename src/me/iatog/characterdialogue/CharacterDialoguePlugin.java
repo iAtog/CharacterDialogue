@@ -3,6 +3,7 @@ package me.iatog.characterdialogue;
 import java.util.Map;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.Messenger;
 
 import me.iatog.characterdialogue.api.CharacterDialogueAPI;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
@@ -19,18 +20,24 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 	private Cache cache;
 	private CharacterDialogueAPI api;
 	private Hooks hooks;
+	private String channel = "BungeeCord";
 	
 	private static CharacterDialoguePlugin instance;
 
 	@Override
 	public void onEnable() {
 		instance = this;
+		Messenger messenger = getServer().getMessenger();
+		if(!messenger.isOutgoingChannelRegistered(this, channel)) { // idk
+			messenger.registerOutgoingPluginChannel(this, channel);
+		}
+		
+		
 		this.cache = new Cache();
 		this.loader = new PluginLoader(this);
 		this.hooks = new Hooks();
-		
 		this.api = new ApiImplementation(this);
-
+		
 		loader.load();
 	}
 
@@ -58,6 +65,11 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 	public Hooks getHooks() {
 		return hooks;
 	}
+	
+	/**
+	 * Register your own methods
+	 * @param methods methods to register
+	 */
 	
 	public void registerMethods(DialogMethod... methods) {
 		Map<String, DialogMethod> mapMethods = getCache().getMethods();
