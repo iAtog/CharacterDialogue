@@ -9,12 +9,12 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.DialogSession;
 
-public class ProxyCommandMethod extends DialogMethod {
+public class SendServerMethod extends DialogMethod {
 
 	private CharacterDialoguePlugin main;
 	
-	public ProxyCommandMethod(CharacterDialoguePlugin main) {
-		super("proxy_command");
+	public SendServerMethod(CharacterDialoguePlugin main) {
+		super("send_server");
 		this.main = main;
 	}
 
@@ -28,15 +28,11 @@ public class ProxyCommandMethod extends DialogMethod {
 			return;
 		}
 		
-		String command = args[0];
+		String server = args[0];
 		String channel = args.length > 1 ? args[1] : "BungeeCord";
-		
-		if(command.startsWith("/")) {
-			command = command.substring(1);
-		}
-		
-		out.writeUTF(command);
-		out.writeUTF("proxy command execution by characterdialogue");
+				
+		out.writeUTF("Connect");
+		out.writeUTF(server);
 
 		player.sendPluginMessage(main, channel, out.toByteArray());
 	}
