@@ -5,13 +5,17 @@ import org.bukkit.entity.Player;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.DialogSession;
 
 public class ProxyCommandMethod extends DialogMethod {
 
-	public ProxyCommandMethod() {
+	private CharacterDialoguePlugin main;
+	
+	public ProxyCommandMethod(CharacterDialoguePlugin main) {
 		super("proxy_command");
+		this.main = main;
 	}
 
 	@Override
@@ -32,12 +36,12 @@ public class ProxyCommandMethod extends DialogMethod {
 		}
 		
 		if(command.startsWith("/")) {
-			command = command.substring(1, (command.length() - 1));
+			command = command.substring(1);
 		}
 		
 		out.writeUTF(command);
 		out.writeUTF("proxy command execution by characterdialogue");
 
-		player.sendPluginMessage(getProvider(), channel, out.toByteArray());
+		player.sendPluginMessage(main, channel, out.toByteArray());
 	}
 }
