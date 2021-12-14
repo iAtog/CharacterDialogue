@@ -1,7 +1,5 @@
 package me.iatog.characterdialogue.dialogs.choice;
 
-import org.bukkit.entity.Player;
-
 import me.iatog.characterdialogue.dialogs.DialogChoice;
 import me.iatog.characterdialogue.session.DialogSession;
 
