@@ -49,7 +49,7 @@ public class NPCInteractListener implements Listener {
 		Optional<String> search = api.searchDialogueByNPCId(id);
 		String path = "players." + player.getUniqueId();
 		
-		if(!search.isPresent() || main.getCache().getSessions().containsKey(player.getUniqueId())) {
+		if(!search.isPresent() || main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
 			return;
 		}
 		

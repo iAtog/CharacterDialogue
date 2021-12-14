@@ -102,7 +102,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	public void executeDialog(List<String> dialog, Player player, ClickType clickType, int npcId, String displayName) {
 		DialogSession session = new DialogSession(main, player, dialog, clickType, npcId, displayName == null ? "John the NPC" : displayName);
 		
-		main.getCache().getSessions().put(player.getUniqueId(), session);
+		main.getCache().getDialogSessions().put(player.getUniqueId(), session);
 		session.start(0);
 	}
 

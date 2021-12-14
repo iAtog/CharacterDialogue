@@ -1,6 +1,7 @@
 package me.iatog.characterdialogue.session;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -10,9 +11,10 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.events.ExecuteMethodEvent;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.enums.ClickType;
+import me.iatog.characterdialogue.interfaces.Session;
 import me.iatog.characterdialogue.libraries.YamlFile;
 
-public class DialogSession {
+public class DialogSession implements Session {
 
 	private CharacterDialoguePlugin main;
 	private UUID uuid;
@@ -116,8 +118,9 @@ public class DialogSession {
 	
 	public void destroy() {
 		cancel();
-		if(main.getCache().getSessions().containsKey(uuid)) {
-			main.getCache().getSessions().remove(uuid);
+		Map<UUID, DialogSession> sessions = main.getCache().getDialogSessions();
+		if(sessions.containsKey(uuid)) {
+			sessions.remove(uuid);
 		}
 	}
 

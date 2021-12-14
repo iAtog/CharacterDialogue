@@ -22,7 +22,7 @@ public class PlayerQuitListener implements Listener {
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		Map<UUID, DialogSession> cache = main.getCache().getSessions();
+		Map<UUID, DialogSession> cache = main.getCache().getDialogSessions();
 		
 		if(!cache.containsKey(player.getUniqueId())) {
 			return;

@@ -63,7 +63,7 @@ public class CharacterDialogueCommand implements CommandClass {
 			return;
 		}
 		
-		Map<UUID, DialogSession> cache = main.getCache().getSessions();
+		Map<UUID, DialogSession> cache = main.getCache().getDialogSessions();
 		
 		if(cache.containsKey(target.getUniqueId())) {
 			DialogSession session = cache.remove(target.getUniqueId());
