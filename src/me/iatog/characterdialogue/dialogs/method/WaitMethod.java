@@ -7,13 +7,10 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.DialogSession;
 
-public class WaitMethod extends DialogMethod {
-	
-	private CharacterDialoguePlugin main;
-	
+public class WaitMethod extends DialogMethod<CharacterDialoguePlugin> {
+		
 	public WaitMethod(CharacterDialoguePlugin main) {
-		super("wait");
-		this.main = main;
+		super("wait", main);
 	}
 
 	@Override
@@ -21,7 +18,7 @@ public class WaitMethod extends DialogMethod {
 		long seconds = Long.valueOf(arg);
 		int next = session.getCurrentIndex() + 1;
 		session.cancel();
-		Bukkit.getScheduler().runTaskLater(main, new Runnable() {
+		Bukkit.getScheduler().runTaskLater(getProvider(), new Runnable() {
 
 			@Override
 			public void run() {
@@ -33,7 +30,7 @@ public class WaitMethod extends DialogMethod {
 				}
 			}
 			
-		}, seconds*20);
+		}, seconds * 20);
 		
 	}
 }

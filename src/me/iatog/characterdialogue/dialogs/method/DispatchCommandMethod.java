@@ -3,10 +3,11 @@ package me.iatog.characterdialogue.dialogs.method;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.DialogSession;
 
-public class DispatchCommandMethod extends DialogMethod {
+public class DispatchCommandMethod extends DialogMethod<CharacterDialoguePlugin> {
 
 	public DispatchCommandMethod() {
 		super("dispatch_command");

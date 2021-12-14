@@ -9,13 +9,10 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.DialogSession;
 
-public class SoundMethod extends DialogMethod {
-	
-	private CharacterDialoguePlugin main;
-	
+public class SoundMethod extends DialogMethod<CharacterDialoguePlugin> {
+		
 	public SoundMethod(CharacterDialoguePlugin main) {
-		super("sound");
-		this.main = main;
+		super("sound", main);
 	}
 
 	@Override
@@ -26,7 +23,7 @@ public class SoundMethod extends DialogMethod {
 		try {
 			sound = Sound.valueOf(part[0]);
 		} catch(Exception exception) {
-			main.getLogger().log(Level.SEVERE, "Unknown sound \"" + part[0] + "\", stopping dialogue.", exception);
+			getProvider().getLogger().log(Level.SEVERE, "Unknown sound \"" + part[0] + "\", stopping dialogue.", exception);
 			session.destroy();
 			return;
 		}

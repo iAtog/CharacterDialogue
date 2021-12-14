@@ -11,17 +11,16 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.DialogSession;
 
-public class EffectMethod extends DialogMethod {
+public class EffectMethod extends DialogMethod<CharacterDialoguePlugin> {
 	
-	private CharacterDialoguePlugin main;
 	
 	public EffectMethod(CharacterDialoguePlugin main) {
-		super("effect");
-		this.main = main;
+		super("effect", main);
 	}
 
 	@Override
 	public void execute(Player player, String arg, DialogSession session) {
+		
 		String[] split = arg.split(",");
 		if(arg.toLowerCase().startsWith("clear")) {
 			String[] separator = arg.split(" ");
@@ -31,7 +30,7 @@ public class EffectMethod extends DialogMethod {
 				String effectName = separator[1];
 				Optional<PotionEffectType> effect = Optional.ofNullable(PotionEffectType.getByName(effectName));
 				if(!effect.isPresent()) {
-					main.getLogger().log(Level.WARNING, "The name of the \""+effectName+"\" effect has not been found.");
+					getProvider().getLogger().log(Level.WARNING, "The name of the \""+effectName+"\" effect has not been found.");
 				} else if(player.hasPotionEffect(effect.get())) {
 					player.removePotionEffect(effect.get());
 				}				
@@ -51,7 +50,7 @@ public class EffectMethod extends DialogMethod {
 		}
 		
 		if(!effectType.isPresent()) {
-			main.getLogger().log(Level.WARNING, "The name of the \""+name+"\" effect has not been found.");
+			getProvider().getLogger().log(Level.WARNING, "The name of the \""+name+"\" effect has not been found.");
 			return;
 		}
 		

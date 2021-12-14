@@ -5,10 +5,11 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.DialogSession;
 
-public class TeleportMethod extends DialogMethod {
+public class TeleportMethod extends DialogMethod<CharacterDialoguePlugin> {
 
 	public TeleportMethod() {
 		super("teleport");

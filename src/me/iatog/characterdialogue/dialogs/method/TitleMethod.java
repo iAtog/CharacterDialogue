@@ -2,11 +2,12 @@ package me.iatog.characterdialogue.dialogs.method;
 
 import org.bukkit.entity.Player;
 
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.nms.TitleBuilder;
 import me.iatog.characterdialogue.session.DialogSession;
 
-public class TitleMethod extends DialogMethod {
+public class TitleMethod extends DialogMethod<CharacterDialoguePlugin> {
 
 	public TitleMethod() {
 		super("title");

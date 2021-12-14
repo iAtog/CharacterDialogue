@@ -9,13 +9,10 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.DialogSession;
 
-public class SendServerMethod extends DialogMethod {
-
-	private CharacterDialoguePlugin main;
+public class SendServerMethod extends DialogMethod<CharacterDialoguePlugin> {
 	
 	public SendServerMethod(CharacterDialoguePlugin main) {
-		super("send_server");
-		this.main = main;
+		super("send_server", main);
 	}
 
 	@Override
@@ -33,7 +30,7 @@ public class SendServerMethod extends DialogMethod {
 				
 		out.writeUTF("Connect");
 		out.writeUTF(server);
-
-		player.sendPluginMessage(main, channel, out.toByteArray());
+		
+		player.sendPluginMessage(getProvider(), channel, out.toByteArray());
 	}
 }
