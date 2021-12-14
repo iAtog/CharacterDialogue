@@ -2,6 +2,9 @@ package me.iatog.characterdialogue;
 
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 
@@ -31,7 +34,6 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 		if(!messenger.isOutgoingChannelRegistered(this, channel)) { // idk
 			messenger.registerOutgoingPluginChannel(this, channel);
 		}
-		
 		
 		this.cache = new Cache();
 		this.loader = new PluginLoader(this);
@@ -76,6 +78,12 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 		for (DialogMethod method : methods) {
 			if (!mapMethods.containsKey(method.getID())) {
 				mapMethods.put(method.getID(), method);
+				if(method instanceof Listener) {
+					PluginManager pluginManager = Bukkit.getPluginManager();
+					JavaPlugin provider = method.getProvider() == null ? this : method.getProvider();
+					
+					pluginManager.registerEvents((Listener) method, provider);
+				}
 			}
 		}
 	}
@@ -84,7 +92,7 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 	 * I only set this method for third party plugins, I do not use this method and
 	 * even less abuse it. <br>
 	 * <br>
-	 * Get the main class of the ConditionalDialog.
+	 * Get the main class of the CharacterDialogue.
 	 * 
 	 * @return the plugin main class
 	 */
