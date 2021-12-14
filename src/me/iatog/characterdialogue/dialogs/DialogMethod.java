@@ -30,7 +30,7 @@ public abstract class DialogMethod<T extends JavaPlugin> {
 	 * Get the id of the method
 	 * @return the id
 	 */
-	public String getID() {
+	public final String getID() {
 		return id.toUpperCase();
 	}
 	
@@ -38,7 +38,7 @@ public abstract class DialogMethod<T extends JavaPlugin> {
 	 * The method provider (in this case the plugin that creates it)
 	 * @return the provider
 	 */
-	public T getProvider() {
+	public final T getProvider() {
 		return provider;
 	}
 }
