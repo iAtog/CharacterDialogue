@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import me.iatog.characterdialogue.dialogs.DialogChoice;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
@@ -11,6 +12,7 @@ import me.iatog.characterdialogue.session.DialogSession;
 public class Cache {
 
 	private Map<String, DialogMethod> methods;
+	private Map<String, DialogChoice> choices;
 	private Map<UUID, DialogSession> dialogSessions;
 	private Map<UUID, ChoiceSession> choiceSessions;
 
@@ -22,6 +24,10 @@ public class Cache {
 
 	public Map<String, DialogMethod> getMethods() {
 		return methods;
+	}
+	
+	public Map<String, DialogChoice> getChoices() {
+		return choices;
 	}
 
 	public Map<UUID, DialogSession> getDialogSessions() {
