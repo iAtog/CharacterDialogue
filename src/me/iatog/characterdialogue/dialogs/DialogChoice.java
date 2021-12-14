@@ -1,7 +1,5 @@
 package me.iatog.characterdialogue.dialogs;
 
-import org.jetbrains.annotations.Nullable;
-
 import me.iatog.characterdialogue.session.DialogSession;
 
 public abstract class DialogChoice {
