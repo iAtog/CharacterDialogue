@@ -6,7 +6,7 @@ import me.iatog.characterdialogue.session.DialogSession;
 public class ContinueChoice extends DialogChoice {
 
 	public ContinueChoice() {
-		super("continue");
+		super("continue", false);
 	}
 
 	@Override

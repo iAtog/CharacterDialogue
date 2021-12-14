@@ -6,7 +6,7 @@ import me.iatog.characterdialogue.session.DialogSession;
 public class DestroyChoice extends DialogChoice {
 
 	public DestroyChoice() {
-		super("destroy");
+		super("destroy", false);
 	}
 
 	@Override
