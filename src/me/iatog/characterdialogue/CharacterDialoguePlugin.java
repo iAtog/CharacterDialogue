@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 
 import me.iatog.characterdialogue.api.CharacterDialogueAPI;
+import me.iatog.characterdialogue.dialogs.DialogChoice;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.hook.Hooks;
 import me.iatog.characterdialogue.interfaces.FileFactory;
@@ -75,17 +76,33 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 	
 	public void registerMethods(DialogMethod... methods) {
 		Map<String, DialogMethod> mapMethods = getCache().getMethods();
+		
 		for (DialogMethod method : methods) {
-			if (!mapMethods.containsKey(method.getID())) {
-				mapMethods.put(method.getID(), method);
-				if(method instanceof Listener) {
-					PluginManager pluginManager = Bukkit.getPluginManager();
-					JavaPlugin provider = method.getProvider() == null ? this : method.getProvider();
-					
-					pluginManager.registerEvents((Listener) method, provider);
-				}
+			if (mapMethods.containsKey(method.getID())) {
+				continue;
+			}
+			
+			mapMethods.put(method.getID(), method);
+			if(method instanceof Listener) {
+				PluginManager pluginManager = Bukkit.getPluginManager();
+				JavaPlugin provider = method.getProvider() == null ? this : method.getProvider();
+				
+				pluginManager.registerEvents((Listener) method, provider);
 			}
 		}
+	}
+	
+	public void registerChoices(DialogChoice... choices) {
+		Map<String, DialogChoice> choiceCache = getCache().getChoices();
+		
+		for(DialogChoice choice : choices) {
+			if(choiceCache.containsKey(choice.getId())) {
+				continue;
+			}
+			
+			choiceCache.put(choice.getId(), choice);
+		}
+		
 	}
 
 	/**
