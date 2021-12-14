@@ -5,12 +5,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.iatog.characterdialogue.session.DialogSession;
 
-public abstract class DialogMethod {
+public abstract class DialogMethod<T extends JavaPlugin> {
 	
 	private String id;
-	private JavaPlugin provider;
+	private T provider;
 	
-	public DialogMethod(String id, JavaPlugin provider) {
+	public DialogMethod(String id, T provider) {
 		this.id = id;
 		this.provider = provider;
 	}
@@ -38,7 +38,7 @@ public abstract class DialogMethod {
 	 * The method provider (in this case the plugin that creates it)
 	 * @return the provider
 	 */
-	public JavaPlugin getProvider() {
+	public T getProvider() {
 		return provider;
 	}
 }
