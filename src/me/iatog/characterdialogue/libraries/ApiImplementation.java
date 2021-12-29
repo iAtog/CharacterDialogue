@@ -1,7 +1,7 @@
 package me.iatog.characterdialogue.libraries;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,6 +14,7 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.CharacterDialogueAPI;
+import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.session.DialogSession;
 import net.citizensnpcs.api.CitizensAPI;
@@ -27,19 +28,20 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		this.main = main;
 	}
 	
+	/*
 	@Override
-	public Optional<String> searchDialogueByNPCId(int id) {
+	public @Nullable String searchDialogueByNPCId(int id) {
 		YamlFile dialogsFile = main.getFileFactory().getDialogs();
-		Optional<String> optional = Optional.ofNullable(null);
+		String result = null;
 		for(String name : dialogsFile.getConfigurationSection("dialogs.npcs").getKeys(false)) {
 			String path = "dialogs.npcs."+name;
 			if(dialogsFile.getInt(path+".npc-id") == id) {
-				optional = Optional.ofNullable(path);
+				result = path;
 				break;
 			}
 		}
-		return optional;
-	}
+		return result;
+	}*/
 
 	@Override
 	public void reloadHolograms() {
@@ -73,17 +75,17 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		}
 		
 		YamlFile dialogsFile = main.getFileFactory().getDialogs();
-		Optional<NPC> citizensNpc = Optional.ofNullable(CitizensAPI.getNPCRegistry().getById(npcId));
-		Optional<String> npc = this.searchDialogueByNPCId(npcId);
+		NPC citizensNpc = CitizensAPI.getNPCRegistry().getById(npcId);
+		String name = getNPCDialogueName(npcId);
 		
-		if(!npc.isPresent() || !citizensNpc.isPresent()) {
+		if(name == null || citizensNpc == null) {
 			return;
 		}
 		
-		ConfigurationSection dialog = dialogsFile.getConfigurationSection(npc.get());
+		ConfigurationSection dialog = dialogsFile.getConfigurationSection("dialogue." + name);
 		
 		if(dialog.getBoolean("hologram.enabled", false)) {
-			Location location = citizensNpc.get().getStoredLocation();
+			Location location = citizensNpc.getStoredLocation();
 			location.add(0, 2 + dialog.getDouble("hologram.y-position", 0.4), 0);
 			Hologram hologram = HologramsAPI.createHologram(main, location);
 			String npcName = dialog.getString("display-name", "John the NPC");
@@ -93,13 +95,66 @@ public class ApiImplementation implements CharacterDialogueAPI {
 				hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line.replace("%npc_name%", npcName)));
 			}
 			
-			citizensNpc.get().setAlwaysUseNameHologram(false);
-			//citizensNpc.get().getEntity().setCustomNameVisible(false);
+			citizensNpc.setAlwaysUseNameHologram(false);
 		}
 	}
 
 	@Override
-	public void executeDialog(List<String> dialog, Player player, ClickType clickType, int npcId, String displayName) {
+	public Dialogue getDialogue(String name) {
+		return main.getCache().getDialogues().get(name);
+	}
+
+	@Override
+	public boolean readDialogBy(Player player, String dialog) {
+		String path = "players." + player.getUniqueId();
+		YamlFile playerCache = main.getFileFactory().getPlayerCache();
+		List<String> readedDialogues = playerCache.getStringList(path + ".readed-dialogues");
+		
+		if(!playerCache.contains(path)) {
+			readedDialogues = new ArrayList<>();
+		}
+		
+		if(readedDialogues.contains(dialog)) {
+			return false;
+		}
+		
+		readedDialogues.add(dialog);
+		playerCache.set(path + ".readed-dialogues", readedDialogues);
+		playerCache.save();
+		return true;
+	}
+
+	@Override
+	public boolean wasReadedBy(Player player, String dialog) {
+		YamlFile playerCache = main.getFileFactory().getPlayerCache();
+		String path = "players." + player.getUniqueId();
+		List<String> readedDialogues = playerCache.getStringList(path + ".readed-dialogues");
+		
+		return playerCache.contains(path) && readedDialogues.contains(dialog);
+	}
+
+	@Override
+	public void runDialog(Player player, List<String> dialog, String displayName) {
+		this.runDialog(player, dialog, ClickType.ALL, -1, displayName);
+	}
+
+	@Override
+	public void runDialog(Player player, String dialog, String displayName) {
+		Dialogue dialogue = getDialogue(dialog);
+		
+		if(dialogue == null) {
+			return;
+		}
+		
+		this.runDialog(player, dialogue.getLines(), displayName);
+	}
+
+	@Override
+	public void runDialog(Player player, List<String> dialog, ClickType clickType, int npcId, String displayName) {
+		if(main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
+			return;
+		}
+		
 		DialogSession session = new DialogSession(main, player, dialog, clickType, npcId, displayName == null ? "John the NPC" : displayName);
 		
 		main.getCache().getDialogSessions().put(player.getUniqueId(), session);
@@ -107,8 +162,24 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	}
 
 	@Override
-	public void executeDialog(List<String> dialog, Player player, String displayName) {
-		executeDialog(dialog, player, ClickType.ALL, -1, displayName);
+	public Dialogue getNPCDialogue(int id) {
+		return getDialogue(getNPCDialogueName(id));
 	}
 
+	@Override
+	public String getNPCDialogueName(int id) {
+		YamlFile npc = main.getFileFactory().getNPC();
+		
+		return npc.getString("assigns." + id);
+	}
+
+	@Override
+	public boolean readDialogBy(Player player, Dialogue dialog) {
+		return readDialogBy(player, dialog.getName());
+	}
+
+	@Override
+	public boolean wasReadedBy(Player player, Dialogue dialog) {
+		return wasReadedBy(player, dialog.getName());
+	}
 }
