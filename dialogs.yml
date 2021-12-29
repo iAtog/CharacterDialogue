@@ -1,46 +1,39 @@
-dialogs:
-  npcs:
-    soldier:
-      click: RIGHT
-      display-name: Soldier
-      npc-id: 8837
-      dialog:
-      - 'SEND: &e[NPC] &b%npc_name%&f: Hello %player_name%!'
-      - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.5'
-      - 'WAIT: 1'
-      - "SEND: &e[NPC] &b%npc_name%&f: You are new around here, aren't you?"
-      - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.6'
-      - 'WAIT: 1'
-      - 'SEND: &e[NPC] &b%npc_name%&f: I recommend going &bsouth &fto find the city.'
-      - 'SOUND: ENTITY_VILLAGER_YES,1,0.4'
+dialogue:
+  soldier:
+    click: RIGHT
+    display-name: Soldier
+    dialog:
+    - 'SEND: &e[NPC] &b%npc_name%&f: Hello %player_name%!'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.5'
+    - 'WAIT: 1'
+    - "SEND: &e[NPC] &b%npc_name%&f: You are new around here, aren't you?"
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.6'
+    - 'WAIT: 1'
+    - 'SEND: &e[NPC] &b%npc_name%&f: I recommend going &bsouth &fto find the city.'
+    - 'SOUND: ENTITY_VILLAGER_YES,1,0.4'
+    - 'WAIT: 2'
+    - 'SEND: &7'
+    - 'SEND: &7          &7&lNext objective&f: enter the city.'
+    - 'SOUND: BLOCK_NOTE_PLING,1,0.1'
+    hologram:
+      enabled: false
+      # Optional
+      y-position: 0.4
+      lines:
+        - '&b%npc_name%'
+        - '&6&lCLICK'
+  placeholder-example:
+    click: RIGHT
+    display-name: EXAMPLE
+    dialog:
+    - 'SEND: %npc_start_placeholder% %hello%'
+    - 'SEND: %npc_start_placeholder% this is a example from the placeholders.'
+    - 'SEND: %npc_start_placeholder% You can add and use it on methods! (only works in arguments, no in the method name)'
+  first-interaction-dialogue:
+    click: RIGHT
+    display-name: '?????'
+    dialog:
       - 'WAIT: 2'
-      - 'SEND: &7'
-      - 'SEND: &7          &7&lNext objective&f: enter the city.'
-      - 'SOUND: BLOCK_NOTE_PLING,1,0.1'
-      hologram:
-        enabled: false
-        # Optional
-        y-position: 0.4
-        lines:
-          - '&b%npc_name%'
-          - '&6&lCLICK'
-    placeholder-example:
-      click: RIGHT
-      display-name: EXAMPLE
-      npc-id: 999
-      dialog:
-      - 'SEND: %npc_start_placeholder% %hello%'
-      - 'SEND: %npc_start_placeholder% this is a example from the placeholders.'
-      - 'SEND: %npc_start_placeholder% You can add and use it on methods! (only works in arguments, no in the method name)'
-    after-first-time-dialogue:
-      click: RIGHT
-      display-name: '?????'
-      npc-id: 7356
-      dialog:
-        - 'WAIT: 2'
-        - 'SEND: &e[NPC] &4%npc_name%&f: Go away!'
-      after-first-time:
-        enabled: true
-        dialog:
-         - 'SEND: &c[NPC] &b%npc_name%&f: What you want? dumb.'
-    
+      - 'SEND: &e[NPC] &4%npc_name%&f: Go away!'
+    first-interaction:
+      - 'SEND: &c[NPC] &b%npc_name%&f: What you want? dumb.'
