@@ -10,7 +10,7 @@ public class DestroyChoice extends DialogChoice {
 	}
 
 	@Override
-	public void onSelect(DialogSession session) {
+	public void onSelect(String argument, DialogSession session) {
 		session.destroy();
 	}
 	

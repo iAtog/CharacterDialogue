@@ -3,14 +3,17 @@ package me.iatog.characterdialogue.dialogs.choice;
 import me.iatog.characterdialogue.dialogs.DialogChoice;
 import me.iatog.characterdialogue.session.DialogSession;
 
-public class ContinueChoice extends DialogChoice {
+public class StartDialogChoice extends DialogChoice {
 
-	public ContinueChoice() {
-		super("continue", false);
+	public StartDialogChoice() {
+		super("start_dialogue", true);
 	}
 
 	@Override
 	public void onSelect(String argument, DialogSession session) {
-		session.start(session.getCurrentIndex() + 1);
+		session.destroy();
+		
+		
 	}
+
 }

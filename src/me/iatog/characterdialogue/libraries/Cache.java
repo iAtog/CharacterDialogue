@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.dialogs.DialogChoice;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.ChoiceSession;
@@ -11,18 +12,21 @@ import me.iatog.characterdialogue.session.DialogSession;
 
 public class Cache {
 
-	private Map<String, DialogMethod> methods;
+	private Map<String, DialogMethod<?>> methods;
 	private Map<String, DialogChoice> choices;
 	private Map<UUID, DialogSession> dialogSessions;
 	private Map<UUID, ChoiceSession> choiceSessions;
-
+	private Map<String, Dialogue> dialogues;
+	
 	public Cache() {
 		this.methods = new HashMap<>();
 		this.dialogSessions = new HashMap<>();
 		this.choiceSessions = new HashMap<>();
+		this.choices = new HashMap<>();
+		this.dialogues = new HashMap<>();
 	}
 
-	public Map<String, DialogMethod> getMethods() {
+	public Map<String, DialogMethod<?>> getMethods() {
 		return methods;
 	}
 	
@@ -37,11 +41,14 @@ public class Cache {
 	public Map<UUID, ChoiceSession> getChoiceSessions() {
 		return choiceSessions;
 	}
-
+	
+	public Map<String, Dialogue> getDialogues() {
+		return dialogues;
+	}
+	
 	public void clearAll() {
 		methods.clear();
 		dialogSessions.clear();
 		choiceSessions.clear();
 	}
-
 }

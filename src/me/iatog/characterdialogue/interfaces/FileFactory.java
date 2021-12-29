@@ -8,6 +8,7 @@ public interface FileFactory {
 	YamlFile getLang();
 	YamlFile getPlaceholders();
 	YamlFile getPlayerCache();
+	YamlFile getNPC();
 	
 	void reload();
 }

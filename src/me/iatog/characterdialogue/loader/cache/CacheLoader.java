@@ -1,6 +1,8 @@
 package me.iatog.characterdialogue.loader.cache;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.dialogs.choice.ContinueChoice;
+import me.iatog.characterdialogue.dialogs.choice.DestroyChoice;
 import me.iatog.characterdialogue.dialogs.method.BroadcastMethod;
 import me.iatog.characterdialogue.dialogs.method.CommandMethod;
 import me.iatog.characterdialogue.dialogs.method.DispatchCommandMethod;
@@ -32,6 +34,11 @@ public class CacheLoader implements Loader {
 				new TeleportMethod(),
 				new EffectMethod(main),
 				new SendServerMethod(main)
+				);
+		
+		main.registerChoices(
+				new ContinueChoice(),
+				new DestroyChoice()
 				);
 	}
 

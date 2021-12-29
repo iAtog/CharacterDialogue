@@ -20,7 +20,6 @@ public class SendServerMethod extends DialogMethod<CharacterDialoguePlugin> {
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
 		String[] args = arg.split(",");
 		
-		
 		if(args.length == 0) {
 			return;
 		}

@@ -21,9 +21,22 @@ public enum ClickType {
 		return actions;
 	}
 	
+	public static boolean match(String click) {
+		boolean isValid = false;
+		
+		for(ClickType type : values()) {
+			if(type.name().equalsIgnoreCase(click)) {
+				isValid = true;
+				break;
+			}
+		}
+		
+		return isValid;
+	}
+	
 	public boolean isValid(Action actionToCompare) {
 		boolean valid = false;
-		for(int i=0;i<getActions().length;i++) {
+		for(int i = 0; i < getActions().length; i++) {
 			Action action = getActions()[i];
 			if(actionToCompare == action) {
 				valid = true;

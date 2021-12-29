@@ -24,16 +24,20 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 	private Cache cache;
 	private CharacterDialogueAPI api;
 	private Hooks hooks;
-	private String channel = "BungeeCord";
+	private String defaultChannel;
 	
 	private static CharacterDialoguePlugin instance;
-
+	
+	public void onLoad() {
+		this.defaultChannel  = "BungeeCord";
+	}
+	
 	@Override
 	public void onEnable() {
 		instance = this;
 		Messenger messenger = getServer().getMessenger();
-		if(!messenger.isOutgoingChannelRegistered(this, channel)) { // idk
-			messenger.registerOutgoingPluginChannel(this, channel);
+		if(!messenger.isOutgoingChannelRegistered(this, defaultChannel)) { // idk
+			messenger.registerOutgoingPluginChannel(this, defaultChannel);
 		}
 		
 		this.cache = new Cache();
@@ -74,10 +78,10 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 	 * @param methods methods to register
 	 */
 	
-	public void registerMethods(DialogMethod... methods) {
-		Map<String, DialogMethod> mapMethods = getCache().getMethods();
+	public void registerMethods(DialogMethod<?>... methods) {
+		Map<String, DialogMethod<?>> mapMethods = getCache().getMethods();
 		
-		for (DialogMethod method : methods) {
+		for (DialogMethod<?> method : methods) {
 			if (mapMethods.containsKey(method.getID())) {
 				continue;
 			}

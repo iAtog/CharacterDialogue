@@ -1,14 +1,19 @@
-package me.iatog.characterdialogue.interfaces;
+package me.iatog.characterdialogue.api.dialog;
 
 import java.util.List;
 
-import net.citizensnpcs.api.npc.NPC;
+import org.bukkit.entity.Player;
 
-/**
- * This is an test interface.
- * @author Atog
- */
+import me.iatog.characterdialogue.enums.ClickType;
+
 public interface Dialogue {
+	String getName();
 	List<String> getLines();
-	NPC getNPC();
+	ClickType getClickType();
+	String getDisplayName();
+	DialogHologram getHologram();
+	List<String> getFirstInteractionLines();
+	boolean isFirstInteractionEnabled();
+	boolean start(Player player);
+	boolean startFirstInteraction(Player player, boolean log);
 }

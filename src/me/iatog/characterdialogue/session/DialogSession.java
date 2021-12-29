@@ -77,7 +77,7 @@ public class DialogSession implements Session {
 				break;
 			}
 			
-			DialogMethod method = main.getCache().getMethods().get(methodName);
+			DialogMethod<?> method = main.getCache().getMethods().get(methodName);
 			ExecuteMethodEvent event = new ExecuteMethodEvent(getPlayer(), method, clickType, npcId, dialogName);
 			Bukkit.getPluginManager().callEvent(event);
 			

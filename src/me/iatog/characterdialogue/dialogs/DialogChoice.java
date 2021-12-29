@@ -12,7 +12,7 @@ public abstract class DialogChoice {
 		this.requireArgument = requireArgument;
 	}
 	
-	public abstract void onSelect(DialogSession session);
+	public abstract void onSelect(String argument, DialogSession session);
 	
 	public String getId() {
 		return id;
