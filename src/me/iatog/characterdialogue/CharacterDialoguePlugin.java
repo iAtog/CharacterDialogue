@@ -46,8 +46,9 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 		this.api = new ApiImplementation(this);
 		
 		loader.load();
+		//test();
 	}
-
+	
 	@Override
 	public void onDisable() {
 		loader.unload();
@@ -78,10 +79,11 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 	 * @param methods methods to register
 	 */
 	
-	public void registerMethods(DialogMethod<?>... methods) {
-		Map<String, DialogMethod<?>> mapMethods = getCache().getMethods();
+	@SuppressWarnings("unchecked")
+	public void registerMethods(DialogMethod<? extends JavaPlugin>... methods) {
+		Map<String, DialogMethod<? extends JavaPlugin>> mapMethods = getCache().getMethods();
 		
-		for (DialogMethod<?> method : methods) {
+		for (DialogMethod<? extends JavaPlugin> method : methods) {
 			if (mapMethods.containsKey(method.getID())) {
 				continue;
 			}

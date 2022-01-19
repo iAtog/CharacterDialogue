@@ -8,7 +8,7 @@ import me.iatog.characterdialogue.session.DialogSession;
 public abstract class DialogMethod<T extends JavaPlugin> {
 	
 	private String id;
-	private T provider;
+	protected T provider;
 	
 	public DialogMethod(String id, T provider) {
 		this.id = id;

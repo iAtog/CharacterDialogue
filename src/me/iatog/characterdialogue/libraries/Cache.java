@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.plugin.java.JavaPlugin;
+
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.dialogs.DialogChoice;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
@@ -12,7 +14,7 @@ import me.iatog.characterdialogue.session.DialogSession;
 
 public class Cache {
 
-	private Map<String, DialogMethod<?>> methods;
+	private Map<String, DialogMethod<? extends JavaPlugin>> methods;
 	private Map<String, DialogChoice> choices;
 	private Map<UUID, DialogSession> dialogSessions;
 	private Map<UUID, ChoiceSession> choiceSessions;
@@ -26,7 +28,7 @@ public class Cache {
 		this.dialogues = new HashMap<>();
 	}
 
-	public Map<String, DialogMethod<?>> getMethods() {
+	public Map<String, DialogMethod<? extends JavaPlugin>> getMethods() {
 		return methods;
 	}
 	
