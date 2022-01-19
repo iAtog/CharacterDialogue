@@ -26,10 +26,11 @@ public class SendServerMethod extends DialogMethod<CharacterDialoguePlugin> {
 		
 		String server = args[0];
 		String channel = args.length > 1 ? args[1] : "BungeeCord";
-				
+		
 		out.writeUTF("Connect");
 		out.writeUTF(server);
 		
-		player.sendPluginMessage(getProvider(), channel, out.toByteArray());
+		player.sendPluginMessage(provider, channel, out.toByteArray());
+		session.cancel();
 	}
 }

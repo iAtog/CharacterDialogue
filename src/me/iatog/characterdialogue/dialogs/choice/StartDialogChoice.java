@@ -1,6 +1,7 @@
 package me.iatog.characterdialogue.dialogs.choice;
 
 import me.iatog.characterdialogue.dialogs.DialogChoice;
+import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
 
 public class StartDialogChoice extends DialogChoice {
@@ -10,7 +11,7 @@ public class StartDialogChoice extends DialogChoice {
 	}
 
 	@Override
-	public void onSelect(String argument, DialogSession session) {
+	public void onSelect(String argument, DialogSession session, ChoiceSession choiceSession) {
 		session.destroy();
 		
 		
