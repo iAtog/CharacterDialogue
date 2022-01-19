@@ -83,6 +83,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 			return;
 		}
 
+		event.setCancelled(true);
 		ChoiceSession session = sessions.get(playerId);
 		UUID uuid = UUID.fromString(args[1]);
 		int choice = Integer.parseInt(args[2]);
@@ -92,7 +93,6 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 			return;
 		}
 
-		event.setCancelled(true);
 		ChoiceSelectEvent choiceEvent = new ChoiceSelectEvent(player, uuid, choiceObject, session);
 		Bukkit.getPluginManager().callEvent(choiceEvent);
 
