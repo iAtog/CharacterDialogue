@@ -50,7 +50,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		}
 		
 		YamlFile dialogsFile = main.getFileFactory().getDialogs();
-		String dialoguesPath = "dialogs.npcs";
+		String dialoguesPath = "dialogue";
 		
 		for(Hologram hologram : HologramsAPI.getHolograms(main)) {
 			hologram.delete();
