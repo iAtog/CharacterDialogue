@@ -53,17 +53,16 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, getSelectText(index)));
 		});
 
-		//questions.append("\n§aSelecciona uno.").event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, ""));
+		// questions.append("\n§aSelecciona uno.").event(new
+		// ClickEvent(ClickEvent.Action.RUN_COMMAND, ""));
 
 		player.spigot().sendMessage(questions.create());
 	}
-	
+
 	private BaseComponent[] getSelectText(int index) {
-		return new BaseComponent[] {
-				new TextComponent("§aClick here to select #" + index)
-		};
+		return new BaseComponent[] { new TextComponent("§aClick here to select #" + index) };
 	}
-	
+
 	@EventHandler
 	public void onChoiceSelect(ChoiceSelectEvent event) {
 		Player player = event.getPlayer();
@@ -88,13 +87,11 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		UUID uuid = UUID.fromString(args[1]);
 		int choice = Integer.parseInt(args[2]);
 		Choice choiceObject = session.getChoice(choice);
-		provider.getLogger().info("Code 1");
-		
+
 		if (!uuid.toString().equals(session.getUniqueId().toString())) {
 			return;
 		}
-		
-		provider.getLogger().info("Code 2");
+
 		event.setCancelled(true);
 		ChoiceSelectEvent choiceEvent = new ChoiceSelectEvent(player, uuid, choiceObject, session);
 		Bukkit.getPluginManager().callEvent(choiceEvent);
@@ -107,7 +104,6 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		DialogSession dialogSession = provider.getCache().getDialogSessions().get(playerId);
 		choiceTarget.onSelect(choiceObject.getArgument(), dialogSession, session);
 		sessions.remove(playerId);
-		provider.getLogger().info("Code 3");
 	}
 
 	private DialogChoice getByClassName(Class<? extends DialogChoice> clazz) {
