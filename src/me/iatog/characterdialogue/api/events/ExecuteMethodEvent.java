@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.enums.ClickType;
@@ -12,13 +13,13 @@ public class ExecuteMethodEvent extends PlayerEvent implements Cancellable {
 	
 	private static final HandlerList handlers = new HandlerList();
 	
-	private DialogMethod method;
+	private DialogMethod<? extends JavaPlugin> method;
 	private ClickType clickType;
 	private int npcId;
 	private String dialogName;
 	private boolean cancelled;
 	
-	public ExecuteMethodEvent(Player player, DialogMethod method, ClickType clickType, int npcId, String dialogName) {
+	public ExecuteMethodEvent(Player player, DialogMethod<? extends JavaPlugin> method, ClickType clickType, int npcId, String dialogName) {
 		super(player);
 		this.method = method;
 		this.clickType = clickType;
@@ -30,7 +31,7 @@ public class ExecuteMethodEvent extends PlayerEvent implements Cancellable {
 	 * get the method when it is used
 	 * @return the method
 	 */
-	public DialogMethod getMethod() {
+	public DialogMethod<? extends JavaPlugin> getMethod() {
 		return method;
 	}
 	

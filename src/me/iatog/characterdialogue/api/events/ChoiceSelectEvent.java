@@ -1,27 +1,46 @@
 package me.iatog.characterdialogue.api.events;
 
+import java.util.UUID;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 
-import me.iatog.characterdialogue.dialogs.DialogChoice;
+import me.iatog.characterdialogue.misc.Choice;
+import me.iatog.characterdialogue.session.ChoiceSession;
 
 public class ChoiceSelectEvent extends PlayerEvent implements Cancellable {
 	
 	private static final HandlerList handlers = new HandlerList();
 	
 	private boolean cancelled;
-	private DialogChoice choice;
+	/*private DialogChoice choice;*/
+	private UUID uuid;
+	private ChoiceSession session;
+	private Choice choice;
 	
-	public ChoiceSelectEvent(Player player, DialogChoice choice) {
+	public ChoiceSelectEvent(Player player, UUID uuid, Choice choice, ChoiceSession session) {
 		super(player);
+		this.uuid = uuid;
 		this.choice = choice;
-		
+		this.session = session;
 	}
-	
+	/*
 	public DialogChoice getChoice() {
 		return choice;
+	}*/
+	
+	public UUID getChoiceUniqueId() {
+		return uuid;
+	}
+	
+	public Choice getChoice() {
+		return choice;
+	}
+	
+	public ChoiceSession getSession() {
+		return session;
 	}
 	
 	/**
