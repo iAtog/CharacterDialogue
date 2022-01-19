@@ -15,6 +15,7 @@ import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.libraries.YamlFile;
+import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
 
 @Command(names = {
@@ -59,19 +60,31 @@ public class CharacterDialogueCommand implements CommandClass {
 		
 		Player target = Bukkit.getPlayer(arg);
 		if(target == null || !target.isOnline()) {
-			sender.sendMessage("§cThe player '" + arg + "' isn't online.");
+			sender.sendMessage("§cThe player \"" + arg + "\" isn't online.");
 			return;
 		}
 		
-		Map<UUID, DialogSession> cache = main.getCache().getDialogSessions();
+		Map<UUID, DialogSession> dialogSessions = main.getCache().getDialogSessions();
+		Map<UUID, ChoiceSession> choiceSessions = main.getCache().getChoiceSessions();
+		boolean done = false;
 		
-		if(cache.containsKey(target.getUniqueId())) {
-			DialogSession session = cache.remove(target.getUniqueId());
-			session.cancel();
-			sender.sendMessage("§aCleared cache for " + arg + " in "+session.getDisplayName() + " §r§adialog.");
-		} else {
-			sender.sendMessage("§cThat player doesn't have any data in the memory cache.");
+		if(dialogSessions.containsKey(target.getUniqueId())) {
+			DialogSession session = dialogSessions.get(target.getUniqueId());
+			session.destroy();
+			done = true;
 		}
+		
+		if(choiceSessions.containsKey(target.getUniqueId())) {
+			choiceSessions.get(target.getUniqueId()).destroy();
+			done = true;
+		}
+		
+		if(!done) {
+			sender.sendMessage("§cThat player doesn't have any data in the memory cache.");
+			return;
+		}
+		
+		sender.sendMessage("§aCleared " + arg + "'s cache");
 	}
 	
 	private List<String> translateList(List<String> list) {

@@ -3,7 +3,6 @@ package me.iatog.characterdialogue.api;
 import java.util.List;
 
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.enums.ClickType;
