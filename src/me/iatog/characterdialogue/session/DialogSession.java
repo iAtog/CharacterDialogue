@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.events.ExecuteMethodEvent;
@@ -78,7 +77,7 @@ public class DialogSession implements Session {
 				break;
 			}
 			
-			DialogMethod<? extends JavaPlugin> method = main.getCache().getMethods().get(methodName);
+			DialogMethod<?> method = main.getCache().getMethods().get(methodName);
 			ExecuteMethodEvent event = new ExecuteMethodEvent(getPlayer(), method, clickType, npcId, dialogName);
 			Bukkit.getPluginManager().callEvent(event);
 			
