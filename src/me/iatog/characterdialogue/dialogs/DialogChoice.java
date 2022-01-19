@@ -1,5 +1,6 @@
 package me.iatog.characterdialogue.dialogs;
 
+import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
 
 public abstract class DialogChoice {
@@ -12,7 +13,7 @@ public abstract class DialogChoice {
 		this.requireArgument = requireArgument;
 	}
 	
-	public abstract void onSelect(String argument, DialogSession session);
+	public abstract void onSelect(String argument, DialogSession dialogSession, ChoiceSession choiceSession);
 	
 	public String getId() {
 		return id;
