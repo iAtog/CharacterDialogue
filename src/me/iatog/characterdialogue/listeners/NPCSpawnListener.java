@@ -22,6 +22,7 @@ public class NPCSpawnListener implements Listener {
 		if(!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
 			return;
 		}
+		
 		NPC npc = event.getNPC();
 		int id = npc.getId();
 		CharacterDialogueAPI api = main.getApi();
