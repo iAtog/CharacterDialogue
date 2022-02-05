@@ -13,7 +13,7 @@ import me.iatog.characterdialogue.api.events.ExecuteMethodEvent;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.interfaces.Session;
-import me.iatog.characterdialogue.libraries.YamlFile;
+import me.iatog.characterdialogue.placeholders.Placeholders;
 
 public class DialogSession implements Session {
 
@@ -57,18 +57,8 @@ public class DialogSession implements Session {
 			String[] splitted = dialog.split(":");
 			String methodName = splitted[0].toUpperCase().trim();
 			String arg = dialog.substring(methodName.length() + 1).trim();
-			YamlFile placeholders = main.getFileFactory().getPlaceholders();
 			
-			for(String name : placeholders.getConfigurationSection("placeholders").getKeys(false)) {
-				String value = placeholders.getString("placeholders."+name);
-				arg = arg.replace("%" + name + "%", value);
-			}
-			
-			if(main.getHooks().isPlaceHolderAPIEnabled()) {
-				arg = main.getHooks().getPlaceHolderAPIHook().translatePlaceHolders(getPlayer(), arg);
-			} else {
-				arg = arg.replace("%player_name%", getPlayer().getName());
-			}
+			arg = Placeholders.translate(getPlayer(), arg);
 			
 			arg = arg.replace("%npc_name%", getDisplayName());
 			if (!main.getCache().getMethods().containsKey(methodName)) {
