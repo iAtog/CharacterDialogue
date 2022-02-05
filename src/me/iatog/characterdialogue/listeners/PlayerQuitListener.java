@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
 
 public class PlayerQuitListener implements Listener {
@@ -20,7 +21,7 @@ public class PlayerQuitListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onQuit(PlayerQuitEvent event) {
+	public void cancelDialogue(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		Map<UUID, DialogSession> cache = main.getCache().getDialogSessions();
 		
@@ -30,6 +31,18 @@ public class PlayerQuitListener implements Listener {
 		
 		DialogSession session = cache.remove(player.getUniqueId());
 		session.cancel();
+	}
+	
+	@EventHandler
+	public void cancelChoice(PlayerQuitEvent event) {
+		Player player = event.getPlayer();
+		Map<UUID, ChoiceSession> sessions = main.getCache().getChoiceSessions();
+		
+		if(!sessions.containsKey(player.getUniqueId())) {
+			return;
+		}
+		
+		sessions.remove(player.getUniqueId());
 	}
 	
 }
