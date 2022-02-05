@@ -1,100 +1,85 @@
 package me.iatog.characterdialogue.libraries;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.CharacterDialogueAPI;
+import me.iatog.characterdialogue.api.dialog.DialogHologram;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
+import me.iatog.characterdialogue.api.events.ExecuteMethodEvent;
+import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.enums.ClickType;
+import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.session.DialogSession;
+import me.iatog.characterdialogue.session.EmptyDialogSession;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 
 public class ApiImplementation implements CharacterDialogueAPI {
-	
+
 	private CharacterDialoguePlugin main;
-	
+
 	public ApiImplementation(CharacterDialoguePlugin main) {
 		this.main = main;
 	}
-	
-	/*
-	@Override
-	public @Nullable String searchDialogueByNPCId(int id) {
-		YamlFile dialogsFile = main.getFileFactory().getDialogs();
-		String result = null;
-		for(String name : dialogsFile.getConfigurationSection("dialogs.npcs").getKeys(false)) {
-			String path = "dialogs.npcs."+name;
-			if(dialogsFile.getInt(path+".npc-id") == id) {
-				result = path;
-				break;
-			}
-		}
-		return result;
-	}*/
 
 	@Override
 	public void reloadHolograms() {
-		if(!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+		YamlFile config = main.getFileFactory().getConfig();
+		if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
 			return;
 		}
-		
-		YamlFile dialogsFile = main.getFileFactory().getDialogs();
-		String dialoguesPath = "dialogue";
-		
-		for(Hologram hologram : HologramsAPI.getHolograms(main)) {
+
+		for (Hologram hologram : HologramsAPI.getHolograms(main)) {
 			hologram.delete();
 		}
-				
-		dialogsFile.getConfigurationSection(dialoguesPath).getKeys(false).forEach((dialogName) -> {
-			ConfigurationSection dialog = dialogsFile.getConfigurationSection(dialoguesPath + "." + dialogName);
-			if(!dialog.contains("npc-id")) {
-				return;
-			}
-			
-			int npcId = dialog.getInt("npc-id");
-			
-			this.loadHologram(npcId);
+
+		config.getConfigurationSection("npc").getKeys(false).forEach((id) -> {
+			this.loadHologram(Integer.parseInt(id));
 		});
 	}
 
 	@Override
 	public void loadHologram(int npcId) {
-		if(!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+		if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
 			return;
 		}
-		
-		YamlFile dialogsFile = main.getFileFactory().getDialogs();
 		NPC citizensNpc = CitizensAPI.getNPCRegistry().getById(npcId);
-		String name = getNPCDialogueName(npcId);
+
+		if (citizensNpc == null) {
+			return;
+		}
+
+		Dialogue dialogue = getNPCDialogue(npcId);
 		
-		if(name == null || citizensNpc == null) {
+		if(dialogue == null) {
 			return;
 		}
 		
-		ConfigurationSection dialog = dialogsFile.getConfigurationSection("dialogue." + name);
-		
-		if(dialog.getBoolean("hologram.enabled", false)) {
+		DialogHologram hologram = dialogue.getHologram();
+
+		if (hologram != null && hologram.isEnabled()) {
 			Location location = citizensNpc.getStoredLocation();
-			location.add(0, 2 + dialog.getDouble("hologram.y-position", 0.4), 0);
-			Hologram hologram = HologramsAPI.createHologram(main, location);
-			String npcName = dialog.getString("display-name", "John the NPC");
-			List<String> lines = dialog.getStringList("hologram.lines");
-			
-			for(String line : lines) {
-				hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line.replace("%npc_name%", npcName)));
+			location.add(0, 2 + hologram.getY(), 0);
+			Hologram holo = HologramsAPI.createHologram(main, location);
+			String npcName = dialogue.getDisplayName();
+			List<String> lines = hologram.getLines();
+
+			for (String line : lines) {
+				holo.appendTextLine(ChatColor.translateAlternateColorCodes('&', line.replace("%npc_name%", npcName)));
 			}
-			
+
 			citizensNpc.setAlwaysUseNameHologram(false);
 		}
 	}
@@ -109,15 +94,15 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		String path = "players." + player.getUniqueId();
 		YamlFile playerCache = main.getFileFactory().getPlayerCache();
 		List<String> readedDialogues = playerCache.getStringList(path + ".readed-dialogues");
-		
-		if(!playerCache.contains(path)) {
+
+		if (!playerCache.contains(path)) {
 			readedDialogues = new ArrayList<>();
 		}
-		
-		if(readedDialogues.contains(dialog)) {
+
+		if (readedDialogues.contains(dialog)) {
 			return false;
 		}
-		
+
 		readedDialogues.add(dialog);
 		playerCache.set(path + ".readed-dialogues", readedDialogues);
 		playerCache.save();
@@ -129,7 +114,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		YamlFile playerCache = main.getFileFactory().getPlayerCache();
 		String path = "players." + player.getUniqueId();
 		List<String> readedDialogues = playerCache.getStringList(path + ".readed-dialogues");
-		
+
 		return playerCache.contains(path) && readedDialogues.contains(dialog);
 	}
 
@@ -141,22 +126,23 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	@Override
 	public void runDialog(Player player, String dialog, String displayName) {
 		Dialogue dialogue = getDialogue(dialog);
-		
-		if(dialogue == null) {
+
+		if (dialogue == null) {
 			return;
 		}
-		
+
 		this.runDialog(player, dialogue.getLines(), displayName);
 	}
 
 	@Override
 	public void runDialog(Player player, List<String> dialog, ClickType clickType, int npcId, String displayName) {
-		if(main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
+		if (main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
 			return;
 		}
-		
-		DialogSession session = new DialogSession(main, player, dialog, clickType, npcId, displayName == null ? "John the NPC" : displayName);
-		
+
+		DialogSession session = new DialogSession(main, player, dialog, clickType, npcId,
+				displayName == null ? "John the NPC" : displayName);
+
 		main.getCache().getDialogSessions().put(player.getUniqueId(), session);
 		session.start(0);
 	}
@@ -168,9 +154,8 @@ public class ApiImplementation implements CharacterDialogueAPI {
 
 	@Override
 	public String getNPCDialogueName(int id) {
-		YamlFile npc = main.getFileFactory().getNPC();
-		
-		return npc.getString("assigns." + id);
+		YamlFile config = main.getFileFactory().getConfig();
+		return config.getString("npc." + id);
 	}
 
 	@Override
@@ -182,4 +167,33 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	public boolean wasReadedBy(Player player, Dialogue dialog) {
 		return wasReadedBy(player, dialog.getName());
 	}
+
+	@Override
+	public void runDialogExpression(Player player, String dialog, String npcName) {
+		String[] splitted = dialog.split(":");
+		String methodName = splitted[0].toUpperCase().trim();
+		String arg = dialog.substring(methodName.length() + 1).trim();
+
+		if (!main.getCache().getMethods().containsKey(methodName)) {
+			main.getLogger().warning("The method \"" + methodName + "\" doesn't exist");
+			return;
+		}
+
+		arg = Placeholders.translate(player, arg);
+		arg = arg.replace("%npc_name%", npcName);
+
+		DialogMethod<? extends JavaPlugin> method = main.getCache().getMethods().get(methodName);
+		ExecuteMethodEvent event = new ExecuteMethodEvent(player, method, ClickType.LEFT, -39, npcName);
+		Bukkit.getPluginManager().callEvent(event);
+
+		if (!event.isCancelled()) {
+			method.execute(player, arg, new EmptyDialogSession(main, player, Arrays.asList(dialog)));
+		}
+	}
+
+	@Override
+	public void runDialogExpression(Player player, String dialog) {
+		runDialogExpression(player, dialog, "John");
+	}
+
 }
