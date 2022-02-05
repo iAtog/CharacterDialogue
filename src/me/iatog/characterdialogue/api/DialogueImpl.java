@@ -20,6 +20,8 @@ public class DialogueImpl implements Dialogue {
 	private String displayName;
 	private DialogHologram hologram;
 	private List<String> firstInteraction;
+	private DialoguePermission permissions;
+	private boolean movement;
 	
 	private CharacterDialoguePlugin main;
 	
@@ -36,14 +38,25 @@ public class DialogueImpl implements Dialogue {
 		this.lines = section.getStringList("dialog");
 		this.clickType = ClickType.match(click) ? ClickType.valueOf(click) : ClickType.RIGHT;
 		this.firstInteraction = section.getStringList("first-interaction");
+		this.displayName = section.getString("display-name", "John the NPC");
 		this.dialogName = dialogName;
 		
 		if(section.getBoolean("hologram.enabled", false)) {
 			boolean enabled = section.getBoolean("hologram.enabled");
-			float yPosition = Float.parseFloat(section.getString("hologram.y-position"));
+			float yPosition = Float.parseFloat(section.getString("hologram.y-position", "0.4"));
 			List<String> hologramLines = section.getStringList("hologram.lines");
 			this.hologram = new DialogHologramImpl(enabled, yPosition, hologramLines);
 		}
+		
+		if(section.contains("permission")) {
+			if(section.isString("permission")) {
+				this.permissions = new DialoguePermission(section.getString("permission"), null);
+			} else {
+				this.permissions = new DialoguePermission(section.getString("permission.value"), section.getString("permission.message"));
+			}
+		}
+		
+		this.movement = section.getBoolean("allow-movement", true);
 		
 		this.main = instance;
 	}
@@ -118,6 +131,16 @@ public class DialogueImpl implements Dialogue {
 	private boolean runDialogue(Player player) {
 		main.getApi().runDialog(player, lines, clickType, -999, displayName);
 		return true;
+	}
+
+	@Override
+	public DialoguePermission getPermissions() {
+		return permissions;
+	}
+
+	@Override
+	public boolean isMovementAllowed() {
+		return movement;
 	}
 	
 }
