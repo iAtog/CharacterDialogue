@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -14,9 +13,12 @@ import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.api.DialogueImpl;
+import me.iatog.characterdialogue.libraries.Cache;
 import me.iatog.characterdialogue.libraries.YamlFile;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
+import me.iatog.characterdialogue.util.TextUtils;
 
 @Command(names = {
 		"characterdialogue", "cdp", "characterd", "ddialogue"
@@ -41,19 +43,27 @@ public class CharacterDialogueCommand implements CommandClass {
 			permission = "characterdialogue.reload",
 			desc = "Reload the plugin")
 	public void reloadCommand(CommandSender sender) {
+		YamlFile dialogs = main.getFileFactory().getDialogs();
+		Cache cache = main.getCache();
+		
 		main.getFileFactory().reload();
 		if(Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
 			main.getApi().reloadHolograms();
 		}
 		
-		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', language.getString("reload-message")));
+		cache.getDialogues().clear();
+		dialogs.getConfigurationSection("dialogue").getKeys(false).forEach(name -> {
+			cache.getDialogues().put(name, new DialogueImpl(main, name));
+		});
+		
+		sender.sendMessage(TextUtils.colorize(language.getString("reload-message")));
 	}
 	
 	@Command(names = "clear-cache",
 	         permission = "characterdialogue.clear-cache",
 	         desc = "Clear a player memory cache")
-	public void clearCache(CommandSender sender, @OptArg("$") String arg) {
-		if(arg.equals("$")) {
+	public void clearCache(CommandSender sender, @OptArg("") String arg) {
+		if(arg.isEmpty()) {
 			sender.sendMessage("§cYou need to specify a player name.");
 			return;
 		}
@@ -90,7 +100,7 @@ public class CharacterDialogueCommand implements CommandClass {
 	private List<String> translateList(List<String> list) {
 		List<String> newList = new ArrayList<>();
 		list.forEach((line) -> {
-			newList.add(ChatColor.translateAlternateColorCodes('&', line));
+			newList.add(TextUtils.colorize(line));
 		});
 		return newList;
 	}
