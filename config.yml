@@ -1,0 +1,25 @@
+placeholders:
+  npc_start_placeholder: "&e[NPC] &b%npc_name%&f:"
+  hello: "Hello %player_name%!"
+
+npc:
+  999: "dialogue-name"
+choice:
+  text-model: "&a{I}>&e {S}"
+  choices:
+    choice-example:
+      teleport:
+        type: dialogue
+        message: "I want to go to 0, 0"
+        argument: "TELEPORT: current,0,63,0,current,current"
+      continue:
+        type: continue
+        message: "Hey, you better keep talking"
+      cancel:
+        type: destroy
+        message: "Hey, I don't want to hear that anymore."
+        argument: "&e[NPC] &b%npc_name%&f: Oh, all right, then don't come on your knees and ask me."
+      forget:
+        type: message
+        message: "I don't want to talk about it..."
+        argument: "&e[NPC] &b%npc_name%&f: Well, I'll keep telling you"

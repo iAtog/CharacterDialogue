@@ -2,6 +2,9 @@ dialogue:
   soldier:
     click: RIGHT
     display-name: Soldier
+    permssion:
+      value: characterdialogue.permission
+      message: '&8Oh, apparently you are unable to talk to the mercenary....'
     dialog:
     - 'SEND: &e[NPC] &b%npc_name%&f: Hello %player_name%!'
     - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.5'
@@ -32,8 +35,23 @@ dialogue:
   first-interaction-dialogue:
     click: RIGHT
     display-name: '?????'
+    permission: characterdialogue.first
     dialog:
       - 'WAIT: 2'
       - 'SEND: &e[NPC] &4%npc_name%&f: Go away!'
     first-interaction:
       - 'SEND: &c[NPC] &b%npc_name%&f: What you want? dumb.'
+  choice-sample:
+    click: RIGHT
+    display-name: EXAMPLE
+    allow-movement: false
+    dialog:
+    - 'SEND: &cSelect one'
+    - 'CHOICE: choice-example'
+    - 'SEND: &aOh, nice.'
+    hologram:
+      enabled: true
+      y-position: 0.4
+      lines:
+      - '&e%npc_name%'
+      - '&6&lCLICK
