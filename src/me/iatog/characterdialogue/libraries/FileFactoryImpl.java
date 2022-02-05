@@ -8,17 +8,13 @@ public class FileFactoryImpl implements FileFactory {
 	private YamlFile config;
 	private YamlFile dialogs;
 	private YamlFile lang;
-	private YamlFile placeholders;
 	private YamlFile playerCache;
-	private YamlFile npc;
 	
 	public FileFactoryImpl(CharacterDialoguePlugin main) {
-		//this.config = new YamlFile(main, "config");
+		this.config = new YamlFile(main, "config");
 		this.dialogs = new YamlFile(main, "dialogs");
 		this.lang = new YamlFile(main, "lang");
-		this.placeholders = new YamlFile(main, "placeholders");
 		this.playerCache = new YamlFile(main, "player-cache");
-		this.npc = new YamlFile(main, "npc");
 	}
 	
 	@Override
@@ -37,26 +33,16 @@ public class FileFactoryImpl implements FileFactory {
 	}
 	
 	@Override
-	public YamlFile getPlaceholders() {
-		return placeholders;
-	}
-	
-	@Override
 	public YamlFile getPlayerCache() {
 		return playerCache;
 	}
 	
-	@Override
-	public YamlFile getNPC() {
-		return npc;
-	}
 	
 	@Override
 	public void reload() {
-		//config.reload();
+		config.reload();
 		dialogs.reload();
 		lang.reload();
-		placeholders.reload();
 		playerCache.reload();
 	}
 }

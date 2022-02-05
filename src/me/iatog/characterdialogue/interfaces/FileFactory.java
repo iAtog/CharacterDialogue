@@ -6,9 +6,7 @@ public interface FileFactory {
 	YamlFile getConfig();
 	YamlFile getDialogs();
 	YamlFile getLang();
-	YamlFile getPlaceholders();
 	YamlFile getPlayerCache();
-	YamlFile getNPC();
 	
 	void reload();
 }
