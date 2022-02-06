@@ -1,10 +1,9 @@
-package me.iatog.characterdialogue.loader.dialogue;
+package me.iatog.characterdialogue.loader;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.DialogueImpl;
 import me.iatog.characterdialogue.libraries.Cache;
 import me.iatog.characterdialogue.libraries.YamlFile;
-import me.iatog.characterdialogue.loader.Loader;
 
 public class DialogLoader implements Loader {
 	

@@ -1,15 +1,9 @@
-package me.iatog.characterdialogue.loader.plugin;
+package me.iatog.characterdialogue.loader;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
-import me.iatog.characterdialogue.loader.Loader;
-import me.iatog.characterdialogue.loader.cache.CacheLoader;
-import me.iatog.characterdialogue.loader.command.CommandLoader;
-import me.iatog.characterdialogue.loader.dialogue.DialogLoader;
-import me.iatog.characterdialogue.loader.file.FileLoader;
-import me.iatog.characterdialogue.loader.listener.ListenerLoader;
 
 public class PluginLoader implements Loader {
 	

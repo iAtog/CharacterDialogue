@@ -15,7 +15,7 @@ import me.iatog.characterdialogue.hook.Hooks;
 import me.iatog.characterdialogue.interfaces.FileFactory;
 import me.iatog.characterdialogue.libraries.ApiImplementation;
 import me.iatog.characterdialogue.libraries.Cache;
-import me.iatog.characterdialogue.loader.plugin.PluginLoader;
+import me.iatog.characterdialogue.loader.PluginLoader;
 
 public class CharacterDialoguePlugin extends JavaPlugin {
 

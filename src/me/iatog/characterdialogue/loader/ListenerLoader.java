@@ -1,4 +1,4 @@
-package me.iatog.characterdialogue.loader.listener;
+package me.iatog.characterdialogue.loader;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -8,7 +8,6 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.listeners.NPCInteractListener;
 import me.iatog.characterdialogue.listeners.NPCSpawnListener;
 import me.iatog.characterdialogue.listeners.PlayerQuitListener;
-import me.iatog.characterdialogue.loader.Loader;
 
 public class ListenerLoader implements Loader {
 	

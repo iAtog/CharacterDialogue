@@ -1,8 +1,7 @@
-package me.iatog.characterdialogue.loader.file;
+package me.iatog.characterdialogue.loader;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.libraries.FileFactoryImpl;
-import me.iatog.characterdialogue.loader.Loader;
 
 public class FileLoader implements Loader {
 	

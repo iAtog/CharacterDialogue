@@ -1,4 +1,4 @@
-package me.iatog.characterdialogue.loader.command;
+package me.iatog.characterdialogue.loader;
 
 import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilder;
 import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilderImpl;
@@ -10,7 +10,6 @@ import me.fixeddev.commandflow.bukkit.factory.BukkitModule;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.command.CharacterDialogueCommand;
 import me.iatog.characterdialogue.command.DeveloperCommand;
-import me.iatog.characterdialogue.loader.Loader;
 
 public class CommandLoader implements Loader {
 	

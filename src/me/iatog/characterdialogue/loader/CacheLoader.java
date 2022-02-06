@@ -1,4 +1,4 @@
-package me.iatog.characterdialogue.loader.cache;
+package me.iatog.characterdialogue.loader;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.choice.ContinueChoice;
@@ -16,7 +16,6 @@ import me.iatog.characterdialogue.dialogs.method.SendMethod;
 import me.iatog.characterdialogue.dialogs.method.SoundMethod;
 import me.iatog.characterdialogue.dialogs.method.TeleportMethod;
 import me.iatog.characterdialogue.dialogs.method.WaitMethod;
-import me.iatog.characterdialogue.loader.Loader;
 
 public class CacheLoader implements Loader {
 	
