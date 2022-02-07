@@ -64,11 +64,11 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		}
 
 		Dialogue dialogue = getNPCDialogue(npcId);
-		
-		if(dialogue == null) {
+
+		if (dialogue == null) {
 			return;
 		}
-		
+
 		DialogHologram hologram = dialogue.getHologram();
 
 		if (hologram != null && hologram.isEnabled()) {
@@ -148,11 +148,11 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		}
 
 		DialogSession session = new DialogSession(main, player, dialogue);
-		
-		if(!dialogue.isMovementAllowed()) {
-			
+
+		if (!dialogue.isMovementAllowed()) {
+
 		}
-		
+
 		main.getCache().getDialogSessions().put(player.getUniqueId(), session);
 		session.start(0);
 	}
@@ -191,14 +191,15 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	}
 
 	@Override
-	public void runDialogueExpressions(Player player, List<String> lines, ClickType clickType, int npcId, String displayName) {
+	public void runDialogueExpressions(Player player, List<String> lines, ClickType clickType, int npcId,
+			String displayName) {
 		if (main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
 			return;
 		}
-		
+
 		DialogSession session = new DialogSession(main, player, lines, clickType, npcId,
 				displayName == null ? "Dummy" : displayName);
-		
+
 		main.getCache().getDialogSessions().put(player.getUniqueId(), session);
 		session.start(0);
 	}
@@ -213,33 +214,27 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		YamlFile playerCache = main.getFileFactory().getPlayerCache();
 		String playerPath = "players." + player.getUniqueId();
 
-		if (playerCache.getBoolean(playerPath + ".remove-effect", false)) {
-			float speed = Float.valueOf(playerCache.getString(playerPath + ".last-speed"));
-			player.setWalkSpeed(speed);
-			playerCache.set(playerPath + ".remove-effect", false);
-			playerCache.save();
-			return true;
-		} else {
-			return false;
-		}
+		float speed = Float.valueOf(playerCache.getString(playerPath + ".last-speed"));
+		player.setWalkSpeed(speed);
+		playerCache.set(playerPath + ".remove-effect", false);
+		playerCache.save();
+
+		return playerCache.getBoolean(playerPath + ".remove-effect", false);
 	}
 
 	@Override
 	public boolean disableMovement(Player player) {
 		YamlFile playerCache = main.getFileFactory().getPlayerCache();
 		String path = "players." + player.getUniqueId();
-		
-		if(!playerCache.getBoolean(path + ".remove-effect", true)) {
-			playerCache.set(path + ".last-speed", player.getWalkSpeed());
-			playerCache.set(path + ".remove-effect", true);
-			playerCache.save();
-			
-			main.getCache().getFrozenPlayers().add(player.getUniqueId());
-			player.setWalkSpeed(0);
-			player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 128));
-			return true;
-		} else {
-			return false;
-		}
+
+		playerCache.set(path + ".last-speed", player.getWalkSpeed());
+		playerCache.set(path + ".remove-effect", true);
+		playerCache.save();
+
+		main.getCache().getFrozenPlayers().add(player.getUniqueId());
+		player.setWalkSpeed(0);
+		player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 128));
+
+		return !playerCache.getBoolean(path + ".remove-effect", true);
 	}
 }
