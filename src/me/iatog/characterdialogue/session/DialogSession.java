@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.api.events.ExecuteMethodEvent;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.enums.ClickType;
@@ -19,35 +20,46 @@ public class DialogSession implements Session {
 
 	private CharacterDialoguePlugin main;
 	private UUID uuid;
-	private List<String> dialogs;
-	private int index;
+	private Dialogue dialogue;
 	private ClickType clickType;
+	private List<String> lines;
+	private String displayName;
+	private int index;
 	private int npcId;
-	private String dialogName;
 	private boolean stop;
-
-	public DialogSession(CharacterDialoguePlugin main, Player player, List<String> dialogs, ClickType clickType, int npcId, String dialogName) {
+	
+	public DialogSession(CharacterDialoguePlugin main, Player player, List<String> lines, ClickType clickType, int npcId, String displayName) {
 		this.main = main;
 		this.uuid = player.getUniqueId();
-		this.dialogs = dialogs;
 		this.clickType = clickType;
-		this.npcId = npcId;
-		this.dialogName = dialogName;
+		this.lines = lines;
+		this.displayName = displayName;
 	}
-
+	
+	public DialogSession(CharacterDialoguePlugin main, Player player, Dialogue dialogue, int npcId) {
+		this(main, player, dialogue.getLines(), dialogue.getClickType(), npcId, dialogue.getDisplayName());
+		this.dialogue = dialogue;
+	}
+	
+	public DialogSession(CharacterDialoguePlugin main, Player player, Dialogue dialogue) {
+		this(main, player, dialogue, -999);
+	}
+	
+	
+	
 	public void start(int index) {
-		if(dialogs.size() < 1) {
+		if(lines.size() < 1) {
 			this.destroy();
 			return;
 		}
 		
-		for (int i = index; i < dialogs.size(); i++) {
+		for (int i = index; i < lines.size(); i++) {
 			if (stop) {
 				this.stop = false;
 				break;
 			}
 			
-			String dialog = dialogs.get(i);
+			String dialog = lines.get(i);
 			this.index = i;
 			
 			if (!dialog.contains(":")) {
@@ -69,14 +81,14 @@ public class DialogSession implements Session {
 			}
 			
 			DialogMethod<? extends JavaPlugin> method = main.getCache().getMethods().get(methodName);
-			ExecuteMethodEvent event = new ExecuteMethodEvent(getPlayer(), method, clickType, npcId, dialogName);
+			ExecuteMethodEvent event = new ExecuteMethodEvent(getPlayer(), method, clickType, npcId, "");
 			Bukkit.getPluginManager().callEvent(event);
 			
 			if(!event.isCancelled()) {
 				method.execute(Bukkit.getPlayer(uuid), arg, this);
 			}
 			
-			if(i == dialogs.size() - 1) {
+			if(i == lines.size() - 1) {
 				destroy();
 				break;
 			}
@@ -95,8 +107,8 @@ public class DialogSession implements Session {
 		return index;
 	}
 
-	public List<String> getDialogs() {
-		return dialogs;
+	public List<String> getLines() {
+		return lines;
 	}
 	
 	public Player getPlayer() {
@@ -122,8 +134,12 @@ public class DialogSession implements Session {
 	public int getNPCId() {
 		return npcId;
 	}
-
+	
 	public String getDisplayName() {
-		return dialogName;
+		return displayName;
+	}
+	
+	public Dialogue getDialogue() {
+		return dialogue;
 	}
 }
