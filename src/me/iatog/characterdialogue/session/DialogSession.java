@@ -14,6 +14,7 @@ import me.iatog.characterdialogue.api.events.ExecuteMethodEvent;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.interfaces.Session;
+import me.iatog.characterdialogue.libraries.YamlFile;
 import me.iatog.characterdialogue.placeholders.Placeholders;
 
 public class DialogSession implements Session {
@@ -44,8 +45,6 @@ public class DialogSession implements Session {
 	public DialogSession(CharacterDialoguePlugin main, Player player, Dialogue dialogue) {
 		this(main, player, dialogue, -999);
 	}
-	
-	
 	
 	public void start(int index) {
 		if(lines.size() < 1) {
@@ -85,10 +84,20 @@ public class DialogSession implements Session {
 			Bukkit.getPluginManager().callEvent(event);
 			
 			if(!event.isCancelled()) {
-				method.execute(Bukkit.getPlayer(uuid), arg, this);
+				method.execute(getPlayer(), arg, this);
 			}
 			
 			if(i == lines.size() - 1) {
+				YamlFile playerCache = main.getFileFactory().getPlayerCache();
+				String playerPath = "players." + uuid;
+				
+				if(playerCache.getBoolean(playerPath + ".remove-effect", false)) {
+					float speed = Float.valueOf(playerCache.getString(playerPath + ".last-speed"));
+					getPlayer().setWalkSpeed(speed);
+					playerCache.set(playerPath + ".remove-effect", false);
+					playerCache.save();
+				}
+				
 				destroy();
 				break;
 			}
