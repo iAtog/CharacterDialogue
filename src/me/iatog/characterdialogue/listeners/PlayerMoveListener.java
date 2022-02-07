@@ -1,6 +1,7 @@
 package me.iatog.characterdialogue.listeners;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -11,8 +12,13 @@ public class PlayerMoveListener implements Listener {
 	
 	private CharacterDialoguePlugin main;
 	
+	public PlayerMoveListener(CharacterDialoguePlugin main) {
+		this.main = main;
+	}
+	
 	@EventHandler
 	public void onMove(PlayerMoveEvent event) {
+		Player player = event.getPlayer();
 		Location to = event.getTo();
 		Location from = event.getFrom();
 		int toX = (int) to.getX();
@@ -22,7 +28,7 @@ public class PlayerMoveListener implements Listener {
 		int fromY = (int) from.getY();
 		int fromZ = (int) from.getZ();
 		
-		if ((fromX != toX || fromY != toY || fromZ != toZ) && false) {
+		if ((fromX != toX || fromY != toY || fromZ != toZ) && main.getCache().getFrozenPlayers().contains(player.getUniqueId())) {
 			event.setCancelled(true);
 		}
 	}

@@ -1,6 +1,8 @@
 package me.iatog.characterdialogue.libraries;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,6 +21,7 @@ public class Cache {
 	private Map<UUID, DialogSession> dialogSessions;
 	private Map<UUID, ChoiceSession> choiceSessions;
 	private Map<String, Dialogue> dialogues;
+	private List<UUID> frozenPlayers;
 	
 	public Cache() {
 		this.methods = new HashMap<>();
@@ -26,6 +29,7 @@ public class Cache {
 		this.choiceSessions = new HashMap<>();
 		this.choices = new HashMap<>();
 		this.dialogues = new HashMap<>();
+		this.frozenPlayers = new ArrayList<>();
 	}
 
 	public Map<String, DialogMethod<? extends JavaPlugin>> getMethods() {
@@ -48,9 +52,14 @@ public class Cache {
 		return dialogues;
 	}
 	
+	public List<UUID> getFrozenPlayers() {
+		return frozenPlayers;
+	}
+	
 	public void clearAll() {
 		methods.clear();
 		dialogSessions.clear();
 		choiceSessions.clear();
+		dialogues.clear();
 	}
 }
