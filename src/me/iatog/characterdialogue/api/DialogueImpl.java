@@ -124,12 +124,12 @@ public class DialogueImpl implements Dialogue {
 			playerCache.save();
 		}
 		
-		main.getApi().runDialog(player, firstInteraction, displayName);	
+		main.getApi().runDialogueExpressions(player, firstInteraction, displayName);	
 		return true;
 	}
 	
 	private boolean runDialogue(Player player) {
-		main.getApi().runDialog(player, lines, clickType, -999, displayName);
+		main.getApi().runDialogue(player, this);
 		return true;
 	}
 

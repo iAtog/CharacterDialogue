@@ -12,7 +12,7 @@ public class ContinueChoice extends DialogChoice {
 
 	@Override
 	public void onSelect(String argument, DialogSession dialogSession, ChoiceSession choiceSession) {
-		if(dialogSession != null && (dialogSession.getCurrentIndex() + 1) < dialogSession.getDialogs().size() && (dialogSession.getPlayer() != null && dialogSession.getPlayer().isOnline())) {
+		if(dialogSession != null && (dialogSession.getCurrentIndex() + 1) < dialogSession.getLines().size() && (dialogSession.getPlayer() != null && dialogSession.getPlayer().isOnline())) {
 			dialogSession.getPlayer().sendMessage("CONTINUE");
 			dialogSession.start(dialogSession.getCurrentIndex() + 1);
 		}

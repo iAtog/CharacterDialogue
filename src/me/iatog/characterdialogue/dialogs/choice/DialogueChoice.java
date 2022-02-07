@@ -16,9 +16,9 @@ public class DialogueChoice extends DialogChoice {
 
 	@Override
 	public void onSelect(String argument, DialogSession dialogSession, ChoiceSession choiceSession) {
-		main.getApi().runDialogExpression(dialogSession.getPlayer(), argument);
+		main.getApi().runDialogueExpression(dialogSession.getPlayer(), argument);
 		
-		if(dialogSession != null && (dialogSession.getCurrentIndex() + 1) <= dialogSession.getDialogs().size() && (dialogSession.getPlayer() != null && dialogSession.getPlayer().isOnline())) {
+		if(dialogSession != null && (dialogSession.getCurrentIndex() + 1) <= dialogSession.getLines().size() && (dialogSession.getPlayer() != null && dialogSession.getPlayer().isOnline())) {
 			dialogSession.start(dialogSession.getCurrentIndex() + 1);
 		}
 	}

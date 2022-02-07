@@ -22,7 +22,7 @@ public class WaitMethod extends DialogMethod<CharacterDialoguePlugin> {
 
 			@Override
 			public void run() {
-				if(next < session.getDialogs().size() && (player != null && player.isOnline())) {
+				if(next < session.getLines().size() && (player != null && player.isOnline())) {
 					session.start(next);
 				} else {
 					session.cancel();

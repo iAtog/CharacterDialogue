@@ -29,22 +29,13 @@ public interface CharacterDialogueAPI {
 	boolean readDialogBy(Player player, Dialogue dialog);
 	boolean wasReadedBy(Player player, Dialogue dialog);
 	
-	void runDialog(Player player, List<String> dialog, String displayName);
-	void runDialog(Player player, String dialog, String displayName);
-	void runDialog(Player player, List<String> dialog, ClickType type, int npcId, String displayName);
-	void runDialogExpression(Player player, String dialog, String npcName);
-	void runDialogExpression(Player player, String dialog);
+	void runDialogue(Player player, Dialogue dialogue);
+	void runDialogue(Player player, String dialogueName);
+	void runDialogueExpression(Player player, String dialog);
+	void runDialogueExpression(Player player, String dialog, String npcName);
+	void runDialogueExpressions(Player player, List<String> lines, ClickType type, int npcId, String displayName);
+	void runDialogueExpressions(Player player, List<String> lines, String displayName);
 	
 	Dialogue getNPCDialogue(int id);
 	String getNPCDialogueName(int id);
-	/*
-	void executeDialog(List<String> dialog, Player player, ClickType type, int npcId, String displayName);
-	
-	void executeDialog(List<String> dialog, Player player, String displayName);
-	
-	void executeDialog(String dialogName, Player player, String displayName);
-	
-	
-	*/
-	
 }

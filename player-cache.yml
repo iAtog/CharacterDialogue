@@ -1,4 +1,6 @@
 players:
   random_uuid_hahalolfake:
+    last-speed: 0
+    remove-effect: false
     readed-dialogues:
       - 'example-test-yooooooooo4'

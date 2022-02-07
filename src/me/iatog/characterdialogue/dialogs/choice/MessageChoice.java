@@ -16,7 +16,7 @@ public class MessageChoice extends DialogChoice {
 		dialogSession.getPlayer().sendMessage(Placeholders.translate(null, argument)
 				.replace("%npc_name%", dialogSession.getDisplayName()));
 		
-		if(dialogSession != null && (dialogSession.getCurrentIndex() + 1) < dialogSession.getDialogs().size() && (dialogSession.getPlayer() != null && dialogSession.getPlayer().isOnline())) {
+		if(dialogSession != null && (dialogSession.getCurrentIndex() + 1) < dialogSession.getLines().size() && (dialogSession.getPlayer() != null && dialogSession.getPlayer().isOnline())) {
 			dialogSession.getPlayer().sendMessage("CONTINUE");
 			dialogSession.start(dialogSession.getCurrentIndex() + 1);
 		}

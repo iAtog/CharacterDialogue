@@ -9,6 +9,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
@@ -119,35 +121,6 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	}
 
 	@Override
-	public void runDialog(Player player, List<String> dialog, String displayName) {
-		this.runDialog(player, dialog, ClickType.ALL, -1, displayName);
-	}
-
-	@Override
-	public void runDialog(Player player, String dialog, String displayName) {
-		Dialogue dialogue = getDialogue(dialog);
-
-		if (dialogue == null) {
-			return;
-		}
-
-		this.runDialog(player, dialogue.getLines(), displayName);
-	}
-
-	@Override
-	public void runDialog(Player player, List<String> dialog, ClickType clickType, int npcId, String displayName) {
-		if (main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
-			return;
-		}
-
-		DialogSession session = new DialogSession(main, player, dialog, clickType, npcId,
-				displayName == null ? "John the NPC" : displayName);
-
-		main.getCache().getDialogSessions().put(player.getUniqueId(), session);
-		session.start(0);
-	}
-
-	@Override
 	public Dialogue getNPCDialogue(int id) {
 		return getDialogue(getNPCDialogueName(id));
 	}
@@ -169,13 +142,45 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	}
 
 	@Override
-	public void runDialogExpression(Player player, String dialog, String npcName) {
+	public void runDialogue(Player player, Dialogue dialogue) {
+		if (main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
+			return;
+		}
+		YamlFile playerCache = main.getFileFactory().getPlayerCache();
+		String path = "players." + player.getUniqueId();
+		DialogSession session = new DialogSession(main, player, dialogue);
+		
+		if(!dialogue.isMovementAllowed()) {
+			playerCache.set(path + ".last-speed", player.getWalkSpeed());
+			playerCache.set(path + ".remove-effect", true);
+			playerCache.save();
+			
+			player.setWalkSpeed(0);
+			player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 128));
+		}
+		
+		main.getCache().getDialogSessions().put(player.getUniqueId(), session);
+		session.start(0);
+	}
+
+	@Override
+	public void runDialogue(Player player, String dialogueName) {
+		runDialogue(player, getDialogue(dialogueName));
+	}
+
+	@Override
+	public void runDialogueExpression(Player player, String dialog) {
+		runDialogueExpression(player, dialog, "Dummy");
+	}
+
+	@Override
+	public void runDialogueExpression(Player player, String dialog, String npcName) {
 		String[] splitted = dialog.split(":");
 		String methodName = splitted[0].toUpperCase().trim();
 		String arg = dialog.substring(methodName.length() + 1).trim();
 
 		if (!main.getCache().getMethods().containsKey(methodName)) {
-			main.getLogger().warning("The method \"" + methodName + "\" doesn't exist");
+			main.getLogger().warning("The method \"" + methodName + "\" doesn't exists");
 			return;
 		}
 
@@ -187,13 +192,25 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		Bukkit.getPluginManager().callEvent(event);
 
 		if (!event.isCancelled()) {
-			method.execute(player, arg, new EmptyDialogSession(main, player, Arrays.asList(dialog)));
+			method.execute(player, arg, new EmptyDialogSession(main, player, Arrays.asList(dialog), npcName));
 		}
 	}
 
 	@Override
-	public void runDialogExpression(Player player, String dialog) {
-		runDialogExpression(player, dialog, "John");
+	public void runDialogueExpressions(Player player, List<String> lines, ClickType clickType, int npcId, String displayName) {
+		if (main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
+			return;
+		}
+		
+		DialogSession session = new DialogSession(main, player, lines, clickType, npcId,
+				displayName == null ? "Dummy" : displayName);
+		
+		main.getCache().getDialogSessions().put(player.getUniqueId(), session);
+		session.start(0);
 	}
 
+	@Override
+	public void runDialogueExpressions(Player player, List<String> lines, String displayName) {
+		runDialogueExpressions(player, lines, ClickType.ALL, -999, displayName);
+	}
 }
