@@ -6,15 +6,11 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
-import me.iatog.characterdialogue.api.events.ExecuteMethodEvent;
-import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.interfaces.Session;
-import me.iatog.characterdialogue.placeholders.Placeholders;
 
 public class DialogSession implements Session {
 
@@ -64,7 +60,12 @@ public class DialogSession implements Session {
 			if (!dialog.contains(":")) {
 				continue;
 			}
-
+			
+			main.getApi().runDialogueExpression(getPlayer(), dialog, displayName, (x) -> {
+				destroy();
+			});
+			
+			/*
 			String[] splitted = dialog.split(":");
 			String methodName = splitted[0].toUpperCase().trim();
 			String arg = dialog.substring(methodName.length() + 1).trim();
@@ -73,7 +74,7 @@ public class DialogSession implements Session {
 
 			arg = arg.replace("%npc_name%", getDisplayName());
 			if (!main.getCache().getMethods().containsKey(methodName)) {
-				main.getLogger().warning("The method \"" + methodName + "\" doesn't exist");
+				main.getLogger().warning("The method \"" + methodName + "\" doesn't exists");
 				this.stop = true;
 				destroy();
 				break;
@@ -85,7 +86,7 @@ public class DialogSession implements Session {
 
 			if (!event.isCancelled()) {
 				method.execute(getPlayer(), arg, this);
-			}
+			}*/
 
 			if (i == lines.size() - 1) {
 				destroy();

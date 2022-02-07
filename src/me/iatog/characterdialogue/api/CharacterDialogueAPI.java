@@ -1,6 +1,7 @@
 package me.iatog.characterdialogue.api;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.bukkit.entity.Player;
 
@@ -35,6 +36,7 @@ public interface CharacterDialogueAPI {
 	void runDialogue(Player player, String dialogueName);
 	void runDialogueExpression(Player player, String dialog);
 	void runDialogueExpression(Player player, String dialog, String npcName);
+	void runDialogueExpression(Player player, String dialog, String npcName, Consumer<String> fail);
 	void runDialogueExpressions(Player player, List<String> lines, ClickType type, int npcId, String displayName);
 	void runDialogueExpressions(Player player, List<String> lines, String displayName);
 	

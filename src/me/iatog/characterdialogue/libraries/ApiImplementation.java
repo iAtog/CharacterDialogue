@@ -3,6 +3,7 @@ package me.iatog.characterdialogue.libraries;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -166,15 +167,20 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	public void runDialogueExpression(Player player, String dialog) {
 		runDialogueExpression(player, dialog, "Dummy");
 	}
-
-	@Override
+	
 	public void runDialogueExpression(Player player, String dialog, String npcName) {
+		runDialogueExpression(player, dialog, npcName, (x) -> { });
+	}
+	
+	@Override
+	public void runDialogueExpression(Player player, String dialog, String npcName, Consumer<String> function) {
 		String[] splitted = dialog.split(":");
 		String methodName = splitted[0].toUpperCase().trim();
 		String arg = dialog.substring(methodName.length() + 1).trim();
 
 		if (!main.getCache().getMethods().containsKey(methodName)) {
 			main.getLogger().warning("The method \"" + methodName + "\" doesn't exists");
+			function.accept(arg);
 			return;
 		}
 
@@ -182,7 +188,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		arg = arg.replace("%npc_name%", npcName);
 
 		DialogMethod<? extends JavaPlugin> method = main.getCache().getMethods().get(methodName);
-		ExecuteMethodEvent event = new ExecuteMethodEvent(player, method, ClickType.LEFT, -39, npcName);
+		ExecuteMethodEvent event = new ExecuteMethodEvent(player, method, ClickType.ALL, -999, npcName);
 		Bukkit.getPluginManager().callEvent(event);
 
 		if (!event.isCancelled()) {
