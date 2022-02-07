@@ -156,7 +156,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 			playerCache.set(path + ".remove-effect", true);
 			playerCache.save();
 			
-			CharacterDialoguePlugin.getInstance().getCache().getFrozenPlayers().add(player.getUniqueId());
+			main.getCache().getFrozenPlayers().add(player.getUniqueId());
 			player.setWalkSpeed(0);
 			player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 128));
 		}

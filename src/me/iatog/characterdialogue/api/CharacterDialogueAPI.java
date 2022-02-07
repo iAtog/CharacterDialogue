@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.enums.ClickType;
+import me.iatog.characterdialogue.libraries.ApiImplementation;
 
 public interface CharacterDialogueAPI {
 	//String searchDialogueByNPCId(int id);
@@ -38,4 +40,8 @@ public interface CharacterDialogueAPI {
 	
 	Dialogue getNPCDialogue(int id);
 	String getNPCDialogueName(int id);
+	
+	public static CharacterDialogueAPI get() {
+		return new ApiImplementation(CharacterDialoguePlugin.getInstance());
+	}
 }
