@@ -146,19 +146,11 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		if (main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
 			return;
 		}
-		
-		YamlFile playerCache = main.getFileFactory().getPlayerCache();
-		String path = "players." + player.getUniqueId();
+
 		DialogSession session = new DialogSession(main, player, dialogue);
 		
 		if(!dialogue.isMovementAllowed()) {
-			playerCache.set(path + ".last-speed", player.getWalkSpeed());
-			playerCache.set(path + ".remove-effect", true);
-			playerCache.save();
 			
-			main.getCache().getFrozenPlayers().add(player.getUniqueId());
-			player.setWalkSpeed(0);
-			player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 128));
 		}
 		
 		main.getCache().getDialogSessions().put(player.getUniqueId(), session);
@@ -214,5 +206,40 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	@Override
 	public void runDialogueExpressions(Player player, List<String> lines, String displayName) {
 		runDialogueExpressions(player, lines, ClickType.ALL, -999, displayName);
+	}
+
+	@Override
+	public boolean enableMovement(Player player) {
+		YamlFile playerCache = main.getFileFactory().getPlayerCache();
+		String playerPath = "players." + player.getUniqueId();
+
+		if (playerCache.getBoolean(playerPath + ".remove-effect", false)) {
+			float speed = Float.valueOf(playerCache.getString(playerPath + ".last-speed"));
+			player.setWalkSpeed(speed);
+			playerCache.set(playerPath + ".remove-effect", false);
+			playerCache.save();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean disableMovement(Player player) {
+		YamlFile playerCache = main.getFileFactory().getPlayerCache();
+		String path = "players." + player.getUniqueId();
+		
+		if(!playerCache.getBoolean(path + ".remove-effect", true)) {
+			playerCache.set(path + ".last-speed", player.getWalkSpeed());
+			playerCache.set(path + ".remove-effect", true);
+			playerCache.save();
+			
+			main.getCache().getFrozenPlayers().add(player.getUniqueId());
+			player.setWalkSpeed(0);
+			player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 128));
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

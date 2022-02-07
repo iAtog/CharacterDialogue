@@ -41,6 +41,9 @@ public interface CharacterDialogueAPI {
 	Dialogue getNPCDialogue(int id);
 	String getNPCDialogueName(int id);
 	
+	boolean enableMovement(Player player);
+	boolean disableMovement(Player player);
+	
 	public static CharacterDialogueAPI get() {
 		return new ApiImplementation(CharacterDialoguePlugin.getInstance());
 	}

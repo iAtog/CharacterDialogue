@@ -14,7 +14,6 @@ import me.iatog.characterdialogue.api.events.ExecuteMethodEvent;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.interfaces.Session;
-import me.iatog.characterdialogue.libraries.YamlFile;
 import me.iatog.characterdialogue.placeholders.Placeholders;
 
 public class DialogSession implements Session {
@@ -89,17 +88,8 @@ public class DialogSession implements Session {
 			}
 
 			if (i == lines.size() - 1) {
-				YamlFile playerCache = main.getFileFactory().getPlayerCache();
-				String playerPath = "players." + uuid;
-
-				if (playerCache.getBoolean(playerPath + ".remove-effect", false)) {
-					float speed = Float.valueOf(playerCache.getString(playerPath + ".last-speed"));
-					getPlayer().setWalkSpeed(speed);
-					playerCache.set(playerPath + ".remove-effect", false);
-					playerCache.save();
-				}
-
 				destroy();
+				main.getApi().enableMovement(getPlayer());
 				break;
 			}
 		}
