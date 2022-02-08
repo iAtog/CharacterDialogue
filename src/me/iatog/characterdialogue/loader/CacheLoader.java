@@ -6,6 +6,7 @@ import me.iatog.characterdialogue.dialogs.choice.DestroyChoice;
 import me.iatog.characterdialogue.dialogs.choice.DialogueChoice;
 import me.iatog.characterdialogue.dialogs.choice.MessageChoice;
 import me.iatog.characterdialogue.dialogs.choice.SendChoice;
+import me.iatog.characterdialogue.dialogs.choice.StartDialogChoice;
 import me.iatog.characterdialogue.dialogs.method.BroadcastMethod;
 import me.iatog.characterdialogue.dialogs.method.ChoiceMethod;
 import me.iatog.characterdialogue.dialogs.method.CommandMethod;
@@ -46,7 +47,8 @@ public class CacheLoader implements Loader {
 				new DestroyChoice(),
 				new SendChoice(),
 				new DialogueChoice(main),
-				new MessageChoice()
+				new MessageChoice(),
+				new StartDialogChoice()
 				);
 	}
 
