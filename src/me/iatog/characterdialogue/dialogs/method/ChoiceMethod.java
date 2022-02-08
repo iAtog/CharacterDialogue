@@ -27,12 +27,13 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implements Listener {
 
-	private String commandName = "/;$/-choice";
+	public static String COMMAND_NAME = "/;;$/5-choice";
 	
 	public ChoiceMethod(CharacterDialoguePlugin main) {
 		super("choice", main);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void execute(Player player, String arg, DialogSession session) {
 		Map<UUID, ChoiceSession> sessions = provider.getCache().getChoiceSessions();
@@ -85,7 +86,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 			// "§a" + index + "> §e" + choice.getMessage()
 			questions.append(parsedModel + " \n")
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-							commandName + " " + choiceSession.getUniqueId() + " " + index))
+							COMMAND_NAME + " " + choiceSession.getUniqueId() + " " + index))
 					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, getSelectText(index)));
 		});
 
@@ -112,7 +113,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		// Command: /;/select 4a8d7587-38f3-35e7-b29c-88c715aa6ba8 1
 
 		String[] args = command.split(" ");
-		if (!command.startsWith(commandName)) {
+		if (!command.startsWith(COMMAND_NAME)) {
 			return;
 		}
 

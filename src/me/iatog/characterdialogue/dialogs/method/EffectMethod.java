@@ -54,8 +54,8 @@ public class EffectMethod extends DialogMethod<CharacterDialoguePlugin> {
 			return;
 		}
 		
-		PotionEffect potionEffect = new PotionEffect(effectType.get(), seconds * 20, amplifier);
-		player.addPotionEffect(potionEffect, true);
+		PotionEffect potionEffect = new PotionEffect(effectType.get(), seconds * 20, amplifier, true);
+		player.addPotionEffect(potionEffect);
 	}
 
 }
