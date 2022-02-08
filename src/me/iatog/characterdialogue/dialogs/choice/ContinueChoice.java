@@ -1,6 +1,7 @@
 package me.iatog.characterdialogue.dialogs.choice;
 
 import me.iatog.characterdialogue.dialogs.DialogChoice;
+import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
 
@@ -12,8 +13,10 @@ public class ContinueChoice extends DialogChoice {
 
 	@Override
 	public void onSelect(String argument, DialogSession dialogSession, ChoiceSession choiceSession) {
+		dialogSession.getPlayer().sendMessage(Placeholders.translate(dialogSession.getPlayer(), argument)
+				.replace("%npc_name%", dialogSession.getDisplayName()));
+		
 		if(dialogSession != null && (dialogSession.getCurrentIndex() + 1) < dialogSession.getLines().size() && (dialogSession.getPlayer() != null && dialogSession.getPlayer().isOnline())) {
-			dialogSession.getPlayer().sendMessage("CONTINUE");
 			dialogSession.start(dialogSession.getCurrentIndex() + 1);
 		}
 	}
