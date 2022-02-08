@@ -169,11 +169,11 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	}
 	
 	public void runDialogueExpression(Player player, String dialog, String npcName) {
-		runDialogueExpression(player, dialog, npcName, (x) -> { });
+		runDialogueExpression(player, dialog, npcName, (x) -> { }, new EmptyDialogSession(main, player, Arrays.asList(dialog), npcName));
 	}
 	
 	@Override
-	public void runDialogueExpression(Player player, String dialog, String npcName, Consumer<String> function) {
+	public void runDialogueExpression(Player player, String dialog, String npcName, Consumer<String> function, DialogSession session) {
 		String[] splitted = dialog.split(":");
 		String methodName = splitted[0].toUpperCase().trim();
 		String arg = dialog.substring(methodName.length() + 1).trim();
@@ -192,7 +192,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		Bukkit.getPluginManager().callEvent(event);
 
 		if (!event.isCancelled()) {
-			method.execute(player, arg, new EmptyDialogSession(main, player, Arrays.asList(dialog), npcName));
+			method.execute(player, arg, session);
 		}
 	}
 
@@ -219,7 +219,11 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	public boolean enableMovement(Player player) {
 		YamlFile playerCache = main.getFileFactory().getPlayerCache();
 		String playerPath = "players." + player.getUniqueId();
-
+		
+		if(!playerCache.getBoolean(playerPath + ".remove-effect", false)) {
+			return false;
+		}
+		
 		float speed = Float.valueOf(playerCache.getString(playerPath + ".last-speed"));
 		player.setWalkSpeed(speed);
 		playerCache.set(playerPath + ".remove-effect", false);
@@ -232,7 +236,11 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	public boolean disableMovement(Player player) {
 		YamlFile playerCache = main.getFileFactory().getPlayerCache();
 		String path = "players." + player.getUniqueId();
-
+		
+		if(playerCache.getBoolean(path + ".remove-effect", false)) {
+			return false;
+		}
+		
 		playerCache.set(path + ".last-speed", player.getWalkSpeed());
 		playerCache.set(path + ".remove-effect", true);
 		playerCache.save();
@@ -242,5 +250,13 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 128));
 
 		return !playerCache.getBoolean(path + ".remove-effect", true);
+	}
+
+	@Override
+	public boolean canEnableMovement(Player player) {
+		YamlFile playerCache = main.getFileFactory().getPlayerCache();
+		String path = "players." + player.getUniqueId();
+		
+		return playerCache.getBoolean(path + ".remove-effect", false);
 	}
 }

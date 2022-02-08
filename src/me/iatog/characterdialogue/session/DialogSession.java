@@ -63,34 +63,14 @@ public class DialogSession implements Session {
 			
 			main.getApi().runDialogueExpression(getPlayer(), dialog, displayName, (x) -> {
 				destroy();
-			});
-			
-			/*
-			String[] splitted = dialog.split(":");
-			String methodName = splitted[0].toUpperCase().trim();
-			String arg = dialog.substring(methodName.length() + 1).trim();
-
-			arg = Placeholders.translate(getPlayer(), arg);
-
-			arg = arg.replace("%npc_name%", getDisplayName());
-			if (!main.getCache().getMethods().containsKey(methodName)) {
-				main.getLogger().warning("The method \"" + methodName + "\" doesn't exists");
-				this.stop = true;
-				destroy();
-				break;
-			}
-
-			DialogMethod<? extends JavaPlugin> method = main.getCache().getMethods().get(methodName);
-			ExecuteMethodEvent event = new ExecuteMethodEvent(getPlayer(), method, clickType, npcId, "");
-			Bukkit.getPluginManager().callEvent(event);
-
-			if (!event.isCancelled()) {
-				method.execute(getPlayer(), arg, this);
-			}*/
+			}, this);
 
 			if (i == lines.size() - 1) {
 				destroy();
-				main.getApi().enableMovement(getPlayer());
+				if(main.getApi().canEnableMovement(getPlayer())) {
+					main.getApi().enableMovement(getPlayer());
+				}
+				
 				break;
 			}
 		}
@@ -98,7 +78,6 @@ public class DialogSession implements Session {
 
 	public void start() {
 		this.start(0);
-		;
 	}
 
 	public void setCurrentIndex(int index) {
