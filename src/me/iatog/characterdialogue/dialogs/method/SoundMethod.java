@@ -3,6 +3,7 @@ package me.iatog.characterdialogue.dialogs.method;
 import java.util.logging.Level;
 
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.entity.Player;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
@@ -32,27 +33,17 @@ public class SoundMethod extends DialogMethod<CharacterDialoguePlugin> {
 			return;
 		}
 		
-		float volume = tryPaste(part, 1, 1);
-		float pitch = tryPaste(part, 2, 1);
+		float volume = def(part, 1, 1);
+		float pitch = def(part, 2, 1);
 		
 		player.playSound(player.getLocation(), sound, volume, pitch);
 	}
 	
-	private float tryPaste(String[] value, int index, float defaultValue) {
+	private float def(String[] value, int index, float defaultValue) {
 		if(index >= value.length) {
 			return defaultValue;
 		} else {
-			return isInt(value[index]) ? Float.valueOf(value[index]) : defaultValue;
+			return NumberUtils.isCreatable(value[index]) ? Float.valueOf(value[index]) : defaultValue;
 		}
 	}
-	
-	private boolean isInt(String value) {
-		try {
-			Integer.parseInt(value);
-			return true;
-		} catch(NumberFormatException ex) {
-			return false;
-		}
-	}
-	
 }
