@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,6 +18,7 @@ import me.iatog.characterdialogue.libraries.YamlFile;
 import me.iatog.characterdialogue.misc.Choice;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
+import me.iatog.characterdialogue.util.TextUtils;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -27,6 +27,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implements Listener {
 
+	private String commandName = "/;$/-choice";
+	
 	public ChoiceMethod(CharacterDialoguePlugin main) {
 		super("choice", main);
 	}
@@ -47,6 +49,8 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 			provider.getLogger().warning("The choice \"" + arg + "\" doesn't exists.");
 			return;
 		}
+		
+		session.cancel();
 		
 		for(String choice : config.getConfigurationSection("choice.choices." + arg).getKeys(false)) {
 			ConfigurationSection section = config.getConfigurationSection("choice.choices." + arg + "." + choice);
@@ -70,19 +74,18 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		choiceSession.addChoice("My stepsis", ContinueChoice.class);
 		*/
 		
-		session.cancel();
 		sessions.put(player.getUniqueId(), choiceSession);
 		ComponentBuilder questions = new ComponentBuilder("");
 		String model = config.getString("choice.text-model", "&a{I})&e {S}");
 		
 		choiceSession.getChoices().forEach((index, choice) -> {
-			String parsedModel = ChatColor.translateAlternateColorCodes('&', model)
+			String parsedModel = TextUtils.colorize(model)
 					.replace("{I}", String.valueOf(index))
 					.replace("{S}", choice.getMessage());
 			// "§a" + index + "> §e" + choice.getMessage()
 			questions.append(parsedModel + " \n")
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-							"/;/select " + choiceSession.getUniqueId() + " " + index))
+							commandName + " " + choiceSession.getUniqueId() + " " + index))
 					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, getSelectText(index)));
 		});
 
@@ -93,7 +96,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		return new BaseComponent[] { new TextComponent("§aClick here to select #" + index) };
 	}
 
-	@EventHandler
+//	@EventHandler
 	public void onChoiceSelect(ChoiceSelectEvent event) {
 		Player player = event.getPlayer();
 
@@ -109,11 +112,16 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		// Command: /;/select 4a8d7587-38f3-35e7-b29c-88c715aa6ba8 1
 
 		String[] args = command.split(" ");
-		if (!command.startsWith("/;/select") || args.length != 3 || !sessions.containsKey(playerId)) {
+		if (!command.startsWith(commandName)) {
 			return;
 		}
 
 		event.setCancelled(true);
+		
+		if(!sessions.containsKey(playerId) || args.length != 3) {
+			return;
+		}
+		
 		ChoiceSession session = sessions.get(playerId);
 		UUID uuid = UUID.fromString(args[1]);
 		int choice = Integer.parseInt(args[2]);
