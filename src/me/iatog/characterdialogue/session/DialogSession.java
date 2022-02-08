@@ -76,6 +76,10 @@ public class DialogSession implements Session {
 		}
 	}
 
+	public boolean hasNext() {
+		return (index + 1) < lines.size();
+	}
+	
 	public void start() {
 		this.start(0);
 	}

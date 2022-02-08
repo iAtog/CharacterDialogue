@@ -13,12 +13,11 @@ public class DestroyChoice extends DialogChoice {
 
 	@Override
 	public void onSelect(String argument, DialogSession dialogSession, ChoiceSession choiceSession) {
-		if (dialogSession == null) {
-			return;
+		if(!argument.isEmpty()) {
+			dialogSession.getPlayer().sendMessage(Placeholders.translate(dialogSession.getPlayer(), argument)
+					.replace("%npc_name%", dialogSession.getDisplayName()));
 		}
 
-		dialogSession.getPlayer().sendMessage(Placeholders.translate(dialogSession.getPlayer(), argument)
-				.replace("%npc_name%", dialogSession.getDisplayName()));
 		dialogSession.destroy();
 	}
 
