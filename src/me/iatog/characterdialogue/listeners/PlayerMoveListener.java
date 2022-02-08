@@ -19,16 +19,19 @@ public class PlayerMoveListener implements Listener {
 	@EventHandler
 	public void onMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
+		
+		if(!main.getCache().getFrozenPlayers().contains(player.getUniqueId())) {
+			return;
+		}
+		
 		Location to = event.getTo();
 		Location from = event.getFrom();
-		int toX = (int) to.getX();
-		int toY = (int) to.getY();
-		int toZ = (int) to.getZ();
-		int fromX = (int) from.getX();
-		int fromY = (int) from.getY();
-		int fromZ = (int) from.getZ();
+		double toX = to.getX();
+		double toZ = to.getZ();
+		double fromX = from.getX();
+		double fromZ = from.getZ();
 		
-		if ((fromX != toX || fromY != toY || fromZ != toZ) && main.getCache().getFrozenPlayers().contains(player.getUniqueId())) {
+		if (fromX != toX || fromZ != toZ) {
 			event.setCancelled(true);
 		}
 	}

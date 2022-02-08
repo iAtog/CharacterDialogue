@@ -46,7 +46,7 @@ public class CacheLoader implements Loader {
 				new ContinueChoice(),
 				new DestroyChoice(),
 				new SendChoice(),
-				new DialogueChoice(main),
+				new DialogueChoice(),
 				new MessageChoice(),
 				new StartDialogChoice()
 				);
