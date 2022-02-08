@@ -9,6 +9,7 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.libraries.ApiImplementation;
+import me.iatog.characterdialogue.session.DialogSession;
 
 public interface CharacterDialogueAPI {
 	//String searchDialogueByNPCId(int id);
@@ -36,7 +37,7 @@ public interface CharacterDialogueAPI {
 	void runDialogue(Player player, String dialogueName);
 	void runDialogueExpression(Player player, String dialog);
 	void runDialogueExpression(Player player, String dialog, String npcName);
-	void runDialogueExpression(Player player, String dialog, String npcName, Consumer<String> fail);
+	void runDialogueExpression(Player player, String dialog, String npcName, Consumer<String> fail, DialogSession session);
 	void runDialogueExpressions(Player player, List<String> lines, ClickType type, int npcId, String displayName);
 	void runDialogueExpressions(Player player, List<String> lines, String displayName);
 	
@@ -45,6 +46,7 @@ public interface CharacterDialogueAPI {
 	
 	boolean enableMovement(Player player);
 	boolean disableMovement(Player player);
+	boolean canEnableMovement(Player player);
 	
 	public static CharacterDialogueAPI get() {
 		return new ApiImplementation(CharacterDialoguePlugin.getInstance());
