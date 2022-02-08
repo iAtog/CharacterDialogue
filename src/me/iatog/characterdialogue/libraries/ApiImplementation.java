@@ -151,7 +151,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		DialogSession session = new DialogSession(main, player, dialogue);
 
 		if (!dialogue.isMovementAllowed()) {
-
+			disableMovement(player);
 		}
 
 		main.getCache().getDialogSessions().put(player.getUniqueId(), session);
@@ -226,6 +226,9 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		
 		float speed = Float.valueOf(playerCache.getString(playerPath + ".last-speed"));
 		player.setWalkSpeed(speed);
+		player.removePotionEffect(PotionEffectType.JUMP);
+		main.getCache().getFrozenPlayers().remove(player.getUniqueId());
+		
 		playerCache.set(playerPath + ".remove-effect", false);
 		playerCache.save();
 
