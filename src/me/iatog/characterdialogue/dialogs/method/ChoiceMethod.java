@@ -74,7 +74,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		}
 
 		sessions.put(player.getUniqueId(), choiceSession);
-		ComponentBuilder questions = new ComponentBuilder("");
+		ComponentBuilder questions = new ComponentBuilder("\n");
 		String model = config.getString("choice.text-model", "&a{I})&e {S}");
 
 		choiceSession.getChoices().forEach((index, choice) -> {
