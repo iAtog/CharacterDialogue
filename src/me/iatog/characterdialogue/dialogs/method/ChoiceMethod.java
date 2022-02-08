@@ -28,7 +28,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implements Listener {
 
 	public static String COMMAND_NAME = "/;;$/5-choice";
-	
+
 	public ChoiceMethod(CharacterDialoguePlugin main) {
 		super("choice", main);
 	}
@@ -38,51 +38,48 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 	public void execute(Player player, String arg, DialogSession session) {
 		Map<UUID, ChoiceSession> sessions = provider.getCache().getChoiceSessions();
 		YamlFile config = provider.getFileFactory().getConfig();
-		
-		
+
 		if (sessions.containsKey(player.getUniqueId())) {
 			return;
 		}
 
 		ChoiceSession choiceSession = new ChoiceSession(provider, player);
-		
-		if(!config.contains("choice.choices." + arg)) {
+
+		if (!config.contains("choice.choices." + arg)) {
 			provider.getLogger().warning("The choice \"" + arg + "\" doesn't exists.");
 			return;
 		}
-		
+
 		session.cancel();
-		
-		for(String choice : config.getConfigurationSection("choice.choices." + arg).getKeys(false)) {
+
+		for (String choice : config.getConfigurationSection("choice.choices." + arg).getKeys(false)) {
 			ConfigurationSection section = config.getConfigurationSection("choice.choices." + arg + "." + choice);
 			String type = section.getString("type");
 			String message = section.getString("message", "no message specified");
 			String argument = section.getString("argument", "");
-			
-			if(type == null || !provider.getCache().getChoices().containsKey(type)) {
+
+			if (type == null || !provider.getCache().getChoices().containsKey(type)) {
 				provider.getLogger().warning("The type of choice '" + choice + "' in " + arg + " isn't valid");
 				continue;
 			}
-			
-			Class<? extends DialogChoice> choiceClass = provider.getCache().getChoices().get(type).getClass();
-			
-			choiceSession.addChoice(message, choiceClass, argument);
+
+			DialogChoice choiceObject = provider.getCache().getChoices().get(type);
+
+			if (message.isEmpty() && choiceObject.isArgumentRequired()) {
+				provider.getLogger().severe("The argument in the choice \"" + choice + "\" is missing");
+				continue;
+			}
+
+			choiceSession.addChoice(message, choiceObject.getClass(), argument);
 		}
-		
-		/*
-		choiceSession.addChoice("My mom", DestroyChoice.class);
-		choiceSession.addChoice("My sis", ContinueChoice.class);
-		choiceSession.addChoice("My stepsis", ContinueChoice.class);
-		*/
-		
+
 		sessions.put(player.getUniqueId(), choiceSession);
 		ComponentBuilder questions = new ComponentBuilder("");
 		String model = config.getString("choice.text-model", "&a{I})&e {S}");
-		
+
 		choiceSession.getChoices().forEach((index, choice) -> {
-			String parsedModel = TextUtils.colorize(model)
-					.replace("{I}", String.valueOf(index))
-					.replace("{S}", choice.getMessage());
+			String parsedModel = TextUtils.colorize(model).replace("{I}", String.valueOf(index)).replace("{S}",
+					choice.getMessage());
 			// "§a" + index + "> §e" + choice.getMessage()
 			questions.append(parsedModel + " \n")
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
@@ -118,11 +115,11 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		}
 
 		event.setCancelled(true);
-		
-		if(!sessions.containsKey(playerId) || args.length != 3) {
+
+		if (!sessions.containsKey(playerId) || args.length != 3) {
 			return;
 		}
-		
+
 		ChoiceSession session = sessions.get(playerId);
 		UUID uuid = UUID.fromString(args[1]);
 		int choice = Integer.parseInt(args[2]);
