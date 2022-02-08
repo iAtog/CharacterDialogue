@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.filter.ConsoleFilter;
 
 public class PluginLoader implements Loader {
 	
@@ -17,6 +18,8 @@ public class PluginLoader implements Loader {
 	
 	@Override
 	public void load() {
+		ConsoleFilter.filter(main.getLogger());
+		
 		loadLoaders(
 				new ListenerLoader(main),
 				new FileLoader(main),
