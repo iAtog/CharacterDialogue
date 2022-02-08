@@ -132,26 +132,29 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		ChoiceSelectEvent choiceEvent = new ChoiceSelectEvent(player, uuid, choiceObject, session);
 		Bukkit.getPluginManager().callEvent(choiceEvent);
 
-		if (choiceEvent.isCancelled()) {
+		if (choiceEvent.isCancelled() || player == null) {
 			return;
 		}
 
 		DialogChoice choiceTarget = getByClassName(choiceObject.getChoiceClass());
 		DialogSession dialogSession = provider.getCache().getDialogSessions().get(playerId);
+		
+		if(dialogSession == null) {
+			sessions.remove(playerId);
+			return;
+		}
+		
 		choiceTarget.onSelect(choiceObject.getArgument(), dialogSession, session);
 		sessions.remove(playerId);
 	}
 
 	private DialogChoice getByClassName(Class<? extends DialogChoice> clazz) {
-		DialogChoice choice = null;
-
 		for (DialogChoice target : provider.getCache().getChoices().values()) {
 			if (target.getClass() == clazz) {
-				choice = target;
-				break;
+				return target;
 			}
 		}
 
-		return choice;
+		return null;
 	}
 }
