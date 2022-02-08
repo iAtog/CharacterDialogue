@@ -27,7 +27,9 @@ public class PlayerJoinListener implements Listener {
 			cache.remove(player.getUniqueId());
 		}
 		
-		main.getApi().enableMovement(player);
+		if(main.getApi().canEnableMovement(player)) {
+			main.getApi().enableMovement(player);
+		}
 	}
 	
 }
