@@ -6,7 +6,7 @@ import me.iatog.characterdialogue.dialogs.DialogChoice;
 import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
-import net.md_5.bungee.api.ChatColor;
+import me.iatog.characterdialogue.util.TextUtils;
 
 public class SendChoice extends DialogChoice {
 	public SendChoice() {
@@ -15,11 +15,7 @@ public class SendChoice extends DialogChoice {
 
 	@Override
 	public void onSelect(String argument, DialogSession session, ChoiceSession choiceSession) {
-		if(session == null) {
-			return;
-		}
-		String colored = ChatColor.translateAlternateColorCodes('&', argument);
 		Player player = session.getPlayer();
-		player.sendMessage(Placeholders.translate(player, colored));
+		player.sendMessage(Placeholders.translate(player, TextUtils.colorize(argument)));
 	}
 }
