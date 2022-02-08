@@ -1,5 +1,6 @@
 package me.iatog.characterdialogue.dialogs.choice;
 
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.CharacterDialogueAPI;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.dialogs.DialogChoice;
@@ -20,6 +21,8 @@ public class StartDialogChoice extends DialogChoice {
 		
 		if (dialogue != null) {
 			api.runDialogue(session.getPlayer(), dialogue);
+		} else {
+			CharacterDialoguePlugin.getInstance().getLogger().severe("The dialogue name in \"start_dialogue\" choice doesn't exists");
 		}
 	}
 
