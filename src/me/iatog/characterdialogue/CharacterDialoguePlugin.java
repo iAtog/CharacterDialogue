@@ -25,11 +25,13 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 	private CharacterDialogueAPI api;
 	private Hooks hooks;
 	private String defaultChannel;
+	private long startup;
 	
 	private static CharacterDialoguePlugin instance;
 	
 	public void onLoad() {
-		this.defaultChannel  = "BungeeCord";
+		this.defaultChannel = "BungeeCord";
+		this.startup = System.currentTimeMillis();
 	}
 	
 	@Override
@@ -46,7 +48,7 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 		this.api = new ApiImplementation(this);
 		
 		loader.load();
-		//test();
+		getLogger().info("§aLoaded in " + (System.currentTimeMillis() - startup) + "ms");
 	}
 	
 	@Override
