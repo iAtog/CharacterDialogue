@@ -13,7 +13,7 @@ public class FileFactoryImpl implements FileFactory {
 	public FileFactoryImpl(CharacterDialoguePlugin main) {
 		this.config = new YamlFile(main, "config");
 		this.dialogs = new YamlFile(main, "dialogs");
-		this.lang = new YamlFile(main, "lang");
+		this.lang = new YamlFile(main, "language");
 		this.playerCache = new YamlFile(main, "player-cache");
 	}
 	
@@ -28,7 +28,7 @@ public class FileFactoryImpl implements FileFactory {
 	}
 
 	@Override
-	public YamlFile getLang() {
+	public YamlFile getLanguage() {
 		return lang;
 	}
 	

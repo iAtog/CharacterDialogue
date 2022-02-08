@@ -31,7 +31,7 @@ public class CharacterDialogueCommand implements CommandClass {
 	
 	public CharacterDialogueCommand(CharacterDialoguePlugin main) {
 		this.main = main;
-		this.language = this.main.getFileFactory().getLang();
+		this.language = this.main.getFileFactory().getLanguage();
 	}
 	
 	@Command(names = "", desc = "Main command")

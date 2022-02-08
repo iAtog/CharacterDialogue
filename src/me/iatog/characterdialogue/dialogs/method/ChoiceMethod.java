@@ -91,7 +91,9 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 	}
 
 	private BaseComponent[] getSelectText(int index) {
-		return new BaseComponent[] { new TextComponent("§aClick here to select #" + index) };
+		YamlFile file = provider.getFileFactory().getLanguage();
+		String text = file.getString("select-choice", "§aClick here to select #%str%").replace("%str%", index + "");
+		return new BaseComponent[] { new TextComponent(text) };
 	}
 
 //	@EventHandler
@@ -138,12 +140,12 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 
 		DialogChoice choiceTarget = getByClassName(choiceObject.getChoiceClass());
 		DialogSession dialogSession = provider.getCache().getDialogSessions().get(playerId);
-		
-		if(dialogSession == null) {
+
+		if (dialogSession == null) {
 			sessions.remove(playerId);
 			return;
 		}
-		
+
 		choiceTarget.onSelect(choiceObject.getArgument(), dialogSession, session);
 		sessions.remove(playerId);
 	}
