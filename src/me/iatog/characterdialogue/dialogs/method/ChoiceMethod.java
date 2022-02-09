@@ -1,5 +1,7 @@
 package me.iatog.characterdialogue.dialogs.method;
 
+import static me.iatog.characterdialogue.util.TextUtils.colorize;
+
 import java.util.Map;
 import java.util.UUID;
 
@@ -18,7 +20,6 @@ import me.iatog.characterdialogue.libraries.YamlFile;
 import me.iatog.characterdialogue.misc.Choice;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
-import me.iatog.characterdialogue.util.TextUtils;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -78,9 +79,9 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		String model = config.getString("choice.text-model", "&a{I})&e {S}");
 
 		choiceSession.getChoices().forEach((index, choice) -> {
-			String parsedModel = TextUtils.colorize(model).replace("{I}", String.valueOf(index)).replace("{S}",
+			String parsedModel = colorize(model).replace("{I}", String.valueOf(index)).replace("{S}",
 					choice.getMessage());
-			// "§a" + index + "> §e" + choice.getMessage()
+
 			questions.append(parsedModel + " \n")
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
 							COMMAND_NAME + " " + choiceSession.getUniqueId() + " " + index))
@@ -93,14 +94,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 	private BaseComponent[] getSelectText(int index) {
 		YamlFile file = provider.getFileFactory().getLanguage();
 		String text = file.getString("select-choice", "§aClick here to select #%str%").replace("%str%", index + "");
-		return new BaseComponent[] { new TextComponent(text) };
-	}
-
-//	@EventHandler
-	public void onChoiceSelect(ChoiceSelectEvent event) {
-		Player player = event.getPlayer();
-
-		player.sendMessage("USED " + event.getChoice().getMessage());
+		return new BaseComponent[] { new TextComponent(colorize(text)) };
 	}
 
 	@EventHandler
