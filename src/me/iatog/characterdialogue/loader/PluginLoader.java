@@ -31,7 +31,7 @@ public class PluginLoader implements Loader {
 				new DialogLoader(main)
 				);
 		
-		main.getLogger().info("§a"+main.getDescription().getName()+" loaded. §7"+main.getDescription().getVersion());
+		main.getLogger().info("§a"+main.getDescription().getName()+" enabled. §7"+main.getDescription().getVersion());
 	}
 	
 	@Override
