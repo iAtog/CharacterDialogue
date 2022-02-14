@@ -41,17 +41,126 @@ dialogue:
       - 'SEND: &e[NPC] &4%npc_name%&f: Go away!'
     first-interaction:
       - 'SEND: &c[NPC] &b%npc_name%&f: What you want? dumb.'
-  choice-sample:
+  aphrodisius:
     click: RIGHT
-    display-name: EXAMPLE
+    display-name: The King
     allow-movement: false
     dialog:
-    - 'SEND: &cSelect one'
-    - 'CHOICE: choice-example'
-    - 'SEND: &aOh, nice.'
+    - 'SEND: %user% My king, do you know of Aphrodisius?'
+    - 'SOUND: ENTITY_VILLAGER_NO,0.7,1.3'
+    - 'WAIT: 2'
+    - 'SEND: %npc% Oh yes, his name is etched in the history books.'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.6'
+    - 'WAIT: 2'
+    - 'SEND: %npc% Why do you ask?'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.6'
+    - 'WAIT: 2'
+    - 'SEND: %user% Well, he''s my ancestor, and I''ve always been judged for being
+      one.'
+    - 'SOUND: ENTITY_VILLAGER_NO,0.7,1.3'
+    - 'WAIT: 4'
+    - 'SEND: %npc% Wow, incredible, you have warrior blood, but well, it''s true that
+      your last name doesn''t have a good reputation...'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.6'
+    - 'WAIT: 5'
+    - 'SEND: %user% I would like to know what I could do to stop that, I will not
+      allow them to continue discriminating against my family, nobody wants to be
+      our friend anymore!'
+    - 'SOUND: ENTITY_VILLAGER_NO,0.7,1.4'
+    - 'WAIT: 5'
+    - 'SEND: %npc% Oh, that''s terrible, but while we''re at it....'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.6'
+    - 'WAIT: 4'
+    - 'SEND: %npc% In 6 months there will be a call for new soldiers'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.6'
+    - 'WAIT: 4'
+    - 'SEND: %npc% If you agree you can attend to become one, and thus fight for the
+      kingdom!'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.6'
+    - 'WAIT: 3'
+    - 'SEND: %npc% What do you think? Do you agree?'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.6'
+    - 'WAIT: 3'
+    - 'SEND: %user% Yes, I will be training a lot'
+    - 'SOUND: ENTITY_VILLAGER_NO,0.7,1.3'
+    - 'WAIT: 3'
+    - 'SEND: %npc% Good luck, you may leave now, I have some business to take care
+      of.'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.7'
+    - 'WAIT: 2'
+    - 'SEND: &7'
+    - 'SEND: &6&lMISSION COMPLETED&7:&f Talk with the king'
+    - 'SOUND: BLOCK_NOTE_PLING,1,0.4'
+  choice-sample:
+    click: RIGHT
+    display-name: The King
+    allow-movement: false
+    permission:
+      value: npc.king.talk
+      message: '&e[NPC] &b%npc_name%&f: Hey, you''re not allowed to be here'
+    dialog:
+    - 'SEND: %npc% Hi, I''m the king, since you''re here, what do you need?'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.5'
+    - 'WAIT: 2'
+    - 'CHOICE: king'
+    - 'SOUND: ENTITY_VILLAGER_NO,0.7,0.7'
+    - 'WAIT: 2'
+    - 'SEND: %npc% I see, so you want to know that?'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.3'
+    - 'WAIT: 2'
+    - 'SEND: %npc% Listen to me well, since I''m in a good mood I''ll tell you.'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.4'
+    - 'WAIT: 3'
+    - 'SEND: %npc% Well, at that time there was a war against the kingdom of Hans.'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.5'
+    - 'WAIT: 3'
+    - 'SEND: %npc% He was a greedy king, he saw everyone from above.'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.6'
+    - 'WAIT: 3'
+    - 'SEND: %npc% One day, Prince John hit on his wife, he was furious.'
+    - 'SOUND: ENTITY_VILLAGER_NO,0.8.0.7'
+    - 'WAIT: 3'
+    - 'SEND: %npc% &oIncident...'
+    - 'SOUND: ENTITY_VILLAGER_NO,0.7,1.3'
+    - 'WAIT: 3'
+    - 'SEND: %npc% John was the prince of this kingdom...'
+    - 'SOUND: ENTITY_VILLAGER_NO,0.7,1.3'
+    - 'WAIT: 2'
+    - 'SEND: %npc% King Hans declared war.'
+    - 'SOUND: ENTITY_VILLAGER_NO,0.7,1.3'
+    - 'WAIT: 3'
+    - 'SEND: %npc% Many innocent people died because of execution orders.'
+    - 'SOUND: ENTITY_VILLAGER_NO,0.7,1.3'
+    - 'WAIT: 2'
+    - 'SEND: %npc% When the war ended no kingdom won, all the deaths were in vain,
+      but Hans claimed to have won.'
+    - 'SOUND: ENTITY_VILLAGER_NO,0.7,1.3'
+    - 'WAIT: 3'
+    - 'CHOICE: king2'
+    - 'SOUND: ENTITY_VILLAGER_NO,0.7,0.6'
+    - 'WAIT: 2'
+    - 'SEND: %npc% Oh, yes, it will be in 6 months.'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.7'
+    - 'WAIT: 2'
+    - 'SEND: %npc% Do you want to be a warrior?'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.7'
+    - 'WAIT: 3'
+    - 'SEND: %user% Yes, I''ll clear my name.'
+    - 'SOUND: ENTITY_VILLAGER_NO,0.7,0.7'
+    - 'WAIT: 4'
+    - 'SEND: %npc% It seems perfect to me, he trains a lot to be able to pass.'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.7'
+    - 'WAIT: 3'
+    - 'SEND: %npc% Good luck, you may leave now, I have some business to take care
+      of.'
+    - 'SOUND: ENTITY_VILLAGER_YES,0.7,0.7'
+    - 'WAIT: 2'
+    - 'SEND: &7'
+    - 'SEND: &6&lMISSION COMPLETED&7:&f Talk with the king'
+    - 'SOUND: BLOCK_NOTE_PLING,1,0.2'
     hologram:
       enabled: true
-      y-position: 0.4
+      y-position: 0.5
       lines:
-      - '&e%npc_name%'
-      - '&6&lCLICK
+      - '&c%npc_name%'
+      - '&6&lCLICK'
