@@ -13,17 +13,16 @@ public class TextUtils {
 		String version = Bukkit.getBukkitVersion().split("-")[0].split("\\.")[1];
 		
 		if(Integer.parseInt(version) >= 16) {
-			Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
+			Pattern pattern = Pattern.compile("&#[a-fA-F0-9]{6}");
             Matcher matcher = pattern.matcher(message);
 
             while (matcher.find()) {
                 String color = message.substring(matcher.start(), matcher.end());
-                message = message.replace(color, ChatColor.of(color) + "");
+                message = message.replace(color, ChatColor.of(color.substring(1)) + "");
                 matcher = pattern.matcher(message);
             }
 		}
 		
 		return org.bukkit.ChatColor.translateAlternateColorCodes('&', message);
 	}
-	
 }
