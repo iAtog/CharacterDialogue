@@ -7,7 +7,27 @@
   <packaging>pom</packaging>
   <name>character-dialogue</name>
   <modules>
-  	<module>core</module>
-  	<module>api</module>
+    <module>core</module>
+    <module>api</module>
   </modules>
+  
+  <repositories>
+    <repository>
+      <id>spigot-repo</id>
+      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+    </repository>
+    <repository>
+      <id>sonatype</id>
+      <url>https://oss.sonatype.org/content/groups/public/</url>
+    </repository>
+  </repositories>
+  
+  <dependencies>
+  	<dependency>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot-api</artifactId>
+      <version>1.16.5-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 </project>
