@@ -11,11 +11,11 @@ import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public class StringUtil {
     
-    public static String BUKKIT_VERSION = Bukkit.getBukkitVersion().split("-")[0].split("\\.")[1];
-    public static Pattern HEX_PATTERN = Pattern.compile("&#[a-fA-F0-9]{6}");
+    private static final boolean SUPPORTS_HEX = Integer.parseInt(Bukkit.getBukkitVersion().split("-")[0].split("\\.")[1]) >= 16;
+    private static final Pattern HEX_PATTERN = Pattern.compile("&#[a-fA-F0-9]{6}");
     
     public static String colorize(String message) {
-        if (Integer.parseInt(BUKKIT_VERSION) >= 16) {
+        if (SUPPORTS_HEX) {
             Matcher matcher = HEX_PATTERN.matcher(message);
 
             while (matcher.find()) {
