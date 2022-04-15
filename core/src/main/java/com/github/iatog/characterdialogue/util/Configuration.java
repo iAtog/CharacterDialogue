@@ -10,23 +10,21 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 public class Configuration extends YamlConfiguration {
-
+    
+    private final String FILE_EXTENSION = ".yml";
+    
     private final String fileName;
     private final Plugin plugin;
     private final File folder;
 
     public Configuration(Plugin plugin, String fileName) {
-        this(plugin, fileName, ".yml");
+        this(plugin, fileName, plugin.getDataFolder());
     }
 
-    public Configuration(Plugin plugin, String fileName, String fileExtension) {
-        this(plugin, fileName, fileExtension, plugin.getDataFolder());
-    }
-
-    public Configuration(Plugin plugin, String fileName, String fileExtension, File folder) {
+    public Configuration(Plugin plugin, String fileName, File folder) {
         this.folder = folder;
         this.plugin = plugin;
-        this.fileName = fileName + (fileName.endsWith(fileExtension) ? "" : fileExtension);
+        this.fileName = fileName + (fileName.endsWith(FILE_EXTENSION) ? "" : FILE_EXTENSION);
         this.create();
     }
 
