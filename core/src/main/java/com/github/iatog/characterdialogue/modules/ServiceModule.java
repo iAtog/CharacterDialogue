@@ -1,6 +1,7 @@
 package com.github.iatog.characterdialogue.modules;
 
 import com.github.iatog.characterdialogue.api.service.Service;
+import com.github.iatog.characterdialogue.service.DialogueService;
 import com.github.iatog.characterdialogue.service.ListenerService;
 import com.github.iatog.characterdialogue.service.MainService;
 import com.google.inject.AbstractModule;
@@ -17,9 +18,14 @@ public class ServiceModule extends AbstractModule {
                 .in(Scopes.SINGLETON);
         
         this.bind(Service.class)
-            .annotatedWith(named("listener"))
-            .to(ListenerService.class)
-            .in(Scopes.SINGLETON);
+                .annotatedWith(named("listener"))
+                .to(ListenerService.class)
+                .in(Scopes.SINGLETON);
+
+        this.bind(Service.class)
+                .annotatedWith(named("dialogue"))
+                .to(DialogueService.class)
+                .in(Scopes.SINGLETON);
     }
 
 }
