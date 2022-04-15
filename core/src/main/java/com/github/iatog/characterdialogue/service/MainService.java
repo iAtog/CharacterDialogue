@@ -11,13 +11,16 @@ public class MainService implements Service {
 
     @Inject @Named("listener")
     private Service listenerService;
+    
+    @Inject @Named("dialogue")
+    private Service dialogueService;
 
     @Inject
     private CharacterDialoguePlugin main;
 
     @Override
     public void start() {
-        startServices(listenerService);
+        startServices(listenerService, dialogueService);
 
         main.getLogger().info(
                 String.format("§fCharacterDialogue version %s has been enabled.", main.getDescription().getVersion())
