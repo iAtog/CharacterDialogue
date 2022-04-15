@@ -11,7 +11,7 @@ public class DialogueService implements Service {
     
     @Override
     public void start() {
-        
+        // load dialogues
     }
 
 }
