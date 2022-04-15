@@ -8,7 +8,6 @@
   <name>character-dialogue</name>
   <modules>
   	<module>core</module>
-  	<module>abstract</module>
   	<module>api</module>
   </modules>
 </project>

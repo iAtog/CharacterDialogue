@@ -1,0 +1,5 @@
+main: com.github.iatog.characterdialogue.CharacterDialoguePlugin
+version: ${project.version}
+name: CharacterDialogue
+author: iAtog
+description: 'create dialogues for citizens npc''s'

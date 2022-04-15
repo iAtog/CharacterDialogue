@@ -88,7 +88,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.iatog.characterdialogue</groupId>
-			<artifactId>abstract</artifactId>
+			<artifactId>api</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
