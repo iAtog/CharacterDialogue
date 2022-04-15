@@ -21,6 +21,7 @@ public class BinderModule extends AbstractModule {
         this.install(new FileModule(main));
         this.install(new ServiceModule());
         this.install(new ListenerModule());
+        this.install(new APIModule());
     }
 
     public Injector createInjector() {
