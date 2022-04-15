@@ -5,6 +5,7 @@ import java.util.Set;
 import org.bukkit.event.Listener;
 
 import com.github.iatog.characterdialogue.CharacterDialoguePlugin;
+import com.github.iatog.characterdialogue.api.service.Service;
 import com.google.inject.Inject;
 
 public class ListenerService implements Service {

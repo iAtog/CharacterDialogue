@@ -1,4 +1,4 @@
-package com.github.iatog.characterdialogue.service;
+package com.github.iatog.characterdialogue.api.service;
 
 public interface Service {
     void start();

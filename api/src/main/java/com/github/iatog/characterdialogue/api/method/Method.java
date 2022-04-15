@@ -1,4 +1,4 @@
-package com.github.iatog.characterdialogue.method;
+package com.github.iatog.characterdialogue.api.method;
 
 import org.bukkit.entity.Player;
 

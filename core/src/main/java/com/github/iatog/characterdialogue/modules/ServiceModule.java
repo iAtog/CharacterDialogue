@@ -1,8 +1,8 @@
 package com.github.iatog.characterdialogue.modules;
 
+import com.github.iatog.characterdialogue.api.service.Service;
 import com.github.iatog.characterdialogue.service.ListenerService;
 import com.github.iatog.characterdialogue.service.MainService;
-import com.github.iatog.characterdialogue.service.Service;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 
