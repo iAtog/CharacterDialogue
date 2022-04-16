@@ -3,7 +3,7 @@ package com.github.iatog.characterdialogue.listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import com.github.iatog.characterdialogue.api.ClickType;
+import com.github.iatog.characterdialogue.api.types.ClickType;
 
 import net.citizensnpcs.api.event.NPCClickEvent;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;

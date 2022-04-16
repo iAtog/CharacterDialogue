@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import com.github.iatog.characterdialogue.api.dialogue.Dialogue;
 import com.github.iatog.characterdialogue.api.dialogue.DialogueLine;
 import com.github.iatog.characterdialogue.api.dialogue.DialogueSession;
+import com.github.iatog.characterdialogue.api.types.ClickType;
 
 public interface User {
     
