@@ -23,6 +23,7 @@ public class BinderModule implements Module {
         binder.install(new ServiceModule());
         binder.install(new ListenerModule());
         binder.install(new APIModule());
+        binder.install(new CacheModule());
     }
 
     public Injector createInjector() {

@@ -1,11 +1,16 @@
 package com.github.iatog.characterdialogue;
 
+import java.util.UUID;
+
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.iatog.characterdialogue.api.Cache;
 import com.github.iatog.characterdialogue.api.CharacterDialogueAPI;
 import com.github.iatog.characterdialogue.api.PluginInstance;
+import com.github.iatog.characterdialogue.api.User;
 import com.github.iatog.characterdialogue.api.service.Service;
 import com.github.iatog.characterdialogue.modules.BinderModule;
 
@@ -13,11 +18,14 @@ import team.unnamed.inject.Injector;
 
 public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstance {
     
-    @Inject
+    @Inject 
     private Service service;
     
-    @Inject
+    @Inject 
     private CharacterDialogueAPI api;
+    
+    @Inject @Named("users")
+    private Cache<UUID, User> users;
     
     @Override
     public void onEnable() {
@@ -37,6 +45,11 @@ public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstanc
     @Override
     public CharacterDialogueAPI getAPI() {
         return api;
+    }
+
+    @Override
+    public Cache<UUID, User> getUsers() {
+        return users;
     }
     
 }
