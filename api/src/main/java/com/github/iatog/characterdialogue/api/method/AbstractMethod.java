@@ -4,6 +4,9 @@ import java.util.function.Predicate;
 
 import org.bukkit.entity.Player;
 
+import com.github.iatog.characterdialogue.api.dialogue.DialogueSession;
+import com.github.iatog.characterdialogue.api.impl.MethodImpl;
+
 public abstract class AbstractMethod {
     
     private final String identifier;
@@ -18,18 +21,7 @@ public abstract class AbstractMethod {
         return identifier;
     }
     
-    public boolean run(Player player, String argument) {
-        return predicate.test(new Method() {
-
-            @Override
-            public Player getPlayer() {
-                return player;
-            }
-
-            @Override
-            public String getArgument() {
-                return argument;
-            }
-        });
+    public boolean run(Player player, String argument, DialogueSession session) {
+        return predicate.test(new MethodImpl(player, argument, session));
     }
 }
