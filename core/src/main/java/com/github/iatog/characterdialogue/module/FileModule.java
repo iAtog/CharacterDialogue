@@ -1,4 +1,4 @@
-package com.github.iatog.characterdialogue.modules;
+package com.github.iatog.characterdialogue.module;
 
 import com.github.iatog.characterdialogue.CharacterDialoguePlugin;
 import com.github.iatog.characterdialogue.util.Configuration;

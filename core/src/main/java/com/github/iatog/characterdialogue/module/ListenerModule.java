@@ -1,4 +1,4 @@
-package com.github.iatog.characterdialogue.modules;
+package com.github.iatog.characterdialogue.module;
 
 import java.util.Arrays;
 import java.util.List;

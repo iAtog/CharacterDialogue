@@ -1,4 +1,4 @@
-package com.github.iatog.characterdialogue.modules;
+package com.github.iatog.characterdialogue.module;
 
 import com.github.iatog.characterdialogue.api.CharacterDialogueAPI;
 import com.github.iatog.characterdialogue.impl.DefaultCharacterDialogueAPI;

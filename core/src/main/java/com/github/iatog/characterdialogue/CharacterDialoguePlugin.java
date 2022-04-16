@@ -12,7 +12,7 @@ import com.github.iatog.characterdialogue.api.CharacterDialogueAPI;
 import com.github.iatog.characterdialogue.api.PluginInstance;
 import com.github.iatog.characterdialogue.api.User;
 import com.github.iatog.characterdialogue.api.service.Service;
-import com.github.iatog.characterdialogue.modules.BinderModule;
+import com.github.iatog.characterdialogue.module.BinderModule;
 
 import team.unnamed.inject.Injector;
 
