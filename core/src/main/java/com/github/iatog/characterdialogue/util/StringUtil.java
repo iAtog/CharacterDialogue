@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -28,4 +29,8 @@ public class StringUtil {
         return translateAlternateColorCodes('&', message);
     }
 
+    public static String translatePlaceholders(Player player, String string) {
+        return string;
+    }
+    
 }
