@@ -9,10 +9,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.iatog.characterdialogue.api.CharacterDialogueAPI;
 import com.github.iatog.characterdialogue.api.PluginInstance;
-import com.github.iatog.characterdialogue.api.User;
 import com.github.iatog.characterdialogue.api.cache.Cache;
 import com.github.iatog.characterdialogue.api.method.Method;
 import com.github.iatog.characterdialogue.api.service.Service;
+import com.github.iatog.characterdialogue.api.user.User;
 import com.github.iatog.characterdialogue.module.BinderModule;
 
 import team.unnamed.inject.Injector;

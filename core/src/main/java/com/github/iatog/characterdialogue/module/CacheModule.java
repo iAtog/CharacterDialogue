@@ -2,8 +2,8 @@ package com.github.iatog.characterdialogue.module;
 
 import java.util.UUID;
 
-import com.github.iatog.characterdialogue.api.User;
 import com.github.iatog.characterdialogue.api.cache.Cache;
+import com.github.iatog.characterdialogue.api.user.User;
 import com.github.iatog.characterdialogue.impl.SimpleUserCache;
 
 import team.unnamed.inject.Binder;

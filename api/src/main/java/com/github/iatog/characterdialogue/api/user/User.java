@@ -1,4 +1,4 @@
-package com.github.iatog.characterdialogue.api;
+package com.github.iatog.characterdialogue.api.user;
 
 import java.util.List;
 import java.util.function.Consumer;
