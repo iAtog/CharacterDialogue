@@ -1,5 +1,7 @@
 package com.github.iatog.characterdialogue.api.cache;
 
+import java.util.function.BiConsumer;
+
 public interface Cache<K, V> {
 
     V get(K key);
@@ -9,5 +11,7 @@ public interface Cache<K, V> {
     boolean contains(K key);
 
     V remove(K key);
+    
+    void forEach(BiConsumer<K, V> consumer);
 
 }
