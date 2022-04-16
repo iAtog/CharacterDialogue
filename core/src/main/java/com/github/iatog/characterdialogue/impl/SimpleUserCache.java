@@ -4,8 +4,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.github.iatog.characterdialogue.api.Cache;
 import com.github.iatog.characterdialogue.api.User;
+import com.github.iatog.characterdialogue.api.cache.Cache;
 
 public class SimpleUserCache implements Cache<UUID, User> {
     

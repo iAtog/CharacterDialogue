@@ -1,4 +1,4 @@
-package com.github.iatog.characterdialogue.api;
+package com.github.iatog.characterdialogue.api.cache;
 
 public interface Cache<K, V> {
 
