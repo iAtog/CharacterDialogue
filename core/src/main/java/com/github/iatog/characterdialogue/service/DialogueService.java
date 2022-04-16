@@ -9,7 +9,7 @@ public class DialogueService implements Service {
 
     @Inject
     private CharacterDialoguePlugin main;
-    
+
     @Override
     public void start() {
         // load dialogues

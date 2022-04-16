@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.github.iatog.characterdialogue.api.CharacterDialogueAPI;
 import com.github.iatog.characterdialogue.api.PluginInstance;
 import com.github.iatog.characterdialogue.api.cache.Cache;
+import com.github.iatog.characterdialogue.api.method.AbstractMethod;
 import com.github.iatog.characterdialogue.api.method.Method;
 import com.github.iatog.characterdialogue.api.service.Service;
 import com.github.iatog.characterdialogue.api.user.User;
@@ -33,7 +34,7 @@ public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstanc
 
     @Inject
     @Named("methods")
-    private Cache<UUID, Method> methods;
+    private Cache<String, AbstractMethod> methods;
 
     @Override
     public void onLoad() {
@@ -70,7 +71,7 @@ public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstanc
     }
 
     @Override
-    public Cache<UUID, Method> getMethods() {
+    public Cache<String, AbstractMethod> getMethods() {
         return methods;
     }
 
