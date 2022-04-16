@@ -4,26 +4,26 @@ import com.github.iatog.characterdialogue.api.service.Service;
 import com.github.iatog.characterdialogue.service.DialogueService;
 import com.github.iatog.characterdialogue.service.ListenerService;
 import com.github.iatog.characterdialogue.service.MainService;
-import com.google.inject.AbstractModule;
-import com.google.inject.Scopes;
 
-import static com.google.inject.name.Names.named;
+import team.unnamed.inject.Binder;
+import team.unnamed.inject.Module;
+import team.unnamed.inject.scope.Scopes;
 
-public class ServiceModule extends AbstractModule {
+public class ServiceModule implements Module {
 
     @Override
-    protected void configure() {
-        this.bind(Service.class)
+    public void configure(Binder binder) {
+        binder.bind(Service.class)
                 .to(MainService.class)
                 .in(Scopes.SINGLETON);
         
-        this.bind(Service.class)
-                .annotatedWith(named("listener"))
+        binder.bind(Service.class)
+                .named("listener")
                 .to(ListenerService.class)
                 .in(Scopes.SINGLETON);
 
-        this.bind(Service.class)
-                .annotatedWith(named("dialogue"))
+        binder.bind(Service.class)
+                .named("dialogue")
                 .to(DialogueService.class)
                 .in(Scopes.SINGLETON);
     }

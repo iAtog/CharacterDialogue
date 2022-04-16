@@ -24,6 +24,10 @@
       <id>everything</id>
       <url>https://repo.citizensnpcs.co/</url>
     </repository>
+    <repository>
+      <id>unnamed-public</id>
+      <url>https://repo.unnamed.team/repository/unnamed-public/</url>
+    </repository>
   </repositories>
 
   <dependencies>

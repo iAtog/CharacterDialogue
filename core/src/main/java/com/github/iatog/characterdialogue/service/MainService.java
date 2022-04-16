@@ -2,10 +2,11 @@ package com.github.iatog.characterdialogue.service;
 
 import java.util.Arrays;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import com.github.iatog.characterdialogue.CharacterDialoguePlugin;
 import com.github.iatog.characterdialogue.api.service.Service;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public class MainService implements Service {
 

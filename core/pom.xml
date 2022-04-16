@@ -39,11 +39,32 @@
             <goals>
               <goal>shade</goal>
             </goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <relocations>
+                <relocation>
+                  <pattern>com.google.inject</pattern>
+                  <shadedPattern>com.github.iatog.characterdialogue.dependencies.guice</shadedPattern>
+                </relocation>
+              </relocations>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/NOTICE.txt</exclude>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+               </filters>
+            </configuration>
           </execution>
         </executions>
         <configuration>
           <shadedArtifactAttached>true</shadedArtifactAttached>
           <shadedClassifierName>shaded</shadedClassifierName>
+          <finalName>CharacterDialogue-v${project.version}</finalName>
         </configuration>
       </plugin>
     </plugins>
@@ -53,20 +74,14 @@
         <filtering>true</filtering>
       </resource>
     </resources>
-    <finalName>characterdialogue</finalName>
+    <finalName>CharacterDialogue-original</finalName>
   </build>
 
   <dependencies>
     <dependency>
-      <groupId>com.google.inject</groupId>
-      <artifactId>guice</artifactId>
-      <version>4.0</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.inject.extensions</groupId>
-      <artifactId>guice-multibindings</artifactId>
-      <version>4.0</version>
+      <groupId>team.unnamed</groupId>
+      <artifactId>inject</artifactId>
+      <version>1.0.1</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

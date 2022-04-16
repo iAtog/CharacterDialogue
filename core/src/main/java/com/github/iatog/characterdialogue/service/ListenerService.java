@@ -1,17 +1,18 @@
 package com.github.iatog.characterdialogue.service;
 
-import java.util.Set;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import org.bukkit.event.Listener;
 
 import com.github.iatog.characterdialogue.CharacterDialoguePlugin;
 import com.github.iatog.characterdialogue.api.service.Service;
-import com.google.inject.Inject;
 
 public class ListenerService implements Service {
 
     @Inject
-    private Set<Listener> listeners;
+    private List<Listener> listeners;
     
     @Inject
     private CharacterDialoguePlugin main;

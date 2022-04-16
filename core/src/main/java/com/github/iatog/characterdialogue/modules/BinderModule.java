@@ -1,11 +1,12 @@
 package com.github.iatog.characterdialogue.modules;
 
 import com.github.iatog.characterdialogue.CharacterDialoguePlugin;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 
-public class BinderModule extends AbstractModule {
+import team.unnamed.inject.Binder;
+import team.unnamed.inject.Injector;
+import team.unnamed.inject.Module;
+
+public class BinderModule implements Module {
     
     private final CharacterDialoguePlugin main;
     
@@ -14,18 +15,19 @@ public class BinderModule extends AbstractModule {
     }
     
     @Override
-    protected void configure() {
-        this.bind(CharacterDialoguePlugin.class)
+    public void configure(Binder binder) {
+        binder.bind(CharacterDialoguePlugin.class)
                 .toInstance(main);
         
-        this.install(new FileModule(main));
-        this.install(new ServiceModule());
-        this.install(new ListenerModule());
-        this.install(new APIModule());
+        binder.install(new FileModule(main));
+        binder.install(new ServiceModule());
+        binder.install(new ListenerModule());
+        binder.install(new APIModule());
     }
 
     public Injector createInjector() {
-        return Guice.createInjector(this);
+        return Injector.create(this);
     }
+
     
 }

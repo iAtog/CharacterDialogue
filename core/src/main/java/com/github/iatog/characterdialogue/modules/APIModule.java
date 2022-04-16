@@ -2,13 +2,15 @@ package com.github.iatog.characterdialogue.modules;
 
 import com.github.iatog.characterdialogue.api.CharacterDialogueAPI;
 import com.github.iatog.characterdialogue.impl.DefaultCharacterDialogueAPI;
-import com.google.inject.AbstractModule;
 
-public class APIModule extends AbstractModule {
+import team.unnamed.inject.Binder;
+import team.unnamed.inject.Module;
+
+public class APIModule implements Module {
 
     @Override
-    protected void configure() {
-        this.bind(CharacterDialogueAPI.class)
+    public void configure(Binder binder) {
+        binder.bind(CharacterDialogueAPI.class)
                 .toInstance(new DefaultCharacterDialogueAPI());
     }
 
