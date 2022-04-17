@@ -20,9 +20,9 @@ public interface User {
     void runDialogue(Dialogue dialogue);
     void runDialogue(String dialogueName);
 
-    void runDialogueExpression(String dialog);
-    void runDialogueExpression(String dialog, String npcName);
-    void runDialogueExpression(String dialog, String npcName, Consumer<DialogueLine> fail, DialogueSession session);
+    void runDialogueExpression(String method, String argument);
+    void runDialogueExpression(String method, String argument, String npcName);
+    void runDialogueExpression(String method, String argument, String npcName, Consumer<DialogueLine> fail, DialogueSession session);
     void runDialogueExpressions(List<String> lines, ClickType type, int npcId, String displayName);
     void runDialogueExpressions(List<String> lines, String displayName);
 
