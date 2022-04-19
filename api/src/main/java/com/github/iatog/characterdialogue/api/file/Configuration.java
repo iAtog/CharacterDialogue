@@ -1,4 +1,4 @@
-package com.github.iatog.characterdialogue.util;
+package com.github.iatog.characterdialogue.api.file;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
