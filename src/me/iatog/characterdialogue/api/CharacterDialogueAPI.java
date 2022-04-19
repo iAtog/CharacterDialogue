@@ -1,6 +1,7 @@
 package me.iatog.characterdialogue.api;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import org.bukkit.entity.Player;
@@ -15,16 +16,9 @@ public interface CharacterDialogueAPI {
 	//String searchDialogueByNPCId(int id);
 	
 	Dialogue getDialogue(String name);
-	
-	/**
-	 * reload all character holograms.
-	 */
+
 	void reloadHolograms();
-	
-	/**
-	 * load npc hologram
-	 * @param npcId the id of the npc
-	 */
+
 	void loadHologram(int npcId);
 	
 	boolean readDialogBy(Player player, String dialog);
@@ -42,7 +36,9 @@ public interface CharacterDialogueAPI {
 	void runDialogueExpressions(Player player, List<String> lines, String displayName);
 	
 	Dialogue getNPCDialogue(int id);
+	Map<String, Dialogue> getDialogues();
 	String getNPCDialogueName(int id);
+	int getBukkitVersion();
 	
 	boolean enableMovement(Player player);
 	boolean disableMovement(Player player);

@@ -96,7 +96,7 @@ public class CharacterDialogueCommand implements CommandClass {
 		
 		sender.sendMessage("§aCleared " + arg + "'s cache");
 	}
-	
+
 	private List<String> translateList(List<String> list) {
 		List<String> newList = new ArrayList<>();
 		list.forEach((line) -> {

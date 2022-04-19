@@ -3,6 +3,7 @@ package me.iatog.characterdialogue.libraries;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import org.bukkit.Bukkit;
@@ -261,5 +262,15 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		String path = "players." + player.getUniqueId();
 		
 		return playerCache.getBoolean(path + ".remove-effect", false);
+	}
+
+	@Override
+	public Map<String, Dialogue> getDialogues() {
+		return main.getCache().getDialogues();
+	}
+
+	@Override
+	public int getBukkitVersion() {
+		return Integer.parseInt(Bukkit.getBukkitVersion().split("-")[0].split("\\.")[1]);
 	}
 }
