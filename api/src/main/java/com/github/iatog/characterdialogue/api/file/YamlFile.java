@@ -9,38 +9,30 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
-public class Configuration extends YamlConfiguration {
+public class YamlFile extends YamlConfiguration {
     
     private final String FILE_EXTENSION = ".yml";
     
     private final String fileName;
     private final Plugin plugin;
-    private final File folder;
+    private final String folder;
 
-    public Configuration(Plugin plugin, String fileName) {
-        this(plugin, fileName, plugin.getDataFolder());
+    public YamlFile(Plugin plugin, String fileName) {
+        this(plugin, fileName, "");
     }
 
-    public Configuration(Plugin plugin, String fileName, File folder) {
-        this.folder = folder;
+    public YamlFile(Plugin plugin, String fileName, String folder) {
+        this.folder = plugin.getDataFolder() + "/" + folder;
         this.plugin = plugin;
         this.fileName = fileName + (fileName.endsWith(FILE_EXTENSION) ? "" : FILE_EXTENSION);
         this.create();
     }
 
-
     @Override
     public String getString(String path) {
-        // Return the specified path in case the result is null
         return super.getString(path, path);
     }
 
-    /**
-     * Returns a String from a configuration file.
-     * @param path The path of the string
-     * @param colorize Whether to translate alternate color codes or not
-     * @return The final string
-     */
     public String getString(String path, boolean colorize) {
         String result = getString(path);
         return colorize ? ChatColor.translateAlternateColorCodes('&', result) : result;
