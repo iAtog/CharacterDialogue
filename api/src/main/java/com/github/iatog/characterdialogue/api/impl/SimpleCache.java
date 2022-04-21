@@ -1,4 +1,4 @@
-package com.github.iatog.characterdialogue.impl;
+package com.github.iatog.characterdialogue.api.impl;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,6 +37,11 @@ public class SimpleCache<K, V> implements Cache<K, V> {
     @Override
     public void forEach(BiConsumer<K, V> consumer) {
         map.forEach(consumer);
+    }
+
+    @Override
+    public Map<K, V> map() {
+        return map;
     }
 
 }
