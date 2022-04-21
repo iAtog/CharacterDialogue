@@ -9,13 +9,13 @@ import com.github.iatog.characterdialogue.api.file.YamlFileRegistry;
 public interface PluginInstance {
 
     CharacterDialogueAPI getAPI();
-    
+
     CacheFactory getCacheFactory();
-    
+
     Logger getLogger();
-    
+
     YamlFileRegistry getFileRegistry();
-    
+
     DialogueFileManager getDialogueManager();
-    
+
 }

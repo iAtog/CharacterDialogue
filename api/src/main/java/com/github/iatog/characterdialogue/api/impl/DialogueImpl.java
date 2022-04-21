@@ -100,24 +100,25 @@ public class DialogueImpl implements Dialogue {
 
     @Override
     public boolean startFirstInteraction(Player player, boolean log) {
-        if(log) {
+        if (log) {
             YamlFile playerCache = main.getFileRegistry().getFile("player-cache");
-            List<String> readedDialogues = playerCache.getStringList("players." + player.getUniqueId() + ".readed-dialogues");
-            
-            if(!playerCache.contains("players." + player.getUniqueId())) {
+            List<String> readedDialogues = playerCache
+                    .getStringList("players." + player.getUniqueId() + ".readed-dialogues");
+
+            if (!playerCache.contains("players." + player.getUniqueId())) {
                 readedDialogues = new ArrayList<>();
             }
-            
-            if(readedDialogues.contains(getName())) {
+
+            if (readedDialogues.contains(getName())) {
                 return false;
             }
-            
+
             readedDialogues.add(getName());
             playerCache.set("players." + player.getUniqueId() + ".readed-dialogues", readedDialogues);
             playerCache.save();
         }
-        
-        main.getAPI().getUser(player).runDialogueExpressions(firstInteraction, displayName);    
+
+        main.getAPI().getUser(player).runDialogueExpressions(firstInteraction, displayName);
         return true;
     }
 

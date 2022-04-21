@@ -19,7 +19,7 @@ import com.github.iatog.characterdialogue.api.method.AbstractMethod;
 import com.github.iatog.characterdialogue.api.user.User;
 
 public class DefaultCharacterDialogueAPI implements CharacterDialogueAPI {
-    
+
     private CharacterDialoguePlugin PLUGIN = CharacterDialoguePlugin.getInstance();
 
     @Override
@@ -29,12 +29,12 @@ public class DefaultCharacterDialogueAPI implements CharacterDialogueAPI {
 
     @Override
     public void reloadHolograms() {
-        
+
     }
 
     @Override
     public void loadHologram(int npcId) {
-        
+
     }
 
     @Override
@@ -71,27 +71,27 @@ public class DefaultCharacterDialogueAPI implements CharacterDialogueAPI {
     @Override
     public List<DialogueLine> parseLines(List<String> lines, String npcName) {
         List<DialogueLine> parsedLines = new ArrayList<>();
-        
-        for(String line : lines) {
-            if(!line.matches("(.*)+(:)+(.*)")) {
+
+        for (String line : lines) {
+            if (!line.matches("(.*)+(:)+(.*)")) {
                 PLUGIN.getLogger().warning("failed to load an invalid dialogue line (" + line + ")");
                 continue;
             }
-            
+
             Cache<String, AbstractMethod> methods = PLUGIN.getCacheFactory().getMethods();
             String[] splitted = line.split(line);
             String methodName = splitted[0].trim();
             String arguments = splitted[1].trim();
-            
-            if(!methods.contains(methodName)) {
+
+            if (!methods.contains(methodName)) {
                 PLUGIN.getLogger().severe("failed to load an dialogue line (invalid method: " + methodName + ")");
                 continue;
             }
-            
+
             parsedLines.add(new SimpleDialogueLine(methods.get(methodName), arguments, npcName));
         }
-        
+
         return parsedLines;
     }
-    
+
 }

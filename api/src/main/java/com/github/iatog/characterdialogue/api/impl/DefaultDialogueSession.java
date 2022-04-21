@@ -13,31 +13,31 @@ import com.github.iatog.characterdialogue.api.dialogue.DialogueSession;
 import com.github.iatog.characterdialogue.api.user.User;
 
 public class DefaultDialogueSession implements DialogueSession {
-    
+
     private final CharacterDialogueAPI API = CharacterDialogueAPI.create();
-    
+
     private final Player player;
     private final User user;
     private final Dialogue dialogue;
     private List<DialogueLine> lines;
-    
+
     protected int index;
     protected boolean paused;
-    
+
     public DefaultDialogueSession(Player player, Dialogue dialogue) {
         this.player = player;
         this.dialogue = dialogue;
         this.lines = this.dialogue.getLines();
         this.user = API.getUser(player);
     }
-    
+
     @Override
     public void start(int index) {
         if (lines.size() < 1) {
             this.destroy();
             return;
         }
-        
+
         for (int i = index; i < lines.size(); i++) {
             if (paused) {
                 this.paused = false;
@@ -50,17 +50,18 @@ public class DefaultDialogueSession implements DialogueSession {
             if (dialog == null) {
                 continue;
             }
-            
-            user.runDialogueExpression(dialog.getMethod().getIdentifier(), dialog.getArgument(), dialogue.getDisplayName(), (x) -> {
-                destroy();
-            }, this);
+
+            user.runDialogueExpression(dialog.getMethod().getIdentifier(), dialog.getArgument(),
+                    dialogue.getDisplayName(), (x) -> {
+                        destroy();
+                    }, this);
 
             if (i == lines.size() - 1) {
                 destroy();
-                if(user.canEnableMovement()) {
+                if (user.canEnableMovement()) {
                     user.setMovement(true);
                 }
-                
+
                 break;
             }
         }
@@ -91,11 +92,11 @@ public class DefaultDialogueSession implements DialogueSession {
         pause();
         Cache<UUID, DialogueSession> sessions = API.getPlugin().getCacheFactory().getDialogueSessions();
         UUID uid = player.getUniqueId();
-        
-        if(sessions.contains(uid)) {
+
+        if (sessions.contains(uid)) {
             sessions.remove(uid);
         }
-        
+
     }
 
     @Override

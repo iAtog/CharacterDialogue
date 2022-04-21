@@ -7,13 +7,13 @@ import java.util.function.BiConsumer;
 import com.github.iatog.characterdialogue.api.cache.Cache;
 
 public class SimpleCache<K, V> implements Cache<K, V> {
-    
+
     private final Map<K, V> map;
-    
+
     public SimpleCache() {
         this.map = new ConcurrentHashMap<>();
     }
-    
+
     @Override
     public V get(K key) {
         return map.get(key);
