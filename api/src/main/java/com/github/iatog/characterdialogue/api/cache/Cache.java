@@ -1,5 +1,6 @@
 package com.github.iatog.characterdialogue.api.cache;
 
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 public interface Cache<K, V> {
@@ -13,5 +14,7 @@ public interface Cache<K, V> {
     V remove(K key);
     
     void forEach(BiConsumer<K, V> consumer);
+    
+    Map<K, V> map();
 
 }
