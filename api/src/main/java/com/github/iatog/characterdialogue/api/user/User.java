@@ -23,8 +23,8 @@ public interface User {
     void runDialogueExpression(String method, String argument);
     void runDialogueExpression(String method, String argument, String npcName);
     void runDialogueExpression(String method, String argument, String npcName, Consumer<DialogueLine> fail, DialogueSession session);
-    void runDialogueExpressions(List<String> lines, ClickType type, int npcId, String displayName);
-    void runDialogueExpressions(List<String> lines, String displayName);
+    void runDialogueExpressions(List<DialogueLine> lines, ClickType type, int npcId, String displayName);
+    void runDialogueExpressions(List<DialogueLine> lines, String displayName);
 
     boolean setMovement(boolean movement);
     boolean canEnableMovement();
