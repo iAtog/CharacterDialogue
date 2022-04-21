@@ -7,6 +7,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.github.iatog.characterdialogue.api.CharacterDialogueAPI;
 import com.github.iatog.characterdialogue.api.PluginInstance;
 import com.github.iatog.characterdialogue.api.cache.CacheFactory;
+import com.github.iatog.characterdialogue.api.file.DialogueFileManager;
+import com.github.iatog.characterdialogue.api.file.YamlFileRegistry;
 import com.github.iatog.characterdialogue.api.service.Service;
 import com.github.iatog.characterdialogue.module.BinderModule;
 
@@ -21,10 +23,15 @@ public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstanc
 
     @Inject
     private CharacterDialogueAPI api;
-    
+
     @Inject
     private CacheFactory cache;
-    
+
+    @Inject
+    private YamlFileRegistry registry;
+
+    private DialogueFileManager dialogueManager;
+
     @Override
     public void onLoad() {
         INSTANCE = this;
@@ -37,6 +44,7 @@ public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstanc
 
         injector.injectMembers(this);
 
+        this.dialogueManager = DialogueFileManager.createManager(this);
         service.start();
     }
 
@@ -57,6 +65,16 @@ public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstanc
     @Override
     public CacheFactory getCacheFactory() {
         return cache;
+    }
+
+    @Override
+    public YamlFileRegistry getFileRegistry() {
+        return registry;
+    }
+
+    @Override
+    public DialogueFileManager getDialogueManager() {
+        return dialogueManager;
     }
 
 }
