@@ -3,7 +3,8 @@ package com.github.iatog.characterdialogue.api.dialogue;
 import java.util.List;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
+
+import com.github.iatog.characterdialogue.api.types.ClickType;
 
 public interface Dialogue {
     
@@ -12,6 +13,7 @@ public interface Dialogue {
 
     ClickType getClickType();
     DialoguePermission getPermissions();
+    DialogueHologram getHologram();
 
     List<DialogueLine> getLines();
     List<DialogueLine> getFirstInteractionLines();
