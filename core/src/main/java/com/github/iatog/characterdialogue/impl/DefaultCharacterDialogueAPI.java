@@ -1,34 +1,35 @@
 package com.github.iatog.characterdialogue.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import com.github.iatog.characterdialogue.CharacterDialoguePlugin;
 import com.github.iatog.characterdialogue.api.CharacterDialogueAPI;
 import com.github.iatog.characterdialogue.api.PluginInstance;
+import com.github.iatog.characterdialogue.api.cache.Cache;
 import com.github.iatog.characterdialogue.api.dialogue.Dialogue;
+import com.github.iatog.characterdialogue.api.dialogue.DialogueLine;
+import com.github.iatog.characterdialogue.api.file.YamlFile;
+import com.github.iatog.characterdialogue.api.method.AbstractMethod;
 import com.github.iatog.characterdialogue.api.user.User;
 
 public class DefaultCharacterDialogueAPI implements CharacterDialogueAPI {
     
     private CharacterDialoguePlugin PLUGIN = CharacterDialoguePlugin.getInstance();
-    
-    @Override
-    public String getDialogueByNPC(int id) {
-        return null;
-    }
 
     @Override
     public Dialogue getDialogue(String name) {
-        return null;
+        return PLUGIN.getCacheFactory().getDialogues().get(name);
     }
 
     @Override
     public void reloadHolograms() {
-
+        
     }
 
     @Override
@@ -38,17 +39,18 @@ public class DefaultCharacterDialogueAPI implements CharacterDialogueAPI {
 
     @Override
     public Dialogue getNPCDialogue(int id) {
-        return null;
+        return getDialogue(getNPCDialogueName(id));
     }
 
     @Override
     public Map<String, Dialogue> getDialogues() {
-        return null;
+        return Collections.unmodifiableMap(PLUGIN.getCacheFactory().getDialogues().map());
     }
 
     @Override
     public String getNPCDialogueName(int id) {
-        return null;
+        YamlFile config = PLUGIN.getFileRegistry().getFile("config");
+        return config.getString("npc." + id);
     }
 
     @Override
@@ -67,7 +69,29 @@ public class DefaultCharacterDialogueAPI implements CharacterDialogueAPI {
     }
 
     @Override
-    public User getUser(Player player) {
-        return getUser(player.getUniqueId());
+    public List<DialogueLine> parseLines(List<String> lines, String npcName) {
+        List<DialogueLine> parsedLines = new ArrayList<>();
+        
+        for(String line : lines) {
+            if(!line.matches("(.*)+(:)+(.*)")) {
+                PLUGIN.getLogger().warning("failed to load an invalid dialogue line (" + line + ")");
+                continue;
+            }
+            
+            Cache<String, AbstractMethod> methods = PLUGIN.getCacheFactory().getMethods();
+            String[] splitted = line.split(line);
+            String methodName = splitted[0].trim();
+            String arguments = splitted[1].trim();
+            
+            if(!methods.contains(methodName)) {
+                PLUGIN.getLogger().severe("failed to load an dialogue line (invalid method: " + methodName + ")");
+                continue;
+            }
+            
+            parsedLines.add(new SimpleDialogueLine(methods.get(methodName), arguments, npcName));
+        }
+        
+        return parsedLines;
     }
+    
 }
