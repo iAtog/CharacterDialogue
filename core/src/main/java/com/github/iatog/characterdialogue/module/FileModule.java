@@ -1,35 +1,23 @@
 package com.github.iatog.characterdialogue.module;
 
 import com.github.iatog.characterdialogue.CharacterDialoguePlugin;
-import com.github.iatog.characterdialogue.util.Configuration;
+import com.github.iatog.characterdialogue.api.file.YamlFileRegistry;
 
 import team.unnamed.inject.Binder;
 import team.unnamed.inject.Module;
 
 public class FileModule implements Module {
     
-    private final CharacterDialoguePlugin main;
+    private final YamlFileRegistry registry;
     
     public FileModule(CharacterDialoguePlugin main) {
-        this.main = main;
+        this.registry = YamlFileRegistry.create(main, "config", "language", "player-cache");
     }
     
     @Override
     public void configure(Binder binder) {
-        binder.bind(Configuration.class)
-                .toInstance(new Configuration(main, "config"));
-        
-        binder.bind(Configuration.class)
-                .named("dialogues")
-                .toInstance(new Configuration(main, "dialogues"));
-        
-        binder.bind(Configuration.class)
-                .named("language")
-                .toInstance(new Configuration(main, "language"));
-        
-        binder.bind(Configuration.class)
-                .named("player-cache")
-                .toInstance(new Configuration(main, "player-cache"));
+        binder.bind(YamlFileRegistry.class)
+                .toInstance(registry);
     }
 
 }
