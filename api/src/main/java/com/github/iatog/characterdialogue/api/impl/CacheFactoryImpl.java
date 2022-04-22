@@ -16,12 +16,11 @@ public class CacheFactoryImpl implements CacheFactory {
     private final Cache<UUID, User> users;
     private final Cache<String, Dialogue> dialogues;
 
-    public CacheFactoryImpl(Cache<UUID, DialogueSession> sessions, Cache<String, AbstractMethod> methods,
-            Cache<UUID, User> users, Cache<String, Dialogue> dialogues) {
-        this.sessions = sessions;
-        this.methods = methods;
-        this.users = users;
-        this.dialogues = dialogues;
+    public CacheFactoryImpl() {
+        this.sessions = new SimpleCache<>();
+        this.methods = new SimpleCache<>();
+        this.users = new SimpleCache<>();
+        this.dialogues = new SimpleCache<>();
     }
 
     @Override
