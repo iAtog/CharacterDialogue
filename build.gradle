@@ -1,0 +1,58 @@
+plugins {
+	id 'java'
+	id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+repositories {
+	mavenCentral()
+	
+	maven {
+		url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+	}
+	
+	maven {
+		url "https://oss.sonatype.org/content/groups/public/"
+	}
+	
+	maven {
+		url "https://repo.unnamed.team/repository/unnamed-public/"
+	}
+	
+	maven {
+		url "https://repo.citizensnpcs.co/"
+	}
+	
+	maven {
+		url "https://repo.codemc.io/repository/maven-public/"
+	}
+	
+	maven {
+        url 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
+
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'net.citizensnpcs:citizensapi:2.0.28-SNAPSHOT'
+    compileOnly 'net.md-5:bungeecord-chat:1.8-SNAPSHOT'
+    compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.9'
+    compileOnly 'me.clip:placeholderapi:2.10.9'
+    implementation 'me.fixeddev:commandflow-universal:0.4.5'
+    implementation 'me.fixeddev:commandflow-bukkit:0.4.0'
+    compileOnly 'org.apache.logging.log4j:log4j-api:2.17.2'
+	compileOnly 'org.apache.logging.log4j:log4j-core:2.17.2'
+    
+}
+
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+shadowJar {
+	archiveBaseName.set("CharacterDialogue")
+	minimize()
+}
+
