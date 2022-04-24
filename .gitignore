@@ -6,3 +6,4 @@ doc/
 dependency-reduced-pom.xml
 /bin/
 /.gradle/
+/build/
