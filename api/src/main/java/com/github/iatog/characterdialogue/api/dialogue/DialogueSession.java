@@ -6,7 +6,10 @@ import org.bukkit.entity.Player;
 
 public interface DialogueSession {
     void start(int index);
-    void start();
+    
+    default void start() {
+        start(0);
+    }
     
     boolean hasNext();
     

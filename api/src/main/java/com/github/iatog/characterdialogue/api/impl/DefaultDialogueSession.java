@@ -18,17 +18,22 @@ public class DefaultDialogueSession implements DialogueSession {
 
     private final Player player;
     private final User user;
-    private final Dialogue dialogue;
-    private List<DialogueLine> lines;
+    private final List<DialogueLine> lines;
+
+    private final String displayName;
 
     protected int index;
     protected boolean paused;
 
-    public DefaultDialogueSession(Player player, Dialogue dialogue) {
+    public DefaultDialogueSession(Player player, String displayName, List<DialogueLine> lines) {
         this.player = player;
-        this.dialogue = dialogue;
-        this.lines = this.dialogue.getLines();
         this.user = API.getUser(player);
+        this.lines = lines;
+        this.displayName = displayName;
+    }
+
+    public DefaultDialogueSession(Player player, Dialogue dialogue) {
+        this(player, dialogue.getDisplayName(), dialogue.getLines());
     }
 
     @Override
@@ -51,10 +56,9 @@ public class DefaultDialogueSession implements DialogueSession {
                 continue;
             }
 
-            user.runDialogueExpression(dialog.getMethod().getIdentifier(), dialog.getArgument(),
-                    dialogue.getDisplayName(), (x) -> {
-                        destroy();
-                    }, this);
+            user.runDialogueExpression(dialog.getMethod().getIdentifier(), dialog.getArgument(), displayName, (x) -> {
+                destroy();
+            }, this);
 
             if (i == lines.size() - 1) {
                 destroy();
