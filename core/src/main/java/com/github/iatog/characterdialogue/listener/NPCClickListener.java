@@ -27,7 +27,6 @@ public class NPCClickListener implements Listener {
     }
     
     private void onClick(NPCClickEvent event, ClickType clickType) {
-        
         Player player = event.getClicker();
         int npcId = event.getNPC().getId();
         Dialogue dialogue = API.getNPCDialogue(npcId);

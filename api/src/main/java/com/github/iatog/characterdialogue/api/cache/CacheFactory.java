@@ -16,5 +16,5 @@ public interface CacheFactory {
     Cache<UUID, User> getUsers();
     
     Cache<String, Dialogue> getDialogues();
-
+    
 }
