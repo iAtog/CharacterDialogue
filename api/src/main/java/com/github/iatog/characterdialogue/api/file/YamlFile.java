@@ -38,6 +38,14 @@ public class YamlFile extends YamlConfiguration {
         String result = getString(path);
         return colorize ? ChatColor.translateAlternateColorCodes('&', result) : result;
     }
+    
+    public float getFloat(String path, float def) {
+        return Float.parseFloat(super.getString(path, String.valueOf(def)));
+    }
+    
+    public float getFloat(String path) {
+        return getFloat(path, 0);
+    }
 
     public void create() {
         try {
