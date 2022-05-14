@@ -18,7 +18,6 @@ import com.github.iatog.characterdialogue.api.dialogue.DialogueSession;
 import com.github.iatog.characterdialogue.api.file.YamlFile;
 import com.github.iatog.characterdialogue.api.impl.DefaultDialogueSession;
 import com.github.iatog.characterdialogue.api.method.AbstractMethod;
-import com.github.iatog.characterdialogue.api.types.ClickType;
 import com.github.iatog.characterdialogue.api.user.User;
 import com.github.iatog.characterdialogue.util.StringUtil;
 
@@ -68,11 +67,23 @@ public class UserImpl implements User {
 
     @Override
     public void runDialogue(Dialogue dialogue) {
-        
+        Cache<UUID, DialogueSession> cache = PLUGIN.getCacheFactory().getDialogueSessions();
+        if (cache.contains(player.getUniqueId())) {
+            return;
+        }
+
+        DialogueSession session = new DefaultDialogueSession(player, dialogue);
+
+        if (!dialogue.isMovementAllowed()) {
+            setMovement(false);
+        }
+
+        cache.set(player.getUniqueId(), session);
+        session.start(0);
     }
 
     @Override
-    public void runDialogueExpression(String method, String argument, String npcName, Consumer<DialogueLine> fail, DialogueSession session) {
+    public void runDialogueExpression(String method, String arg, String npcName, Consumer<DialogueLine> fail, DialogueSession session) {
         Cache<String, AbstractMethod> methods = PLUGIN.getCacheFactory().getMethods();
         
         if(!methods.contains(method)) {
@@ -80,7 +91,10 @@ public class UserImpl implements User {
             return;
         }
         
+        String argument = StringUtil.translatePlaceholders(player, arg, npcName);
+        AbstractMethod methodObject = methods.get(method);
         
+        methodObject.run(player, argument, session);
     }
 
     @Override

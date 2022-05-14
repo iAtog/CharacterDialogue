@@ -29,7 +29,7 @@ public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstanc
 
     @Inject
     private YamlFileRegistry registry;
-
+    
     private DialogueFileManager dialogueManager;
 
     @Override
@@ -76,5 +76,5 @@ public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstanc
     public DialogueFileManager getDialogueManager() {
         return dialogueManager;
     }
-
+    
 }
