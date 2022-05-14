@@ -1,6 +1,6 @@
 package com.github.iatog.characterdialogue.api.hook;
 
-public interface HologramHook extends Hook {
+public interface HologramHook {
 
     void reloadHolograms();
 
