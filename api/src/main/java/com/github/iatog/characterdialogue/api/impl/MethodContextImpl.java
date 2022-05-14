@@ -3,15 +3,15 @@ package com.github.iatog.characterdialogue.api.impl;
 import org.bukkit.entity.Player;
 
 import com.github.iatog.characterdialogue.api.dialogue.DialogueSession;
-import com.github.iatog.characterdialogue.api.method.Method;
+import com.github.iatog.characterdialogue.api.method.MethodContext;
 
-public class MethodImpl implements Method {
+public class MethodContextImpl implements MethodContext {
 
     private final Player player;
     private final String argument;
     private final DialogueSession session;
 
-    public MethodImpl(Player player, String argument, DialogueSession session) {
+    public MethodContextImpl(Player player, String argument, DialogueSession session) {
         this.player = player;
         this.argument = argument;
         this.session = session;

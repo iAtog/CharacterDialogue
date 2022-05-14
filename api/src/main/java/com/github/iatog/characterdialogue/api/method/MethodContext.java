@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import com.github.iatog.characterdialogue.api.dialogue.DialogueSession;
 
-public interface Method {
+public interface MethodContext {
     
     public Player getPlayer();
     public String getArgument();
