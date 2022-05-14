@@ -1,4 +1,4 @@
-package com.github.iatog.characterdialogue.hook;
+package com.github.iatog.characterdialogue.hook.hologram;
 
 import java.util.List;
 

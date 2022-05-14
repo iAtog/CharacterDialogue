@@ -1,4 +1,4 @@
-package com.github.iatog.characterdialogue.hook;
+package com.github.iatog.characterdialogue.hook.hologram;
 
 import com.github.iatog.characterdialogue.CharacterDialoguePlugin;
 import com.github.iatog.characterdialogue.api.hook.HologramHook;

@@ -5,6 +5,8 @@ import org.bukkit.Bukkit;
 import com.github.iatog.characterdialogue.CharacterDialoguePlugin;
 import com.github.iatog.characterdialogue.api.hook.HologramHook;
 import com.github.iatog.characterdialogue.hook.hologram.DecentHologramsHook;
+import com.github.iatog.characterdialogue.hook.hologram.HolographicDisplaysHook;
+import com.github.iatog.characterdialogue.hook.hologram.InvalidHologramsHook;
 
 public class HookHandler {
     
