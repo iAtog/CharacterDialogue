@@ -11,7 +11,6 @@ import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilderImpl;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.part.PartInjector;
 import me.fixeddev.commandflow.annotated.part.defaults.DefaultsModule;
-import me.fixeddev.commandflow.bukkit.BukkitCommandManager;
 import me.fixeddev.commandflow.bukkit.factory.BukkitModule;
 
 public class CommandService implements Service {
@@ -20,10 +19,8 @@ public class CommandService implements Service {
     private CharacterDialoguePlugin main;
     
     private AnnotatedCommandTreeBuilder builder;
-    private BukkitCommandManager commandManager;
     
     public CommandService() {
-        this.commandManager = new BukkitCommandManager("CharacterDialogue");
         PartInjector injector = PartInjector.create();
         injector.install(new DefaultsModule());
         injector.install(new BukkitModule());
@@ -38,7 +35,7 @@ public class CommandService implements Service {
     
     private void registerCommands(CommandClass... commands) {
         for (CommandClass command : commands) {
-            commandManager.registerCommands(builder.fromClass(command));
+            main.getCommandManager().registerCommands(builder.fromClass(command));
         }
     }
     

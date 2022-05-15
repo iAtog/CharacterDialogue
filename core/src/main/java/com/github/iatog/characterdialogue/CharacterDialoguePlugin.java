@@ -12,6 +12,7 @@ import com.github.iatog.characterdialogue.api.file.YamlFileRegistry;
 import com.github.iatog.characterdialogue.api.service.Service;
 import com.github.iatog.characterdialogue.module.BinderModule;
 
+import me.fixeddev.commandflow.bukkit.BukkitCommandManager;
 import team.unnamed.inject.Injector;
 
 public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstance {
@@ -31,6 +32,7 @@ public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstanc
     private YamlFileRegistry registry;
     
     private DialogueFileManager dialogueManager;
+    private BukkitCommandManager commandManager;
 
     @Override
     public void onLoad() {
@@ -39,6 +41,8 @@ public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstanc
 
     @Override
     public void onEnable() {
+        this.commandManager = new BukkitCommandManager("CharacterDialogue");
+
         BinderModule module = new BinderModule(this);
         Injector injector = module.createInjector();
 
@@ -50,6 +54,10 @@ public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstanc
 
     public static CharacterDialoguePlugin getInstance() {
         return INSTANCE;
+    }
+
+    public BukkitCommandManager getCommandManager() {
+        return commandManager;
     }
 
     @Override
