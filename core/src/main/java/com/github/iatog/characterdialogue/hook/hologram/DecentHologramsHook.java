@@ -60,7 +60,7 @@ public class DecentHologramsHook implements HologramHook {
         if(hologram != null && hologram.isEnabled()) {
             Location location = citizensNpc.getStoredLocation();
             location.add(0, 2 + hologram.getY(), 0);
-            Hologram holo = DHAPI.createHologram(String.valueOf(npcId), location);
+            Hologram holo = DHAPI.createHologram("characterdialogue-hologram-" + npcId, location);
             String npcName = dialogue.getDisplayName();
             List<String> lines = new ArrayList<>();
             
@@ -70,6 +70,7 @@ public class DecentHologramsHook implements HologramHook {
             
             DHAPI.setHologramLines(holo, lines);
             citizensNpc.setAlwaysUseNameHologram(false);
+            holograms.add("characterdialogue-hologram-" + npcId);
         }
     }
 
