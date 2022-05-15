@@ -122,10 +122,9 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>de.themoep</groupId>
-      <artifactId>inventorygui</artifactId>
-      <version>1.5.1-SNAPSHOT</version>
-      <scope>compile</scope>
+      <groupId>team.unnamed.gui</groupId>
+      <artifactId>core</artifactId>
+      <version>2.3.3-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
