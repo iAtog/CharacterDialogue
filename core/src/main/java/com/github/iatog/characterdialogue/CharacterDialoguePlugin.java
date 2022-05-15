@@ -10,6 +10,7 @@ import com.github.iatog.characterdialogue.api.cache.CacheFactory;
 import com.github.iatog.characterdialogue.api.file.DialogueFileManager;
 import com.github.iatog.characterdialogue.api.file.YamlFileRegistry;
 import com.github.iatog.characterdialogue.api.service.Service;
+import com.github.iatog.characterdialogue.hook.HookHandler;
 import com.github.iatog.characterdialogue.module.BinderModule;
 
 import me.fixeddev.commandflow.bukkit.BukkitCommandManager;
@@ -33,6 +34,7 @@ public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstanc
     
     private DialogueFileManager dialogueManager;
     private BukkitCommandManager commandManager;
+    private HookHandler hookHandler;
 
     @Override
     public void onLoad() {
@@ -42,6 +44,7 @@ public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstanc
     @Override
     public void onEnable() {
         this.commandManager = new BukkitCommandManager("CharacterDialogue");
+        this.hookHandler = new HookHandler(this);
 
         BinderModule module = new BinderModule(this);
         Injector injector = module.createInjector();
@@ -83,6 +86,10 @@ public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstanc
     @Override
     public DialogueFileManager getDialogueManager() {
         return dialogueManager;
+    }
+
+    public HookHandler getHookHandler() {
+        return hookHandler;
     }
     
 }
