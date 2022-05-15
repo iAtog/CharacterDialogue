@@ -29,12 +29,12 @@ public class DefaultCharacterDialogueAPI implements CharacterDialogueAPI {
 
     @Override
     public void reloadHolograms() {
-
+        PLUGIN.getHookHandler().getHologramHook().reloadHolograms();
     }
 
     @Override
     public void loadHologram(int npcId) {
-
+        PLUGIN.getHookHandler().getHologramHook().loadHologram(npcId);
     }
 
     @Override
