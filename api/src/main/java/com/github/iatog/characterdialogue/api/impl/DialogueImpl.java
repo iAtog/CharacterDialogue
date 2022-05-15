@@ -25,9 +25,7 @@ public class DialogueImpl implements Dialogue {
 
     private PluginInstance main;
 
-    public DialogueImpl(PluginInstance instance, String dialogName) {
-        YamlFile file = instance.getDialogueManager().getDialogue(dialogName);
-
+    public DialogueImpl(PluginInstance instance, String dialogName, YamlFile file) {
         String click = file.getString("click", "RIGHT").toUpperCase();
 
         this.lines = instance.getAPI().parseLines(file.getStringList("dialogue"));
@@ -55,6 +53,10 @@ public class DialogueImpl implements Dialogue {
         this.movement = file.getBoolean("allow-movement", true);
 
         this.main = instance;
+    }
+    
+    public DialogueImpl(PluginInstance instance, String dialogName) {
+        this(instance, dialogName, instance.getDialogueManager().getDialogue(dialogName));
     }
 
     @Override
