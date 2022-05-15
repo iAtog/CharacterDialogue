@@ -11,8 +11,10 @@ import com.github.iatog.characterdialogue.api.types.ClickType;
 import net.citizensnpcs.api.event.NPCClickEvent;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
+import net.citizensnpcs.api.event.NPCSpawnEvent;
+import net.citizensnpcs.api.npc.NPC;
 
-public class NPCClickListener implements Listener {
+public class NPCListener implements Listener {
     
     private CharacterDialogueAPI API = CharacterDialogueAPI.create();
     
@@ -26,6 +28,14 @@ public class NPCClickListener implements Listener {
         onClick(event, ClickType.RIGHT);
     }
     
+    @EventHandler
+    public void onNPCSpawn(NPCSpawnEvent event) {
+        NPC npc = event.getNPC();
+        int id = npc.getId();
+        
+        API.loadHologram(id);
+    }
+    
     private void onClick(NPCClickEvent event, ClickType clickType) {
         Player player = event.getClicker();
         int npcId = event.getNPC().getId();
@@ -33,5 +43,7 @@ public class NPCClickListener implements Listener {
         
         
     }
+    
+    
     
 }
