@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.bukkit.event.Listener;
 
-import com.github.iatog.characterdialogue.listener.NPCClickListener;
+import com.github.iatog.characterdialogue.listener.NPCListener;
 
 import team.unnamed.inject.Binder;
 import team.unnamed.inject.Module;
@@ -16,7 +16,7 @@ public class ListenerModule implements Module {
     @Override
     public void configure(Binder binder) {
         binder.bind(new TypeReference<List<Listener>>() {})
-                .toInstance(Arrays.asList(new NPCClickListener()));
+                .toInstance(Arrays.asList(new NPCListener()));
         
         
     }
