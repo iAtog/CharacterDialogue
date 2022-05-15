@@ -25,7 +25,7 @@ public class PrincipalCommand implements CommandClass {
     @Command(names = { "", "help" }, desc = "Main command")
     public void mainCommand(CommandSender sender) {
         sender.sendMessage(translatedList(
-                "&8[&cCharacterDialogue&8] &7Help",
+                "        &8[&cCharacterDialogue&8] &7Help",
                 "&7/&adialogue create &8<&name&8> &f- &ecreate a new dialogue",
                 "&7/&adialogue menu &f- &eopen dialogues menu",
                 "&7/&adialogue reload &f- &ereload the plugin",
@@ -35,6 +35,7 @@ public class PrincipalCommand implements CommandClass {
 
     @Command(names = "create", desc = "create a new dialogue")
     public void create(@Sender Player player, String name) {
+        
         
     }
 
