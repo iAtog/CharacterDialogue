@@ -1,5 +1,7 @@
 package com.github.iatog.characterdialogue.module;
 
+import com.github.iatog.characterdialogue.CharacterDialoguePlugin;
+import com.github.iatog.characterdialogue.api.file.DialogueFileManager;
 import com.github.iatog.characterdialogue.api.service.Service;
 import com.github.iatog.characterdialogue.service.DialogueService;
 import com.github.iatog.characterdialogue.service.ListenerService;
@@ -13,6 +15,7 @@ public class ServiceModule implements Module {
 
     @Override
     public void configure(Binder binder) {
+        DialogueFileManager dfm = DialogueFileManager.createManager(CharacterDialoguePlugin.getInstance());
         binder.bind(Service.class)
                 .to(MainService.class)
                 .in(Scopes.SINGLETON);
@@ -26,6 +29,9 @@ public class ServiceModule implements Module {
                 .named("dialogue")
                 .to(DialogueService.class)
                 .in(Scopes.SINGLETON);
+        
+        binder.bind(DialogueFileManager.class)
+                .toInstance(dfm);
     }
 
 }

@@ -32,7 +32,9 @@ public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstanc
     @Inject
     private YamlFileRegistry registry;
     
+    @Inject
     private DialogueFileManager dialogueManager;
+    
     private BukkitCommandManager commandManager;
     private HookHandler hookHandler;
 
@@ -51,7 +53,6 @@ public class CharacterDialoguePlugin extends JavaPlugin implements PluginInstanc
 
         injector.injectMembers(this);
 
-        this.dialogueManager = DialogueFileManager.createManager(this);
         service.start();
     }
 
