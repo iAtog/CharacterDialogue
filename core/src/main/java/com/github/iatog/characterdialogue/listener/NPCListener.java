@@ -27,12 +27,12 @@ public class NPCListener implements Listener {
     
     @EventHandler
     public void onLeftClick(NPCLeftClickEvent event) {
-        onClick(event, ClickType.LEFT);
+        onClick(event);
     }
     
     @EventHandler
     public void onRightClick(NPCRightClickEvent event) {
-        onClick(event, ClickType.RIGHT);
+        onClick(event);
     }
     
     @EventHandler
@@ -43,7 +43,7 @@ public class NPCListener implements Listener {
         API.loadHologram(id);
     }
     
-    private void onClick(NPCClickEvent event, ClickType clickType) {
+    private void onClick(NPCClickEvent event) {
         Player player = event.getClicker();
         int npcId = event.getNPC().getId();
         Dialogue dialogue = API.getNPCDialogue(npcId);
@@ -53,8 +53,14 @@ public class NPCListener implements Listener {
         if(dialogue == null || sessions.contains(player.getUniqueId())) {
             return;
         }
-
+        
+        ClickType clickType = dialogue.getClickType();
         DialoguePermission permissions = dialogue.getPermissions();
+
+        if (((event instanceof NPCRightClickEvent && clickType != ClickType.RIGHT)
+                || (event instanceof NPCLeftClickEvent && clickType != ClickType.LEFT)) && clickType != ClickType.ALL) {
+            return;
+        }
 
         if(permissions != null && permissions.getPermission() != null) {
             String permission = permissions.getPermission();
