@@ -2,8 +2,7 @@ package me.iatog.characterdialogue.dialogs.method;
 
 import static me.iatog.characterdialogue.util.TextUtils.colorize;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,13 +24,16 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.scheduler.BukkitTask;
 
 public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implements Listener {
 
 	public static String COMMAND_NAME = "/;;$/5-choice";
+	private final Map<UUID, BukkitTask> taskList;
 
 	public ChoiceMethod(CharacterDialoguePlugin main) {
 		super("choice", main);
+		taskList = new HashMap<>();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -89,11 +91,25 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		});
 
 		player.spigot().sendMessage(questions.create());
+
+		BukkitTask task = Bukkit.getScheduler().runTaskLater(getProvider(), () -> {
+			Map<UUID, DialogSession> dialogSessionMap = getProvider().getCache().getDialogSessions();
+			UUID uuid = player.getUniqueId();
+
+			sessions.remove(uuid);
+			dialogSessionMap.remove(uuid);
+
+			if(player.isOnline()) {
+				player.sendMessage(colorize("&cYou took a long time to answer"));
+			}
+ 		}, (long)(20 * 10));
+
+		taskList.put(player.getUniqueId(), task);
 	}
 
 	private BaseComponent[] getSelectText(int index) {
 		YamlFile file = provider.getFileFactory().getLanguage();
-		String text = file.getString("select-choice", "§aClick here to select #%str%").replace("%str%", index + "");
+		String text = file.getString("select-choice", "ï¿½aClick here to select #%str%").replace("%str%", index + "");
 		return new BaseComponent[] { new TextComponent(colorize(text)) };
 	}
 
@@ -128,7 +144,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		ChoiceSelectEvent choiceEvent = new ChoiceSelectEvent(player, uuid, choiceObject, session);
 		Bukkit.getPluginManager().callEvent(choiceEvent);
 
-		if (choiceEvent.isCancelled() || player == null) {
+		if (choiceEvent.isCancelled()) {
 			return;
 		}
 
@@ -140,7 +156,9 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 			return;
 		}
 
-		choiceTarget.onSelect(choiceObject.getArgument(), dialogSession, session);
+        assert choiceTarget != null;
+
+        choiceTarget.onSelect(choiceObject.getArgument(), dialogSession, session);
 		sessions.remove(playerId);
 	}
 
@@ -153,4 +171,5 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 
 		return null;
 	}
+
 }
