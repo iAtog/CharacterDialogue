@@ -55,14 +55,11 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
     }
 
     private void setupRunnable() {
-        Bukkit.getScheduler().runTaskTimer(getProvider(), new Runnable() {
-            @Override
-            public void run() {
-                for(UUID uuid : waitingPlayers.keySet()) {
-                    Player player = Bukkit.getPlayer(uuid);
-                    assert player != null;
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§c[ Sneak to continue ]"));
-                }
+        Bukkit.getScheduler().runTaskTimer(getProvider(), () -> {
+            for(UUID uuid : waitingPlayers.keySet()) {
+                Player player = Bukkit.getPlayer(uuid);
+                assert player != null;
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§c[ Sneak to continue ]"));
             }
         }, 40, 40);
     }
