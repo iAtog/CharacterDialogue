@@ -8,7 +8,7 @@ import me.iatog.characterdialogue.reflection.ReflectionUtil;
 
 public class TitleBuilder {
 	
-	private Player player;
+	private final Player player;
 	private String title;
 	private String subtitle;
 	
