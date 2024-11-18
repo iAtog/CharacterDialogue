@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import me.iatog.characterdialogue.api.events.DialogueFinishEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -43,7 +44,7 @@ public class DialogSession implements Session {
 	}
 
 	public void start(int index) {
-		if (lines.size() < 1) {
+		if (lines.isEmpty()) {
 			this.destroy();
 			return;
 		}
@@ -106,6 +107,9 @@ public class DialogSession implements Session {
 
 	public void destroy() {
 		cancel();
+		DialogueFinishEvent dialogueFinishEvent = new DialogueFinishEvent(getPlayer(), this);
+		Bukkit.getPluginManager().callEvent(dialogueFinishEvent);
+
 		Map<UUID, DialogSession> sessions = main.getCache().getDialogSessions();
 		if (sessions.containsKey(uuid)) {
 			sessions.remove(uuid);
