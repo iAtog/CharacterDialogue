@@ -37,9 +37,9 @@ dependencies {
     compileOnly 'net.citizensnpcs:citizensapi:2.0.28-SNAPSHOT'
     compileOnly 'net.md-5:bungeecord-chat:1.8-SNAPSHOT'
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.9'
-    compileOnly 'me.clip:placeholderapi:2.10.9'
-    implementation 'me.fixeddev:commandflow-universal:0.4.5'
-    implementation 'me.fixeddev:commandflow-bukkit:0.4.0'
+    compileOnly 'me.clip:placeholderapi:2.11.6'
+    implementation 'me.fixeddev:commandflow-universal:0.6.0'
+    implementation 'me.fixeddev:commandflow-bukkit:0.6.0'
     compileOnly 'org.apache.logging.log4j:log4j-api:2.17.2'
 	compileOnly 'org.apache.logging.log4j:log4j-core:2.17.2'
     
@@ -52,7 +52,7 @@ tasks.withType(JavaCompile) {
 }
 
 shadowJar {
-	archiveBaseName.set("CharacterDialogue")
+	archiveBaseName.set("character-dialogue")
 	minimize()
 }
 
