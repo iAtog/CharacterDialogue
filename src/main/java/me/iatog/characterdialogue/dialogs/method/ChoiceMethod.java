@@ -98,6 +98,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 
 			sessions.remove(uuid);
 			dialogSessionMap.remove(uuid);
+			taskList.remove(uuid);
 
 			if(player.isOnline()) {
 				player.sendMessage(colorize("&cYou took a long time to answer"));
@@ -160,6 +161,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 
         choiceTarget.onSelect(choiceObject.getArgument(), dialogSession, session);
 		sessions.remove(playerId);
+		taskList.remove(playerId).cancel();
 	}
 
 	private DialogChoice getByClassName(Class<? extends DialogChoice> clazz) {
