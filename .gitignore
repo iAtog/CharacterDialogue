@@ -7,5 +7,5 @@ dependency-reduced-pom.xml
 /bin/
 /.gradle/
 /build/
-.idea
+.idea/
 .gradle

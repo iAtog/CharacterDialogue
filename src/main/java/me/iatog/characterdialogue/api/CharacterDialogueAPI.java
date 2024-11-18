@@ -1,16 +1,15 @@
 package me.iatog.characterdialogue.api;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-
-import org.bukkit.entity.Player;
-
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.libraries.ApiImplementation;
 import me.iatog.characterdialogue.session.DialogSession;
+import org.bukkit.entity.Player;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public interface CharacterDialogueAPI {
 	//String searchDialogueByNPCId(int id);

@@ -7,16 +7,7 @@ import me.iatog.characterdialogue.dialogs.choice.DialogueChoice;
 import me.iatog.characterdialogue.dialogs.choice.MessageChoice;
 import me.iatog.characterdialogue.dialogs.choice.SendChoice;
 import me.iatog.characterdialogue.dialogs.choice.StartDialogChoice;
-import me.iatog.characterdialogue.dialogs.method.BroadcastMethod;
-import me.iatog.characterdialogue.dialogs.method.ChoiceMethod;
-import me.iatog.characterdialogue.dialogs.method.CommandMethod;
-import me.iatog.characterdialogue.dialogs.method.DispatchCommandMethod;
-import me.iatog.characterdialogue.dialogs.method.EffectMethod;
-import me.iatog.characterdialogue.dialogs.method.SendServerMethod;
-import me.iatog.characterdialogue.dialogs.method.SendMethod;
-import me.iatog.characterdialogue.dialogs.method.SoundMethod;
-import me.iatog.characterdialogue.dialogs.method.TeleportMethod;
-import me.iatog.characterdialogue.dialogs.method.WaitMethod;
+import me.iatog.characterdialogue.dialogs.method.*;
 
 public class CacheLoader implements Loader {
 	
@@ -39,7 +30,8 @@ public class CacheLoader implements Loader {
 				new TeleportMethod(),
 				new EffectMethod(main),
 				new SendServerMethod(main),
-				new ChoiceMethod(main)
+				new ChoiceMethod(main),
+				new SneakMethod(main)
 				);
 		
 		main.registerChoices(
