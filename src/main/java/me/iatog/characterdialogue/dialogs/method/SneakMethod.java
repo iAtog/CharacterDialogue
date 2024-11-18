@@ -4,6 +4,9 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.events.DialogueFinishEvent;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.DialogSession;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,13 +24,15 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
         super("waitsneak");
         this.provider = main;
         this.waitingPlayers = new HashMap<>();
+
+        setupRunnable();
     }
 
     @Override
     public void execute(Player player, String arg, DialogSession session) {
         waitingPlayers.put(player.getUniqueId(), session.getCurrentIndex());
         session.cancel();
-        player.sendMessage("§c[Sneak to continue]");
+        //player.sendMessage("§c[ Sneak to continue ]");
     }
 
     @EventHandler
@@ -47,5 +52,18 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
     @EventHandler
     public void onFinish(DialogueFinishEvent event) {
         waitingPlayers.remove(event.getPlayer().getUniqueId());
+    }
+
+    private void setupRunnable() {
+        Bukkit.getScheduler().runTaskTimer(getProvider(), new Runnable() {
+            @Override
+            public void run() {
+                for(UUID uuid : waitingPlayers.keySet()) {
+                    Player player = Bukkit.getPlayer(uuid);
+                    assert player != null;
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§c[ Sneak to continue ]"));
+                }
+            }
+        }, 40, 40);
     }
 }

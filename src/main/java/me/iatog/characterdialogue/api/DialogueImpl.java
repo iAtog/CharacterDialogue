@@ -13,16 +13,16 @@ import java.util.List;
 
 public class DialogueImpl implements Dialogue {
 	
-	private String dialogName;
-	private List<String> lines;
-	private ClickType clickType;
-	private String displayName;
+	private final String dialogName;
+	private final List<String> lines;
+	private final ClickType clickType;
+	private final String displayName;
 	private DialogHologram hologram;
-	private List<String> firstInteraction;
+	private final List<String> firstInteraction;
 	private DialoguePermission permissions;
-	private boolean movement;
+	private final boolean movement;
 	
-	private CharacterDialoguePlugin main;
+	private final CharacterDialoguePlugin main;
 	
 	public DialogueImpl(CharacterDialoguePlugin instance, String dialogName) {
 		YamlFile dialogsFile = instance.getFileFactory().getDialogs();
