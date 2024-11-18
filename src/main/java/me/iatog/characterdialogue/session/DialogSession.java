@@ -109,6 +109,7 @@ public class DialogSession implements Session {
 		cancel();
 		DialogueFinishEvent dialogueFinishEvent = new DialogueFinishEvent(getPlayer(), this);
 		Bukkit.getPluginManager().callEvent(dialogueFinishEvent);
+		main.getApi().enableMovement(this.getPlayer());
 
 		Map<UUID, DialogSession> sessions = main.getCache().getDialogSessions();
 		if (sessions.containsKey(uuid)) {
