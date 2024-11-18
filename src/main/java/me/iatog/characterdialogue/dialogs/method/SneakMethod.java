@@ -1,6 +1,7 @@
 package me.iatog.characterdialogue.dialogs.method;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.api.events.DialogueFinishEvent;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.DialogSession;
 import org.bukkit.entity.Player;
@@ -26,6 +27,7 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
     public void execute(Player player, String arg, DialogSession session) {
         waitingPlayers.put(player.getUniqueId(), session.getCurrentIndex());
         session.cancel();
+        player.sendMessage("§c[Sneak to continue]");
     }
 
     @EventHandler
@@ -38,6 +40,12 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
             int current = waitingPlayers.get(uid);
 
             session.start(current + 1);
+            waitingPlayers.remove(uid);
         }
+    }
+
+    @EventHandler
+    public void onFinish(DialogueFinishEvent event) {
+        waitingPlayers.remove(event.getPlayer().getUniqueId());
     }
 }
