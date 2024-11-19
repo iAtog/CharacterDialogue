@@ -53,7 +53,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 			return;
 		}
 
-		session.cancel();
+		session.pause();
 
 		for (String choice : config.getConfigurationSection("choice.choices." + arg).getKeys(false)) {
 			ConfigurationSection section = config.getConfigurationSection("choice.choices." + arg + "." + choice);

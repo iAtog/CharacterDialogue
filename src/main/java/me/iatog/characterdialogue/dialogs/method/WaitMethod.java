@@ -26,7 +26,7 @@ public class WaitMethod extends DialogMethod<CharacterDialoguePlugin> {
 		}
 
 		int next = session.getCurrentIndex() + 1;
-		session.cancel();
+		session.pause();
 		Bukkit.getScheduler().runTaskLater(getProvider(), new Runnable() {
 
 			@Override
@@ -34,7 +34,7 @@ public class WaitMethod extends DialogMethod<CharacterDialoguePlugin> {
 				if(next < session.getLines().size() && (player != null && player.isOnline())) {
 					session.start(next);
 				} else {
-					session.cancel();
+					session.pause();
 					session.destroy();
 				}
 			}

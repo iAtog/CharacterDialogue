@@ -36,7 +36,7 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
     @Override
     public void execute(Player player, String arg, DialogSession session) {
         waitingPlayers.put(player.getUniqueId(), session.getCurrentIndex());
-        session.cancel();
+        session.pause();
 
         if(!actionBar) {
             player.sendMessage("&7");

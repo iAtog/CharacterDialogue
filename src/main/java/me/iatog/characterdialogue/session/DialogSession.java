@@ -101,12 +101,12 @@ public class DialogSession implements Session {
 		return Bukkit.getPlayer(uuid);
 	}
 
-	public void cancel() {
+	public void pause() {
 		this.stop = true;
 	}
 
 	public void destroy() {
-		cancel();
+		pause();
 		DialogueFinishEvent dialogueFinishEvent = new DialogueFinishEvent(getPlayer(), this);
 		Bukkit.getPluginManager().callEvent(dialogueFinishEvent);
 		main.getApi().enableMovement(this.getPlayer());
