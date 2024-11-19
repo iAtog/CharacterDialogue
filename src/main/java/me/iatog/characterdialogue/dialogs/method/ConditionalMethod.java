@@ -1,5 +1,7 @@
 package me.iatog.characterdialogue.dialogs.method;
 
+import me.iatog.characterdialogue.placeholders.Placeholders;
+import me.iatog.characterdialogue.session.EmptyDialogSession;
 import me.iatog.characterdialogue.util.TextUtils;
 import org.bukkit.entity.Player;
 
@@ -7,12 +9,16 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.DialogSession;
 
+import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
+
 public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 
-	public ConditionalMethod() {
-		super("conditional");
+	public ConditionalMethod(CharacterDialoguePlugin main) {
+		super("conditional", main);
 		/**
-		 * PREDISEÑO DEL DIALOGO:
+		 * PREDESIGN:
 		 * lines:
 		 * - send: hello
 		 * - conditional:        CONDITIONAL    |               CONDITIONAL = TRUE                           |  CONDITIONAL = FALSE
@@ -22,52 +28,210 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 		 */
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public void execute(Player player, String arg, DialogSession session) {
-		//String condition = arg.split(":")[0];
-		//String toExecute = arg.substring(condition.length());
-		String[] arguments = arg.split("\\|");
-		String condition = arguments[0].trim();
-		String ifTrue = arguments[1].trim();
-		String ifFalse = arguments[2].trim();
-
-		boolean conditionResult = false;
-
 		try {
-			conditionResult = evaluateCondition(player, condition);
-		} catch(IllegalArgumentException e) {
-			player.sendMessage(TextUtils.colorize("&cFatal error occurred."));
-			getProvider().getLogger().warning("The dialogue '" + session.getDialogue().getName() + "' has an invalid condition in L" + session.getCurrentIndex());
-			session.destroy();
-			return;
-		}
+			String[] arguments = arg.split("\\|");
+			String condition = arguments[0].trim();
+			String ifTrue = arguments[1].trim();
+			String ifFalse = arguments[2].trim();
 
+			boolean conditionResult = false;
 
-		if(conditionResult) {
-			// ifTrue stuff
-		} else {
-			// ifFalse estufa
+			try {
+				conditionResult = evaluateCondition(player, condition);
+			} catch(IllegalArgumentException e) {
+				player.sendMessage(TextUtils.colorize("&c&lFatal error occurred."));
+				getProvider().getLogger().warning("The dialogue '" + session.getDialogue().getName() + "' has an invalid condition in L" + session.getCurrentIndex());
+				session.destroy();
+				return;
+			}
+
+			String actualExpression = conditionResult ? ifTrue : ifFalse;
+			String method;
+			String argument;
+			player.sendMessage(TextUtils.colorize("&e" + condition + "&7: &c" + conditionResult));
+			if(actualExpression.contains(":")) {
+				String[] parts = actualExpression.split(":", 2);
+				method = parts[0].trim().toUpperCase();
+				argument = parts.length > 1 ? parts[1].trim() : "";
+			} else {
+				method = actualExpression.trim().toUpperCase();
+				argument = "";
+			}
+
+			ConditionalExpression expression = ConditionalExpression.valueOf(method);
+			expression.execute(new ConditionData(session, getProvider(), argument));
+			// pero estas chill de cojones
+		} catch(IndexOutOfBoundsException|IllegalArgumentException e) {
+			player.sendMessage(TextUtils.colorize("&c&lFatal error occurred."));
+			getProvider().getLogger().warning("The dialogue '" + session.getDialogue().getName() + "' has an invalid format in L" + session.getCurrentIndex());
+			e.printStackTrace();
 		}
 	}
 
 	public boolean evaluateCondition(Player player, String condition) {
-		String[] parts = condition.split("==");
-		if (parts.length != 2) {
-			throw new IllegalArgumentException("Invalid condition format");
+		Operator operator = null;
+		String leftSide = null;
+		String rightSide = null;
+
+		for (Operator op : Operator.values()) {
+			if (condition.contains(op.getText())) {
+				operator = op;
+				String[] parts = condition.split(Pattern.quote(op.getText()));
+				leftSide = Placeholders.translate(player, parts[0].trim());
+				rightSide = Placeholders.translate(player, parts[1].trim());
+				break;
+			}
 		}
 
-		String placeholder = replacePlaceholders(player, parts[0].trim());
-		String value = parts[1].trim();
+		if (operator == null || leftSide == null || rightSide == null) {
+			throw new IllegalArgumentException("Invalid format");
+		}
 
-		return placeholder.equals(value);
+		return compareCondition(leftSide, rightSide, operator);
 	}
 
-	public String replacePlaceholders(Player player, String text) {
-		// SUPPORT PARA PLACEHOLDERAPI DESPUES
-		return text
-				.replace("%playername%", player.getName())
-				.replace("%time%", String.valueOf(player.getWorld().getTime()));
+	private boolean compareCondition(String left, String right, Operator operator) {
+		try {
+			double leftDouble = 0;
+			double rightDouble = 0;
+
+			if(isDouble(left))
+				leftDouble = Double.parseDouble(left);
+
+			if(isDouble(right))
+				rightDouble = Double.parseDouble(right);
+
+			switch (operator) {
+				case LESS_THAN:
+					return leftDouble < rightDouble;
+                case LESS_THAN_EQUAL:
+					return leftDouble <= rightDouble;
+                case MORE_THAN:
+					return leftDouble > rightDouble;
+                case MORE_THAN_EQUAL:
+					return leftDouble >= rightDouble;
+                case EQUAL_TO:
+					return left.equals(right);
+				case NOT_EQUAL_TO:
+					return !left.equals(right);
+				default:
+					return false;
+            }
+		} catch(NumberFormatException e) {
+			throw new IllegalArgumentException("The values cannot be compared: " + left + " y " + right);
+		}
 	}
 
+	public boolean isDouble(String input) {
+		try {
+			Double.parseDouble(input);
+			return true;
+		} catch(NumberFormatException e) {
+			return false;
+		}
+	}
+
+	public enum Operator {
+		LESS_THAN_EQUAL("<="),
+		MORE_THAN_EQUAL(">="),
+		NOT_EQUAL_TO("!="),
+		LESS_THAN("<"),
+		MORE_THAN(">"),
+		EQUAL_TO("==");
+
+
+		private final String text;
+
+		Operator(String text) {
+			this.text = text;
+		}
+
+		public String getText() {
+			return this.text;
+		}
+	}
+
+	public enum ConditionalExpression {
+		//RUN_DIALOGUE/STOP_AND_SEND_MESSAGE/STOP/RUN_METHOD/CONTINUE
+		RUN_DIALOGUE(data -> { // TODO: fix issue, on run dialog only the first line is executing
+			DialogSession session = data.getSession();
+			Player player = session.getPlayer();
+			String expression = data.getExpression();
+			session.destroy();
+
+			if(!data.getMain().getCache().getDialogues().containsKey(expression) || expression.isEmpty()) {
+				data.getMain().getLogger().severe("The dialogue '" + expression + "' was not found.");
+				player.sendMessage(TextUtils.colorize("&c&lUnknown dialogue found."));
+				return;
+			}
+
+			data.getMain().getApi().runDialogue(player, expression);
+		}),
+		STOP_SEND_MSG(data -> {
+			Player player = data.getSession().getPlayer();
+			data.getSession().destroy();
+			player.sendMessage(Placeholders.translate(player, data.getExpression()));
+		}),
+		STOP(data -> {
+			data.getSession().destroy();
+		}),
+		RUN_METHOD(data -> {
+			DialogSession session = data.getSession();
+			Player player = session.getPlayer();
+			String expression = data.getExpression();
+
+			if(data.getExpression().isEmpty() || data.getMain().getCache().getMethods().containsKey(expression)) {
+				session.destroy();
+				data.getMain().getLogger().severe("The dialogue '" + expression + "' was not found.");
+				player.sendMessage("&c&lUnknown method found.");
+				return;
+			}
+
+			data.getMain().getApi().runDialogueExpression(player, expression, session.getDisplayName(), fail -> {
+				player.sendMessage(TextUtils.colorize("&c&lUnknown method found"));
+				session.destroy();
+				data.getMain().getLogger().severe("The method '" + expression + "' was not found.");
+			}, new EmptyDialogSession(data.getMain(), player, Arrays.asList(expression), session.getDisplayName()));
+		}),
+		CONTINUE(data -> {
+			// yeah
+		});
+
+		private final Consumer<ConditionData> action;
+
+		ConditionalExpression(Consumer<ConditionData> action) {
+			this.action = action;
+		}
+
+		public void execute(ConditionData data) {
+			action.accept(data);
+		}
+	}
+
+	public static class ConditionData {
+
+		private final DialogSession session;
+		private final CharacterDialoguePlugin main;
+		private final String expression;
+
+		public ConditionData(DialogSession session, CharacterDialoguePlugin main, String expression) {
+			this.session = session;
+			this.main = main;
+			this.expression = expression;
+		}
+
+		public DialogSession getSession() {
+			return session;
+		}
+
+		public String getExpression() {
+			return expression;
+		}
+
+		public CharacterDialoguePlugin getMain() {
+			return main;
+		}
+	}
 }
