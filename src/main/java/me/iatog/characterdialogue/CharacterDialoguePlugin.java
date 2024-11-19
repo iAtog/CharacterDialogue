@@ -2,6 +2,7 @@ package me.iatog.characterdialogue;
 
 import java.util.Map;
 
+import me.iatog.characterdialogue.util.TextUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -48,7 +49,7 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 		this.api = new ApiImplementation(this);
 		
 		loader.load();
-		getLogger().info("§aLoaded in " + (System.currentTimeMillis() - startup) + "ms");
+		getLogger().info(TextUtils.colorize("&aLoaded in " + (System.currentTimeMillis() - startup) + "ms"));
 	}
 	
 	@Override

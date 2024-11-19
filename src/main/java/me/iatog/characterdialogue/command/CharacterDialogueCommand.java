@@ -64,13 +64,13 @@ public class CharacterDialogueCommand implements CommandClass {
 	         desc = "Clear a player memory cache")
 	public void clearCache(CommandSender sender, @OptArg("") String arg) {
 		if(arg.isEmpty()) {
-			sender.sendMessage("§cYou need to specify a player name.");
+			sender.sendMessage(TextUtils.colorize("&cYou need to specify a player name."));
 			return;
 		}
 		
 		Player target = Bukkit.getPlayer(arg);
 		if(target == null || !target.isOnline()) {
-			sender.sendMessage("§cThe player \"" + arg + "\" isn't online.");
+			sender.sendMessage("ï¿½cThe player \"" + arg + "\" isn't online.");
 			return;
 		}
 		
@@ -90,11 +90,11 @@ public class CharacterDialogueCommand implements CommandClass {
 		}
 		
 		if(!done) {
-			sender.sendMessage("§cThat player doesn't have any data in the memory cache.");
+			sender.sendMessage(TextUtils.colorize("&cThat player doesn't have any data in the memory cache."));
 			return;
 		}
 		
-		sender.sendMessage("§aCleared " + arg + "'s cache");
+		sender.sendMessage("ï¿½aCleared " + arg + "'s cache");
 	}
 
 	private List<String> translateList(List<String> list) {
