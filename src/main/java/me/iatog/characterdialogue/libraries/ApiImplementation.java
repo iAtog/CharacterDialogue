@@ -175,8 +175,8 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	
 	@Override
 	public void runDialogueExpression(Player player, String dialog, String npcName, Consumer<String> function, DialogSession session) {
-		String[] splitted = dialog.split(":");
-		String methodName = splitted[0].toUpperCase().trim();
+		String[] split = dialog.split(":");
+		String methodName = split[0].toUpperCase().trim();
 		String arg = dialog.substring(methodName.length() + 1).trim();
 
 		if (!main.getCache().getMethods().containsKey(methodName)) {
