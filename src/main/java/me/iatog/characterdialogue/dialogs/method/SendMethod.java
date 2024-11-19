@@ -1,5 +1,6 @@
 package me.iatog.characterdialogue.dialogs.method;
 
+import me.iatog.characterdialogue.util.TextUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -15,7 +16,7 @@ public class SendMethod extends DialogMethod<CharacterDialoguePlugin> {
 
 	@Override
 	public void execute(Player player, String arg, DialogSession session) {
-		player.sendMessage(ChatColor.translateAlternateColorCodes('&', arg));
+		player.sendMessage(TextUtils.colorize(arg));
 	}
 
 }
