@@ -31,6 +31,6 @@ public class SendServerMethod extends DialogMethod<CharacterDialoguePlugin> {
 		out.writeUTF(server);
 		
 		player.sendPluginMessage(provider, channel, out.toByteArray());
-		session.pause();
+		session.destroy();
 	}
 }
