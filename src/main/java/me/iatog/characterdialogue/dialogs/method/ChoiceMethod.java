@@ -96,12 +96,13 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 			Map<UUID, DialogSession> dialogSessionMap = getProvider().getCache().getDialogSessions();
 			UUID uuid = player.getUniqueId();
 
-			sessions.remove(uuid);
-			dialogSessionMap.remove(uuid);
+			choiceSession.destroy();
+			session.destroy();
 			taskList.remove(uuid);
 
 			if(player.isOnline()) {
 				player.sendMessage(colorize("&cYou took a long time to answer"));
+
 			}
  		}, (long)(20 * 10));
 
@@ -110,7 +111,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 
 	private BaseComponent[] getSelectText(int index) {
 		YamlFile file = provider.getFileFactory().getLanguage();
-		String text = file.getString("select-choice", "�aClick here to select #%str%").replace("%str%", index + "");
+		String text = file.getString("select-choice", colorize("&aClick here to select #%str%")).replace("%str%", index + "");
 		return new BaseComponent[] { new TextComponent(colorize(text)) };
 	}
 
