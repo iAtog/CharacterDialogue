@@ -3,6 +3,7 @@ placeholders:
   user: '&e[YOU] &b%player_name%&f:'
 npc:
   '9999': choice-sample
+use-actionbar: true
 choice:
   text-model: '&c{I}&7)&e {S}'
   choices:

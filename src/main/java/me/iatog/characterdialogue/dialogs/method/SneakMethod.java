@@ -4,6 +4,7 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.events.DialogueFinishEvent;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.DialogSession;
+import me.iatog.characterdialogue.util.TextUtils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -20,19 +21,28 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
 
     private final Map<UUID, Integer> waitingPlayers;
 
-    public SneakMethod(CharacterDialoguePlugin main) {
-        super("waitsneak");
-        this.provider = main;
-        this.waitingPlayers = new HashMap<>();
+    public final boolean actionBar;
 
-        setupRunnable();
+    public SneakMethod(CharacterDialoguePlugin main) {
+        super("waitsneak", main);
+        this.waitingPlayers = new HashMap<>();
+        this.actionBar = getProvider().getFileFactory().getConfig().getBoolean("use-actionbar", true);
+
+        if(actionBar) {
+            setupRunnable();
+        }
     }
 
     @Override
     public void execute(Player player, String arg, DialogSession session) {
         waitingPlayers.put(player.getUniqueId(), session.getCurrentIndex());
         session.cancel();
-        //player.sendMessage("§c[ Sneak to continue ]");
+
+        if(!actionBar) {
+            player.sendMessage("&7");
+            player.sendMessage(TextUtils.colorize("&c[ Sneak to continue ]"));
+            player.sendMessage("&7");
+        }
     }
 
     @EventHandler
@@ -58,9 +68,13 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
         Bukkit.getScheduler().runTaskTimer(getProvider(), () -> {
             for(UUID uuid : waitingPlayers.keySet()) {
                 Player player = Bukkit.getPlayer(uuid);
-                assert player != null;
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§c[ Sneak to continue ]"));
+                if(player == null || !player.isOnline()) {
+                    waitingPlayers.remove(uuid);
+                    return;
+                }
+
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(TextUtils.colorize("&c[ Sneak to continue ]")));
             }
-        }, 40, 40);
+        }, 40, 20);
     }
 }
