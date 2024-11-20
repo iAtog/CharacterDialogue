@@ -32,7 +32,8 @@ public class CacheLoader implements Loader {
 				new SendServerMethod(main),
 				new ChoiceMethod(main),
 				new SneakMethod(main),
-				new ConditionalMethod(main)
+				new ConditionalMethod(main),
+				new GiveMethod()
 				);
 		
 		main.registerChoices(
