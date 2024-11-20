@@ -24,6 +24,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implements Listener {
@@ -137,12 +138,14 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		ChoiceSession session = sessions.get(playerId);
 		UUID uuid = UUID.fromString(args[1]);
 		int choice = Integer.parseInt(args[2]);
-		Choice choiceObject = session.getChoice(choice);
+		//Choice choiceObject = session.getChoice(choice);
 
 		if (!uuid.toString().equals(session.getUniqueId().toString())) {
 			return;
 		}
 
+		runChoice(player, choice);
+/*
 		ChoiceSelectEvent choiceEvent = new ChoiceSelectEvent(player, uuid, choiceObject, session);
 		Bukkit.getPluginManager().callEvent(choiceEvent);
 
@@ -158,11 +161,62 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 			return;
 		}
 
-        assert choiceTarget != null;
+        if(choiceTarget == null) {
+			return;
+		}
 
         choiceTarget.onSelect(choiceObject.getArgument(), dialogSession, session);
 		sessions.remove(playerId);
-		taskList.remove(playerId).cancel();
+		taskList.remove(playerId).cancel();*/
+	}
+
+	@EventHandler
+	public void onHeld(PlayerItemHeldEvent event) {
+		Player player = event.getPlayer();
+		UUID uuid = player.getUniqueId();
+		Map<UUID, ChoiceSession> sessions = provider.getCache().getChoiceSessions();
+
+		runChoice(player, (event.getNewSlot() + 1));
+	}
+
+	public final void runChoice(Player player, int choice) {
+		Map<UUID, ChoiceSession> sessions = provider.getCache().getChoiceSessions();
+		UUID uuid = player.getUniqueId();
+
+		if(!sessions.containsKey(uuid)) {
+			return;
+		}
+
+		ChoiceSession session = sessions.get(uuid);
+		Choice choiceObject = session.getChoice(choice);
+
+		if(choiceObject == null) {
+			return;
+		}
+
+		ChoiceSelectEvent choiceEvent = new ChoiceSelectEvent(player, uuid, choiceObject, session);
+		Bukkit.getPluginManager().callEvent(choiceEvent);
+
+
+		if (choiceEvent.isCancelled()) {
+			return;
+		}
+
+		DialogChoice choiceTarget = getByClassName(choiceObject.getChoiceClass());
+		DialogSession dialogSession = provider.getCache().getDialogSessions().get(uuid);
+
+		if (dialogSession == null) {
+			sessions.remove(uuid);
+			return;
+		}
+
+		if(choiceTarget == null) {
+			return;
+		}
+
+		choiceTarget.onSelect(choiceObject.getArgument(), dialogSession, session);
+		sessions.remove(uuid);
+		taskList.remove(uuid).cancel();
 	}
 
 	private DialogChoice getByClassName(Class<? extends DialogChoice> clazz) {

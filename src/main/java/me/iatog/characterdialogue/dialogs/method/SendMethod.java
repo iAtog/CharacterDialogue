@@ -16,7 +16,7 @@ public class SendMethod extends DialogMethod<CharacterDialoguePlugin> {
 
 	@Override
 	public void execute(Player player, String arg, DialogSession session) {
-		player.sendMessage(TextUtils.colorize(arg));
+		player.sendMessage(arg);
 	}
 
 }
