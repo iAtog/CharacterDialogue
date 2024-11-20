@@ -47,9 +47,9 @@ public class CharacterDialogueCommand implements CommandClass {
 		Cache cache = main.getCache();
 		
 		main.getFileFactory().reload();
-		if(Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
-			main.getApi().reloadHolograms();
-		}
+
+		main.getApi().reloadHolograms();
+
 		
 		cache.getDialogues().clear();
 		dialogs.getConfigurationSection("dialogue").getKeys(false).forEach(name -> {

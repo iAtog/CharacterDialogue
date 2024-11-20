@@ -10,6 +10,7 @@ import me.iatog.characterdialogue.util.TextUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -34,32 +35,20 @@ import net.citizensnpcs.api.npc.NPC;
 public class ApiImplementation implements CharacterDialogueAPI {
 
 	private CharacterDialoguePlugin main;
+	private HologramLibrary hologramLibrary;
 
 	public ApiImplementation(CharacterDialoguePlugin main) {
 		this.main = main;
+		hologramLibrary = new HologramLibrary(main);
 	}
 
 	@Override
 	public void reloadHolograms() {
-		YamlFile config = main.getFileFactory().getConfig();
-		if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
-			return;
-		}
-
-		for (Hologram hologram : HologramsAPI.getHolograms(main)) {
-			hologram.delete();
-		}
-
-		config.getConfigurationSection("npc").getKeys(false).forEach((id) -> {
-			this.loadHologram(Integer.parseInt(id));
-		});
+		hologramLibrary.reloadHolograms();
 	}
 
 	@Override
 	public void loadHologram(int npcId) {
-		if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
-			return;
-		}
 		NPC citizensNpc = CitizensAPI.getNPCRegistry().getById(npcId);
 
 		if (citizensNpc == null) {
@@ -77,13 +66,14 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		if (hologram != null && hologram.isEnabled()) {
 			Location location = citizensNpc.getStoredLocation();
 			location.add(0, 2 + hologram.getY(), 0);
-			Hologram holo = HologramsAPI.createHologram(main, location);
+			//Hologram holo = HologramsAPI.createHologram(main, location);
 			String npcName = dialogue.getDisplayName();
 			List<String> lines = hologram.getLines();
 
-			for (String line : lines) {
-				holo.appendTextLine(ChatColor.translateAlternateColorCodes('&', line.replace("%npc_name%", npcName)));
-			}
+			hologramLibrary.addHologram(lines, location, npcName);
+			//for (String line : lines) {
+			//	holo.appendTextLine(ChatColor.translateAlternateColorCodes('&', line.replace("%npc_name%", npcName)));
+			//}
 
 			citizensNpc.setAlwaysUseNameHologram(false);
 		}
