@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import me.iatog.characterdialogue.api.events.DialogueFinishEvent;
+import me.iatog.characterdialogue.util.TextUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -12,18 +13,22 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.interfaces.Session;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class DialogSession implements Session {
 
-	private CharacterDialoguePlugin main;
-	private UUID uuid;
+	private final CharacterDialoguePlugin main;
+	private final UUID uuid;
 	private Dialogue dialogue;
-	private ClickType clickType;
-	private List<String> lines;
-	private String displayName;
+	private final ClickType clickType;
+	private final List<String> lines;
+	private final String displayName;
 	private int index;
 	private int npcId;
 	private boolean stop;
+
+	private boolean isDestroyed = false;
 
 	public DialogSession(CharacterDialoguePlugin main, Player player, List<String> lines, ClickType clickType,
 			int npcId, String displayName) {
@@ -48,6 +53,7 @@ public class DialogSession implements Session {
 			this.destroy();
 			return;
 		}
+		getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 59999, 4, true, false, false));
 
 		for (int i = index; i < lines.size(); i++) {
 			if (stop) {
@@ -107,14 +113,23 @@ public class DialogSession implements Session {
 
 	public void destroy() {
 		pause();
+		if(isDestroyed) {
+			System.out.println("Dialogue already destroyed");
+			return;
+		}
+
+		if(getPlayer().isOnline()) {
+			getPlayer().removePotionEffect(PotionEffectType.SLOW);
+		}
+
 		DialogueFinishEvent dialogueFinishEvent = new DialogueFinishEvent(getPlayer(), this);
 		Bukkit.getPluginManager().callEvent(dialogueFinishEvent);
 		main.getApi().enableMovement(this.getPlayer());
 
 		Map<UUID, DialogSession> sessions = main.getCache().getDialogSessions();
-		if (sessions.containsKey(uuid)) {
-			sessions.remove(uuid);
-		}
+		sessions.remove(uuid);
+
+		this.isDestroyed = true;
 	}
 
 	public ClickType getClickType() {
