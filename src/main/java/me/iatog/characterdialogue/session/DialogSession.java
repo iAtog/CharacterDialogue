@@ -114,11 +114,11 @@ public class DialogSession implements Session {
 	public void destroy() {
 		pause();
 		if(isDestroyed) {
-			System.out.println("Dialogue already destroyed");
+
 			return;
 		}
 
-		if(getPlayer().isOnline()) {
+		if(getPlayer() != null || getPlayer().isOnline()) {
 			getPlayer().removePotionEffect(PotionEffectType.SLOW);
 		}
 
