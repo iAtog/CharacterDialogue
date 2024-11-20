@@ -120,7 +120,7 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 					return false;
             }
 		} catch(NumberFormatException e) {
-			throw new IllegalArgumentException("The values cannot be compared: " + left + " y " + right);
+			throw new IllegalArgumentException("The values cannot be compared: " + left + " & " + right);
 		}
 	}
 
@@ -155,7 +155,7 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 
 	public enum ConditionalExpression {
 		//RUN_DIALOGUE/STOP_AND_SEND_MESSAGE/STOP/RUN_METHOD/CONTINUE
-		RUN_DIALOGUE(data -> { // TODO: fix issue, on run dialog only the first line is executing
+		RUN_DIALOGUE(data -> {
 			DialogSession session = data.getSession();
 			Player player = session.getPlayer();
 			String expression = data.getExpression();

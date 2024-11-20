@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import me.iatog.characterdialogue.util.TextUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -146,6 +147,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	@Override
 	public void runDialogue(Player player, Dialogue dialogue) {
 		if (main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
+			//player.sendMessage(TextUtils.colorize("&c["+dialogue.getName()+"] Session rejected"));
 			return;
 		}
 
@@ -156,6 +158,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		}
 
 		main.getCache().getDialogSessions().put(player.getUniqueId(), session);
+		//player.sendMessage(TextUtils.colorize("&c["+dialogue.getName()+"] Session started"));
 		session.start(0);
 	}
 
@@ -225,7 +228,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 			return false;
 		}
 		
-		float speed = Float.valueOf(playerCache.getString(playerPath + ".last-speed"));
+		float speed = Float.parseFloat(playerCache.getString(playerPath + ".last-speed"));
 		player.setWalkSpeed(speed);
 		player.removePotionEffect(PotionEffectType.JUMP);
 		main.getCache().getFrozenPlayers().remove(player.getUniqueId());
