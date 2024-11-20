@@ -11,15 +11,16 @@ import org.bukkit.Location;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class HologramLibrary {
 
-    private CharacterDialoguePlugin main;
+    private final CharacterDialoguePlugin main;
 
     private final boolean holographicDisplays;
     private final boolean decentHolograms;
 
-    private List<String> decentHologramsList;
+    private final List<String> decentHologramsList;
 
     public HologramLibrary(CharacterDialoguePlugin main) {
         this.main = main;
@@ -44,9 +45,9 @@ public class HologramLibrary {
             for(String line : lines) {
                 formattedLines.add(TextUtils.colorize(line.replace("%npc_name%", npcName)));
             }
-
-            DHAPI.createHologram(npcName, location, formattedLines);
-            decentHologramsList.add(npcName);
+            String uuid = UUID.randomUUID().toString();
+            DHAPI.createHologram(uuid, location, formattedLines);
+            decentHologramsList.add(uuid);
             //main.getLogger().info("Hologram created");
         }
     }
@@ -71,6 +72,8 @@ public class HologramLibrary {
 
                 hologram.destroy();
             }
+
+            decentHologramsList.clear();
 
             config.getConfigurationSection("npc").getKeys(false).forEach((id) -> {
                 main.getApi().loadHologram(Integer.parseInt(id));
