@@ -6,12 +6,14 @@ import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.api.dialog.Dialogue.DialoguePermission;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.placeholders.Placeholders;
+import me.iatog.characterdialogue.util.TextUtils;
 import net.citizensnpcs.api.event.NPCClickEvent;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.metadata.FixedMetadataValue;
 
 public class NPCInteractListener implements Listener {
 
@@ -34,12 +36,27 @@ public class NPCInteractListener implements Listener {
 	private void runEvent(NPCClickEvent event) {
 		CharacterDialogueAPI api = main.getApi();
 		Player player = event.getClicker();
+
 		int npcId = event.getNPC().getId();
 		Dialogue dialogue = api.getNPCDialogue(npcId);
 
 		if (dialogue == null || main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
 			return;
 		}
+
+		long currentTime = System.currentTimeMillis();
+		// Cooldown logic
+
+		if(player.hasMetadata("dialogueCooldown")) {
+			long cooldown = player.getMetadata("dialogueCooldown").get(0).asLong();
+			if(currentTime < cooldown) {
+				player.sendMessage(TextUtils.colorize("&cCalm down."));
+				return;
+			}
+		}
+
+		long cooldownTime = 1 * 1000;
+		player.setMetadata("dialogueCooldown", new FixedMetadataValue(main, currentTime + cooldownTime));
 
 		ClickType clickType = dialogue.getClickType();
 
