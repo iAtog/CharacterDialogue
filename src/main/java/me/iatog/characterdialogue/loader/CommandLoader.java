@@ -9,7 +9,6 @@ import me.fixeddev.commandflow.bukkit.BukkitCommandManager;
 import me.fixeddev.commandflow.bukkit.factory.BukkitModule;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.command.CharacterDialogueCommand;
-import me.iatog.characterdialogue.command.DeveloperCommand;
 
 public class CommandLoader implements Loader {
 	
@@ -29,8 +28,7 @@ public class CommandLoader implements Loader {
 	@Override
 	public void load() {
 		registerCommands(
-				new CharacterDialogueCommand(main),
-				new DeveloperCommand()
+				new CharacterDialogueCommand(main)
 				);
 	}
 	
