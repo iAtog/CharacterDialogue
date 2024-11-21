@@ -1,25 +1,31 @@
 package me.iatog.characterdialogue.misc;
 
+import dev.dejvokep.boostedyaml.YamlDocument;
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
-import me.iatog.characterdialogue.CharacterDialoguePlugin;
-import me.iatog.characterdialogue.libraries.YamlFile;
-
 public class PlayerCache {
 	
-	private UUID uuid;
-	private List<String> readedDialogs;
-	private YamlFile file;
+	private final UUID uuid;
+	private final List<String> readedDialogs;
+	private final YamlDocument file;
 	
 	public PlayerCache(CharacterDialoguePlugin main, UUID uuid) {
 		this.uuid = uuid;
-		this.file = new YamlFile(main, uuid.toString(), "cache");
+        try {
+            this.file = YamlDocument.create(new File("cache/"+uuid.toString()+".yml"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        //this.file = new YamlFile(main, uuid.toString(), "cache");
 		
 		if(file.contains("readed")) {
 			this.readedDialogs = file.getStringList("readed");
@@ -48,13 +54,17 @@ public class PlayerCache {
 		return readedDialogs.get(index);
 	}
 	
-	public YamlFile getFile() {
+	public YamlDocument getFile() {
 		return file;
 	}
 	
 	public void save() {
 		file.set("readed", readedDialogs);
-		file.save();
-	}
+        try {
+            file.save();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 	
 }

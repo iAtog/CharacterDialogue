@@ -1,16 +1,15 @@
 package me.iatog.characterdialogue.listeners;
 
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import me.iatog.characterdialogue.CharacterDialoguePlugin;
-
 public class PlayerMoveListener implements Listener {
 	
-	private CharacterDialoguePlugin main;
+	private final CharacterDialoguePlugin main;
 	
 	public PlayerMoveListener(CharacterDialoguePlugin main) {
 		this.main = main;

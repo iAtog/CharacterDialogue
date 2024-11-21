@@ -1,31 +1,28 @@
 package me.iatog.characterdialogue.dialogs.method;
 
-import static me.iatog.characterdialogue.util.TextUtils.colorize;
-
-import java.util.*;
-
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-
+import dev.dejvokep.boostedyaml.YamlDocument;
+import dev.dejvokep.boostedyaml.block.implementation.Section;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.events.ChoiceSelectEvent;
 import me.iatog.characterdialogue.dialogs.DialogChoice;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
-import me.iatog.characterdialogue.libraries.YamlFile;
 import me.iatog.characterdialogue.misc.Choice;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.*;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import static me.iatog.characterdialogue.util.TextUtils.colorize;
 
 public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implements Listener {
 
@@ -41,7 +38,8 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 	@Override
 	public void execute(Player player, String arg, DialogSession session) {
 		Map<UUID, ChoiceSession> sessions = provider.getCache().getChoiceSessions();
-		YamlFile config = provider.getFileFactory().getConfig();
+		YamlDocument choicesFile = provider.getFileFactory().getChoicesFile();
+		YamlDocument config = provider.getFileFactory().getConfig();
 
 		if (sessions.containsKey(player.getUniqueId())) {
 			return;
@@ -49,15 +47,15 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 
 		ChoiceSession choiceSession = new ChoiceSession(provider, player);
 
-		if (!config.contains("choice.choices." + arg)) {
+		if (!choicesFile.contains("choice.choices." + arg)) {
 			provider.getLogger().warning("The choice \"" + arg + "\" doesn't exists.");
 			return;
 		}
 
 		session.pause();
 
-		for (String choice : config.getConfigurationSection("choice.choices." + arg).getKeys(false)) {
-			ConfigurationSection section = config.getConfigurationSection("choice.choices." + arg + "." + choice);
+		for (String choice : choicesFile.getSection("choice.choices." + arg).getRoutesAsStrings(false)) {
+			Section section = choicesFile.getSection("choice.choices." + arg + "." + choice);
 			String type = section.getString("type");
 			String message = section.getString("message", "no message specified");
 			String argument = section.getString("argument", "");
@@ -111,8 +109,8 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 	}
 
 	private BaseComponent[] getSelectText(int index) {
-		YamlFile file = provider.getFileFactory().getLanguage();
-		String text = file.getString("select-choice", colorize("&aClick here to select #%str%")).replace("%str%", index + "");
+		YamlDocument file = provider.getFileFactory().getLanguage();
+		String text = file.getString("select-choice", "&aClick here to select #%str%").replace("%str%", index + "");
 		return new BaseComponent[] { new TextComponent(colorize(text)) };
 	}
 

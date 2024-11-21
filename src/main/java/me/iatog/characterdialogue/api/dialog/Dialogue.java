@@ -1,10 +1,9 @@
 package me.iatog.characterdialogue.api.dialog;
 
-import java.util.List;
-
+import me.iatog.characterdialogue.enums.ClickType;
 import org.bukkit.entity.Player;
 
-import me.iatog.characterdialogue.enums.ClickType;
+import java.util.List;
 
 public interface Dialogue {
 	String getName();
@@ -21,8 +20,8 @@ public interface Dialogue {
 	
 	public class DialoguePermission {
 		
-		private String permission;
-		private String message;
+		private final String permission;
+		private final String message;
 		
 		public DialoguePermission(String permission, String message) {
 			this.permission = permission;

@@ -1,22 +1,21 @@
 package me.iatog.characterdialogue.session;
 
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.UUID;
-
-import org.bukkit.entity.Player;
-
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogChoice;
 import me.iatog.characterdialogue.interfaces.Session;
 import me.iatog.characterdialogue.misc.Choice;
+import org.bukkit.entity.Player;
+
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.UUID;
 
 public class ChoiceSession implements Session {
 
-	private CharacterDialoguePlugin main;
-	private Player player;
-	private UUID uuid;
-	private Map<Integer, Choice> choices;
+	private final CharacterDialoguePlugin main;
+	private final Player player;
+	private final UUID uuid;
+	private final Map<Integer, Choice> choices;
 
 	public ChoiceSession(CharacterDialoguePlugin main, Player player) {
 		this.main = main;

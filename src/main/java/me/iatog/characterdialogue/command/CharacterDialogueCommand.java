@@ -1,33 +1,33 @@
 package me.iatog.characterdialogue.command;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
+import dev.dejvokep.boostedyaml.YamlDocument;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.DialogueImpl;
 import me.iatog.characterdialogue.libraries.Cache;
-import me.iatog.characterdialogue.libraries.YamlFile;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.util.TextUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Command(names = {
-		"characterdialogue", "cdp", "characterd", "ddialogue"
+		"characterdialogue"
 },      permission = "characterdialogue.use",
 		desc = "CharacterDialogue main command")
 public class CharacterDialogueCommand implements CommandClass {
 	
-	private CharacterDialoguePlugin main;
-	private YamlFile language;
+	private final CharacterDialoguePlugin main;
+	private final YamlDocument language;
 	
 	public CharacterDialogueCommand(CharacterDialoguePlugin main) {
 		this.main = main;
@@ -43,18 +43,36 @@ public class CharacterDialogueCommand implements CommandClass {
 			permission = "characterdialogue.reload",
 			desc = "Reload the plugin")
 	public void reloadCommand(CommandSender sender) {
-		YamlFile dialogs = main.getFileFactory().getDialogs();
+		//YamlFile dialogs = main.getFileFactory().getDialogs();
 		Cache cache = main.getCache();
-		
-		main.getFileFactory().reload();
 
-		main.getApi().reloadHolograms();
+        try {
+            main.getFileFactory().reload();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
+        main.getApi().reloadHolograms();
 		
 		cache.getDialogues().clear();
+
+		main.clearAllDialogues();
+		try {
+			main.loadAllDialogues();
+		} catch(IOException exception) {
+			exception.printStackTrace();
+		}
+
+		for(YamlDocument dialogueFile : main.getAllDialogues()) {
+			dialogueFile.getSection("dialogue").getRoutesAsStrings(false).forEach(name -> {
+				cache.getDialogues().put(name, new DialogueImpl(main, name, dialogueFile));
+			});
+		}
+
+		/*
 		dialogs.getConfigurationSection("dialogue").getKeys(false).forEach(name -> {
-			cache.getDialogues().put(name, new DialogueImpl(main, name));
-		});
+			cache.getDialogues().put(name, new DialogueImpl(main, name, main.getAllDialogues()));
+		});*/
 		
 		sender.sendMessage(TextUtils.colorize(language.getString("reload-message")));
 	}
@@ -94,7 +112,7 @@ public class CharacterDialogueCommand implements CommandClass {
 			return;
 		}
 		
-		sender.sendMessage("�aCleared " + arg + "'s cache");
+		sender.sendMessage(TextUtils.colorize("&aCleared " + arg + "'s cache"));
 	}
 
 	private List<String> translateList(List<String> list) {

@@ -1,12 +1,11 @@
 package me.iatog.characterdialogue.dialogs.choice;
 
-import org.bukkit.entity.Player;
-
 import me.iatog.characterdialogue.dialogs.DialogChoice;
 import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.util.TextUtils;
+import org.bukkit.entity.Player;
 
 public class SendChoice extends DialogChoice {
 	public SendChoice() {

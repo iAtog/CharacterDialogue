@@ -1,32 +1,35 @@
 package me.iatog.characterdialogue.libraries;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
-public class YamlFile extends YamlConfiguration {
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+
+public class CustomYamlFile extends YamlConfiguration {
 	private final String fileName;
 
 	private final Plugin plugin;
 
 	private final String folder;
+	private final String folderName;
 
-	public YamlFile(Plugin plugin, String fileName, String fileExtension, String folder) {
+	public CustomYamlFile(Plugin plugin, String fileName, String fileExtension, String folder) {
 		this.folder = plugin.getDataFolder() + "/" + folder;
+		this.folderName = folder;
+		plugin.getLogger().info("creating " + fileName + " in folder: " + folder);
 		this.plugin = plugin;
 		this.fileName = fileName + (fileName.endsWith(fileExtension) ? "" : fileExtension);
 		createFile();
 	}
 
-	public YamlFile(Plugin plugin, String fileName) {
+	public CustomYamlFile(Plugin plugin, String fileName) {
 		this(plugin, fileName, "");
 	}
 
-	public YamlFile(Plugin plugin, String fileName, String folder) {
+	public CustomYamlFile(Plugin plugin, String fileName, String folder) {
 		this(plugin, fileName, ".yml", folder);
 	}
 
@@ -38,6 +41,7 @@ public class YamlFile extends YamlConfiguration {
 				save(file);
 				return;
 			}
+			String f = !folderName.isEmpty() ? folderName + "/" : "";
 			if (this.plugin.getResource(this.fileName) != null) {
 				this.plugin.saveResource(this.fileName, false);
 			} else {

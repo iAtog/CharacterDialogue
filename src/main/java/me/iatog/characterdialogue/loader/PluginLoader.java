@@ -1,18 +1,19 @@
 package me.iatog.characterdialogue.loader;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.filter.ConsoleFilter;
 import me.iatog.characterdialogue.util.TextUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
-import me.iatog.characterdialogue.CharacterDialoguePlugin;
-import me.iatog.characterdialogue.filter.ConsoleFilter;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PluginLoader implements Loader {
 	
-	private CharacterDialoguePlugin main;
-	private List<Loader> loaders;
+	private final CharacterDialoguePlugin main;
+	private final List<Loader> loaders;
 	
 	public PluginLoader(CharacterDialoguePlugin main) {
 		this.main = main;
@@ -45,10 +46,13 @@ public class PluginLoader implements Loader {
 	}
 	
 	private void loadLoaders(Loader...loaders) {
-		for(Loader loader : loaders) {
-			loader.load();
-			this.loaders.add(loader);
-		}
+		Arrays.asList(loaders).forEach(this::append);
+	}
+
+	private void append(Loader loader) {
+		loader.load();
+		this.loaders.add(loader);
+		main.getLogger().info("Loaded: " + loader.getClass().getSimpleName());
 	}
 	
 }

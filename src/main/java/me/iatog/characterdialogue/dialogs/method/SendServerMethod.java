@@ -1,13 +1,11 @@
 package me.iatog.characterdialogue.dialogs.method;
 
-import org.bukkit.entity.Player;
-
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.DialogSession;
+import org.bukkit.entity.Player;
 
 public class SendServerMethod extends DialogMethod<CharacterDialoguePlugin> {
 	

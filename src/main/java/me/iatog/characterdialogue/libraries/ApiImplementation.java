@@ -1,24 +1,6 @@
 package me.iatog.characterdialogue.libraries;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-
-import me.iatog.characterdialogue.util.TextUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
+import dev.dejvokep.boostedyaml.YamlDocument;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.CharacterDialogueAPI;
 import me.iatog.characterdialogue.api.dialog.DialogHologram;
@@ -31,6 +13,19 @@ import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.session.EmptyDialogSession;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class ApiImplementation implements CharacterDialogueAPI {
 
@@ -87,7 +82,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	@Override
 	public boolean readDialogBy(Player player, String dialog) {
 		String path = "players." + player.getUniqueId();
-		YamlFile playerCache = main.getFileFactory().getPlayerCache();
+		YamlDocument playerCache = main.getFileFactory().getPlayerCache();
 		List<String> readedDialogues = playerCache.getStringList(path + ".readed-dialogues");
 
 		if (!playerCache.contains(path)) {
@@ -100,13 +95,18 @@ public class ApiImplementation implements CharacterDialogueAPI {
 
 		readedDialogues.add(dialog);
 		playerCache.set(path + ".readed-dialogues", readedDialogues);
-		playerCache.save();
-		return true;
+
+        try {
+            playerCache.save();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
 	}
 
 	@Override
 	public boolean wasReadedBy(Player player, String dialog) {
-		YamlFile playerCache = main.getFileFactory().getPlayerCache();
+		YamlDocument playerCache = main.getFileFactory().getPlayerCache();
 		String path = "players." + player.getUniqueId();
 		List<String> readedDialogues = playerCache.getStringList(path + ".readed-dialogues");
 
@@ -120,7 +120,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 
 	@Override
 	public String getNPCDialogueName(int id) {
-		YamlFile config = main.getFileFactory().getConfig();
+		YamlDocument config = main.getFileFactory().getConfig();
 		return config.getString("npc." + id);
 	}
 
@@ -211,7 +211,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 
 	@Override
 	public boolean enableMovement(Player player) {
-		YamlFile playerCache = main.getFileFactory().getPlayerCache();
+		YamlDocument playerCache = main.getFileFactory().getPlayerCache();
 		String playerPath = "players." + player.getUniqueId();
 		
 		if(!playerCache.getBoolean(playerPath + ".remove-effect", false)) {
@@ -224,14 +224,19 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		main.getCache().getFrozenPlayers().remove(player.getUniqueId());
 		
 		playerCache.set(playerPath + ".remove-effect", false);
-		playerCache.save();
 
-		return playerCache.getBoolean(playerPath + ".remove-effect", false);
+        try {
+            playerCache.save();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return playerCache.getBoolean(playerPath + ".remove-effect", false);
 	}
 
 	@Override
 	public boolean disableMovement(Player player) {
-		YamlFile playerCache = main.getFileFactory().getPlayerCache();
+		YamlDocument playerCache = main.getFileFactory().getPlayerCache();
 		String path = "players." + player.getUniqueId();
 		
 		if(playerCache.getBoolean(path + ".remove-effect", false)) {
@@ -240,9 +245,14 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		
 		playerCache.set(path + ".last-speed", player.getWalkSpeed());
 		playerCache.set(path + ".remove-effect", true);
-		playerCache.save();
 
-		main.getCache().getFrozenPlayers().add(player.getUniqueId());
+        try {
+            playerCache.save();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        main.getCache().getFrozenPlayers().add(player.getUniqueId());
 		player.setWalkSpeed(0);
 		player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 128));
 
@@ -251,7 +261,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 
 	@Override
 	public boolean canEnableMovement(Player player) {
-		YamlFile playerCache = main.getFileFactory().getPlayerCache();
+		YamlDocument playerCache = main.getFileFactory().getPlayerCache();
 		String path = "players." + player.getUniqueId();
 		
 		return playerCache.getBoolean(path + ".remove-effect", false);

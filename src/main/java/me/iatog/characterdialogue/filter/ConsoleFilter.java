@@ -1,5 +1,6 @@
 package me.iatog.characterdialogue.filter;
 
+import me.iatog.characterdialogue.dialogs.method.ChoiceMethod;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.core.Filter;
@@ -7,8 +8,6 @@ import org.apache.logging.log4j.core.LifeCycle;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.message.Message;
-
-import me.iatog.characterdialogue.dialogs.method.ChoiceMethod;
 
 public class ConsoleFilter implements Filter {
 

@@ -1,14 +1,14 @@
 package me.iatog.characterdialogue.libraries;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * class made for cleaner handling of chat components

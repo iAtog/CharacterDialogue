@@ -1,13 +1,12 @@
 package me.iatog.characterdialogue.api.events;
 
+import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.enums.ClickType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import me.iatog.characterdialogue.dialogs.DialogMethod;
-import me.iatog.characterdialogue.enums.ClickType;
 
 public class ExecuteMethodEvent extends PlayerEvent implements Cancellable {
 	

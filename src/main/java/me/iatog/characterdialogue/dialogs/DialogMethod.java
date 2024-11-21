@@ -1,13 +1,12 @@
 package me.iatog.characterdialogue.dialogs;
 
+import me.iatog.characterdialogue.session.DialogSession;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.iatog.characterdialogue.session.DialogSession;
-
 public abstract class DialogMethod<T extends JavaPlugin> {
 	
-	private String id;
+	private final String id;
 	protected T provider;
 	
 	public DialogMethod(String id, T provider) {

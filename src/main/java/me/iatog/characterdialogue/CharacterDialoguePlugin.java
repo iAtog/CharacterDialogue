@@ -1,14 +1,6 @@
 package me.iatog.characterdialogue;
 
-import java.util.Map;
-
-import me.iatog.characterdialogue.util.TextUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.messaging.Messenger;
-
+import dev.dejvokep.boostedyaml.YamlDocument;
 import me.iatog.characterdialogue.api.CharacterDialogueAPI;
 import me.iatog.characterdialogue.dialogs.DialogChoice;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
@@ -17,6 +9,19 @@ import me.iatog.characterdialogue.interfaces.FileFactory;
 import me.iatog.characterdialogue.libraries.ApiImplementation;
 import me.iatog.characterdialogue.libraries.Cache;
 import me.iatog.characterdialogue.loader.PluginLoader;
+import me.iatog.characterdialogue.util.TextUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.Messenger;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class CharacterDialoguePlugin extends JavaPlugin {
 
@@ -27,18 +32,27 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 	private Hooks hooks;
 	private String defaultChannel;
 	private long startup;
+	private List<YamlDocument> dialogues;
 	
 	private static CharacterDialoguePlugin instance;
 	
 	public void onLoad() {
 		this.defaultChannel = "BungeeCord";
 		this.startup = System.currentTimeMillis();
+		this.dialogues = new ArrayList<>();
 	}
 	
 	@Override
 	public void onEnable() {
 		instance = this;
-		Messenger messenger = getServer().getMessenger();
+
+        try {
+            loadAllDialogues();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Messenger messenger = getServer().getMessenger();
 		if(!messenger.isOutgoingChannelRegistered(this, defaultChannel)) { // idk
 			messenger.registerOutgoingPluginChannel(this, defaultChannel);
 		}
@@ -112,6 +126,42 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 			choiceCache.put(choice.getId(), choice);
 		}
 		
+	}
+
+	public List<YamlDocument> getAllDialogues() {
+		return dialogues;
+	}
+
+	public void loadAllDialogues() throws IOException {
+		String folderName = "dialogues";
+		File folder = new File(this.getDataFolder() + "/" + folderName);
+
+		if(!folder.exists()) {
+			folder.mkdir();
+			YamlDocument defaultDialogues = YamlDocument.create(new File(getDataFolder() + "/" + folderName + "/examples.yml"), Objects.requireNonNull(getResource("dialogues/dialogs.yml")));
+			dialogues.add(defaultDialogues);
+			return;
+		}
+
+		if(folder.isDirectory()) {
+			File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".yml"));
+			if(files != null) {
+				for(File file : files) {
+					if(!file.isFile()) continue;
+					YamlDocument yamlDocument = YamlDocument.create(file); // Objects.requireNonNull(getResource(folderName + "/" + file.getName()))
+
+					dialogues.add(yamlDocument);
+					//YamlFile yamlFile = new YamlFile(this, file.getName(), folderName);
+					//dialogues.add(yamlFile);
+				}
+			}
+		}
+
+		getLogger().info("Loaded " + dialogues.size() + " dialogues.");
+	}
+
+	public void clearAllDialogues() {
+		dialogues.clear();
 	}
 
 	/**

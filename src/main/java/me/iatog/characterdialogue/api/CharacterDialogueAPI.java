@@ -7,6 +7,7 @@ import me.iatog.characterdialogue.libraries.ApiImplementation;
 import me.iatog.characterdialogue.session.DialogSession;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -20,7 +21,7 @@ public interface CharacterDialogueAPI {
 
 	void loadHologram(int npcId);
 	
-	boolean readDialogBy(Player player, String dialog);
+	boolean readDialogBy(Player player, String dialog) throws IOException;
 	boolean wasReadedBy(Player player, String dialog);
 	
 	boolean readDialogBy(Player player, Dialogue dialog);

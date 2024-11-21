@@ -1,8 +1,7 @@
 package me.iatog.characterdialogue.hook.papi;
 
-import org.bukkit.entity.Player;
-
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.entity.Player;
 
 public class PAPIHook {
 	

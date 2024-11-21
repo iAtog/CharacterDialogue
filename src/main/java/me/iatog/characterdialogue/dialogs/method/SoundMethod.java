@@ -1,13 +1,12 @@
 package me.iatog.characterdialogue.dialogs.method;
 
-import java.util.logging.Level;
-
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.DialogSession;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+
+import java.util.logging.Level;
 
 public class SoundMethod extends DialogMethod<CharacterDialoguePlugin> {
 		
@@ -25,10 +24,6 @@ public class SoundMethod extends DialogMethod<CharacterDialoguePlugin> {
 		} catch(Exception exception) {
 			getProvider().getLogger().log(Level.SEVERE, "Unknown sound \"" + part[0] + "\", stopping dialogue.", exception);
 			session.destroy();
-			return;
-		}
-		
-		if(sound == null) {
 			return;
 		}
 		

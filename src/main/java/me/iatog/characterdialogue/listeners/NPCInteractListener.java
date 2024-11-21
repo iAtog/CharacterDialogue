@@ -1,9 +1,5 @@
 package me.iatog.characterdialogue.listeners;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.CharacterDialogueAPI;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
@@ -13,10 +9,13 @@ import me.iatog.characterdialogue.placeholders.Placeholders;
 import net.citizensnpcs.api.event.NPCClickEvent;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 public class NPCInteractListener implements Listener {
 
-	private CharacterDialoguePlugin main;
+	private final CharacterDialoguePlugin main;
 
 	public NPCInteractListener(CharacterDialoguePlugin main) {
 		this.main = main;

@@ -1,10 +1,9 @@
 package me.iatog.characterdialogue.nms;
 
-import java.lang.reflect.Constructor;
-
+import me.iatog.characterdialogue.reflection.ReflectionUtil;
 import org.bukkit.entity.Player;
 
-import me.iatog.characterdialogue.reflection.ReflectionUtil;
+import java.lang.reflect.Constructor;
 
 public class TitleBuilder {
 	

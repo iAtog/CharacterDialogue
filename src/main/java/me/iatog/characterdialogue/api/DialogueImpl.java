@@ -1,13 +1,14 @@
 package me.iatog.characterdialogue.api;
 
+import dev.dejvokep.boostedyaml.YamlDocument;
+import dev.dejvokep.boostedyaml.block.implementation.Section;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.dialog.DialogHologram;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.enums.ClickType;
-import me.iatog.characterdialogue.libraries.YamlFile;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +25,8 @@ public class DialogueImpl implements Dialogue {
 	
 	private final CharacterDialoguePlugin main;
 	
-	public DialogueImpl(CharacterDialoguePlugin instance, String dialogName) {
-		YamlFile dialogsFile = instance.getFileFactory().getDialogs();
-		ConfigurationSection section = dialogsFile.getConfigurationSection("dialogue." + dialogName);
+	public DialogueImpl(CharacterDialoguePlugin instance, String dialogName, YamlDocument dialogsFile) {
+		Section section = dialogsFile.getSection("dialogue." + dialogName);
 		
 		if(!dialogsFile.contains("dialogue." + dialogName)) {
 			throw new NullPointerException("No dialog named \"" + dialogName + "\" was found.");
@@ -60,9 +60,7 @@ public class DialogueImpl implements Dialogue {
 		this.main = instance;
 	}
 	
-	public DialogueImpl(String dialogName) {
-		this(CharacterDialoguePlugin.getInstance(), dialogName);
-	}
+	//public DialogueImpl(String dialogName) { this(CharacterDialoguePlugin.getInstance(), dialogName); }
 	
 	@Override
 	public String getName() {
@@ -107,7 +105,7 @@ public class DialogueImpl implements Dialogue {
 	@Override
 	public boolean startFirstInteraction(Player player, boolean log) {
 		if(log) {
-			YamlFile playerCache = main.getFileFactory().getPlayerCache();
+			YamlDocument playerCache = main.getFileFactory().getPlayerCache();
 			List<String> readedDialogues = playerCache.getStringList("players." + player.getUniqueId() + ".readed-dialogues");
 			
 			if(!playerCache.contains("players." + player.getUniqueId())) {
@@ -120,8 +118,12 @@ public class DialogueImpl implements Dialogue {
 			
 			readedDialogues.add(getName());
 			playerCache.set("players." + player.getUniqueId() + ".readed-dialogues", readedDialogues);
-			playerCache.save();
-		}
+            try {
+                playerCache.save();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 		
 		main.getApi().runDialogueExpressions(player, firstInteraction, displayName);	
 		return true;

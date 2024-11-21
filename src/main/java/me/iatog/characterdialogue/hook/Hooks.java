@@ -1,8 +1,7 @@
 package me.iatog.characterdialogue.hook;
 
-import org.bukkit.Bukkit;
-
 import me.iatog.characterdialogue.hook.papi.PAPIHook;
+import org.bukkit.Bukkit;
 
 public class Hooks {
 	

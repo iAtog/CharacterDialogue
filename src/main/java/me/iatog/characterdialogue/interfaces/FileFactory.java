@@ -1,12 +1,15 @@
 package me.iatog.characterdialogue.interfaces;
 
-import me.iatog.characterdialogue.libraries.YamlFile;
+import dev.dejvokep.boostedyaml.YamlDocument;
+
+import java.io.IOException;
 
 public interface FileFactory {
-	YamlFile getConfig();
-	YamlFile getDialogs();
-	YamlFile getLanguage();
-	YamlFile getPlayerCache();
+	YamlDocument getConfig();
+	//YamlFile getDialogs();
+	YamlDocument getLanguage();
+	YamlDocument getPlayerCache();
+	YamlDocument getChoicesFile();
 	
-	void reload();
+	void reload() throws IOException;
 }

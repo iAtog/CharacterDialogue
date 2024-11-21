@@ -1,13 +1,12 @@
 package me.iatog.characterdialogue.dialogs.method;
 
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.placeholders.Placeholders;
+import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.session.EmptyDialogSession;
 import me.iatog.characterdialogue.util.TextUtils;
 import org.bukkit.entity.Player;
-
-import me.iatog.characterdialogue.CharacterDialoguePlugin;
-import me.iatog.characterdialogue.dialogs.DialogMethod;
-import me.iatog.characterdialogue.session.DialogSession;
 
 import java.util.Arrays;
 import java.util.function.Consumer;

@@ -2,11 +2,11 @@ package me.iatog.characterdialogue.libraries;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import dev.dejvokep.boostedyaml.YamlDocument;
 import eu.decentsoftware.holograms.api.DHAPI;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.util.TextUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
@@ -53,13 +53,13 @@ public class HologramLibrary {
     }
 
     public void reloadHolograms() {
-        YamlFile config = main.getFileFactory().getConfig();
+        YamlDocument config = main.getFileFactory().getConfig();
         if(holographicDisplays) {
             for (Hologram hologram : HologramsAPI.getHolograms(main)) {
                 hologram.delete();
             }
 
-            config.getConfigurationSection("npc").getKeys(false).forEach((id) -> {
+            config.getSection("npc").getRoutesAsStrings(false).forEach((id) -> {
                 main.getApi().loadHologram(Integer.parseInt(id));
             });
         } else if(decentHolograms) {
@@ -75,7 +75,7 @@ public class HologramLibrary {
 
             decentHologramsList.clear();
 
-            config.getConfigurationSection("npc").getKeys(false).forEach((id) -> {
+            config.getSection("npc").getRoutesAsStrings(false).forEach((id) -> {
                 main.getApi().loadHologram(Integer.parseInt(id));
             });
         }

@@ -1,20 +1,18 @@
 package me.iatog.characterdialogue.session;
 
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.api.dialog.Dialogue;
+import me.iatog.characterdialogue.api.events.DialogueFinishEvent;
+import me.iatog.characterdialogue.enums.ClickType;
+import me.iatog.characterdialogue.interfaces.Session;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import me.iatog.characterdialogue.api.events.DialogueFinishEvent;
-import me.iatog.characterdialogue.util.TextUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
-import me.iatog.characterdialogue.CharacterDialoguePlugin;
-import me.iatog.characterdialogue.api.dialog.Dialogue;
-import me.iatog.characterdialogue.enums.ClickType;
-import me.iatog.characterdialogue.interfaces.Session;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 public class DialogSession implements Session {
 

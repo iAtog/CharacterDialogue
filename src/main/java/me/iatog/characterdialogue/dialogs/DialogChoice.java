@@ -5,8 +5,8 @@ import me.iatog.characterdialogue.session.DialogSession;
 
 public abstract class DialogChoice {
 	
-	private String id;
-	private boolean requireArgument;
+	private final String id;
+	private final boolean requireArgument;
 	
 	public DialogChoice(String id, boolean requireArgument) {
 		this.id = id;

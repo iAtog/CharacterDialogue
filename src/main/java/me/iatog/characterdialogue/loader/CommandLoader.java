@@ -13,9 +13,9 @@ import me.iatog.characterdialogue.command.DeveloperCommand;
 
 public class CommandLoader implements Loader {
 	
-	private CharacterDialoguePlugin main;
-	private AnnotatedCommandTreeBuilder builder;
-	private BukkitCommandManager commandManager;
+	private final CharacterDialoguePlugin main;
+	private final AnnotatedCommandTreeBuilder builder;
+	private final BukkitCommandManager commandManager;
 	
 	public CommandLoader(CharacterDialoguePlugin main) {
 		this.main = main;

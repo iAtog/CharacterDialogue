@@ -1,11 +1,10 @@
 package me.iatog.characterdialogue.session;
 
-import java.util.List;
-
-import org.bukkit.entity.Player;
-
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.enums.ClickType;
+import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class EmptyDialogSession extends DialogSession {
 

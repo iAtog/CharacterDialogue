@@ -1,10 +1,9 @@
 package me.iatog.characterdialogue.dialogs.method;
 
-import org.bukkit.entity.Player;
-
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.session.DialogSession;
+import org.bukkit.entity.Player;
 
 public class RadialSendMethod extends DialogMethod<CharacterDialoguePlugin> {
 

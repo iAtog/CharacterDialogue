@@ -1,15 +1,14 @@
 package me.iatog.characterdialogue.dialogs.method;
 
-import java.util.Optional;
-import java.util.logging.Level;
-
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.session.DialogSession;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.iatog.characterdialogue.CharacterDialoguePlugin;
-import me.iatog.characterdialogue.dialogs.DialogMethod;
-import me.iatog.characterdialogue.session.DialogSession;
+import java.util.Optional;
+import java.util.logging.Level;
 
 public class EffectMethod extends DialogMethod<CharacterDialoguePlugin> {
 	

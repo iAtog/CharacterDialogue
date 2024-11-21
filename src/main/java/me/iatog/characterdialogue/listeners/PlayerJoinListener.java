@@ -1,16 +1,15 @@
 package me.iatog.characterdialogue.listeners;
 
-import java.util.List;
-import java.util.UUID;
-
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-
-import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.List;
+import java.util.UUID;
 
 public class PlayerJoinListener implements Listener {
 	

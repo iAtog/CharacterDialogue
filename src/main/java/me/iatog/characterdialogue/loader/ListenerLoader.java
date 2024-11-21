@@ -1,19 +1,14 @@
 package me.iatog.characterdialogue.loader;
 
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.listeners.*;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 
-import me.iatog.characterdialogue.CharacterDialoguePlugin;
-import me.iatog.characterdialogue.listeners.NPCInteractListener;
-import me.iatog.characterdialogue.listeners.NPCSpawnListener;
-import me.iatog.characterdialogue.listeners.PlayerJoinListener;
-import me.iatog.characterdialogue.listeners.PlayerMoveListener;
-import me.iatog.characterdialogue.listeners.PlayerQuitListener;
-
 public class ListenerLoader implements Loader {
 	
-	private CharacterDialoguePlugin main;
+	private final CharacterDialoguePlugin main;
 	
 	public ListenerLoader(CharacterDialoguePlugin main) {
 		this.main = main;

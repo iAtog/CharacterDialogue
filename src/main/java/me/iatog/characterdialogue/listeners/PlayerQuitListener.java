@@ -1,20 +1,19 @@
 package me.iatog.characterdialogue.listeners;
 
-import java.util.Map;
-import java.util.UUID;
-
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.session.ChoiceSession;
+import me.iatog.characterdialogue.session.DialogSession;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import me.iatog.characterdialogue.CharacterDialoguePlugin;
-import me.iatog.characterdialogue.session.ChoiceSession;
-import me.iatog.characterdialogue.session.DialogSession;
+import java.util.Map;
+import java.util.UUID;
 
 public class PlayerQuitListener implements Listener {
 	
-	private CharacterDialoguePlugin main;
+	private final CharacterDialoguePlugin main;
 	
 	public PlayerQuitListener(CharacterDialoguePlugin main) {
 		this.main = main;

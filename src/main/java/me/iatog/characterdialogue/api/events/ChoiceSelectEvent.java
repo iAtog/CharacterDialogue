@@ -1,14 +1,13 @@
 package me.iatog.characterdialogue.api.events;
 
-import java.util.UUID;
-
+import me.iatog.characterdialogue.misc.Choice;
+import me.iatog.characterdialogue.session.ChoiceSession;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 
-import me.iatog.characterdialogue.misc.Choice;
-import me.iatog.characterdialogue.session.ChoiceSession;
+import java.util.UUID;
 
 public class ChoiceSelectEvent extends PlayerEvent implements Cancellable {
 	
