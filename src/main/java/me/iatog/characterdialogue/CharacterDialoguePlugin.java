@@ -157,7 +157,7 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 			}
 		}
 
-		getLogger().info("Loaded " + dialogues.size() + " dialogues.");
+		//getLogger().info("Loaded " + dialogues.size() + " dialogues.");
 	}
 
 	public void clearAllDialogues() {

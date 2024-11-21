@@ -3,6 +3,8 @@ package me.iatog.characterdialogue.loader;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.choice.*;
 import me.iatog.characterdialogue.dialogs.method.*;
+import me.iatog.characterdialogue.libraries.Cache;
+import me.iatog.characterdialogue.util.TextUtils;
 
 public class CacheLoader implements Loader {
 	
@@ -14,6 +16,8 @@ public class CacheLoader implements Loader {
 
 	@Override
 	public void load() {
+		Cache cache = main.getCache();
+
 		main.registerMethods(
 				new SendMethod(),
 				new SoundMethod(main),
@@ -38,6 +42,8 @@ public class CacheLoader implements Loader {
 				new MessageChoice(),
 				new StartDialogChoice()
 				);
+		main.getLogger().info(TextUtils.colorize("Correctly loaded " + cache.getChoices().size() + " choices."));
+		main.getLogger().info(TextUtils.colorize("Correctly loaded " + cache.getMethods().size() + " methods."));
 	}
 
 	@Override
