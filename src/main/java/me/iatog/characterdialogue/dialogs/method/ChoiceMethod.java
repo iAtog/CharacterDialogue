@@ -47,15 +47,15 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 
 		ChoiceSession choiceSession = new ChoiceSession(provider, player);
 
-		if (!choicesFile.contains("choice.choices." + arg)) {
+		if (!choicesFile.contains("choices." + arg)) {
 			provider.getLogger().warning("The choice \"" + arg + "\" doesn't exists.");
 			return;
 		}
 
 		session.pause();
 
-		for (String choice : choicesFile.getSection("choice.choices." + arg).getRoutesAsStrings(false)) {
-			Section section = choicesFile.getSection("choice.choices." + arg + "." + choice);
+		for (String choice : choicesFile.getSection("choices." + arg).getRoutesAsStrings(false)) {
+			Section section = choicesFile.getSection("choices." + arg + "." + choice);
 			String type = section.getString("type");
 			String message = section.getString("message", "no message specified");
 			String argument = section.getString("argument", "");
@@ -99,7 +99,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 			session.destroy();
 			taskList.remove(uuid);
 
-			if(player.isOnline()) {
+			if(player != null) {
 				player.sendMessage(colorize("&cYou took a long time to answer"));
 
 			}
@@ -136,36 +136,12 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		ChoiceSession session = sessions.get(playerId);
 		UUID uuid = UUID.fromString(args[1]);
 		int choice = Integer.parseInt(args[2]);
-		//Choice choiceObject = session.getChoice(choice);
 
 		if (!uuid.toString().equals(session.getUniqueId().toString())) {
 			return;
 		}
 
 		runChoice(player, choice);
-/*
-		ChoiceSelectEvent choiceEvent = new ChoiceSelectEvent(player, uuid, choiceObject, session);
-		Bukkit.getPluginManager().callEvent(choiceEvent);
-
-		if (choiceEvent.isCancelled()) {
-			return;
-		}
-
-		DialogChoice choiceTarget = getByClassName(choiceObject.getChoiceClass());
-		DialogSession dialogSession = provider.getCache().getDialogSessions().get(playerId);
-
-		if (dialogSession == null) {
-			sessions.remove(playerId);
-			return;
-		}
-
-        if(choiceTarget == null) {
-			return;
-		}
-
-        choiceTarget.onSelect(choiceObject.getArgument(), dialogSession, session);
-		sessions.remove(playerId);
-		taskList.remove(playerId).cancel();*/
 	}
 
 	@EventHandler
