@@ -52,7 +52,7 @@ public class PluginLoader implements Loader {
 	private void append(Loader loader) {
 		loader.load();
 		this.loaders.add(loader);
-		main.getLogger().info("Loaded: " + loader.getClass().getSimpleName());
+		//main.getLogger().info("Loaded: " + loader.getClass().getSimpleName());
 	}
 	
 }
