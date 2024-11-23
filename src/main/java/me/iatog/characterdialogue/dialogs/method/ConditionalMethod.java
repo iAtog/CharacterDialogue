@@ -199,6 +199,7 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 		}),
 		CONTINUE(data -> {
 			// yeah
+			data.getSession().startNext();
 		});
 
 		private final Consumer<ConditionData> action;
