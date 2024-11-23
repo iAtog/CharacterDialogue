@@ -1,4 +1,4 @@
-file-version: 1.0.0
+file-version: 1
 placeholders:
   npc: '&e[NPC] &c%npc_name%&f:'
   user: '&e[YOU] &b%player_name%&f:'

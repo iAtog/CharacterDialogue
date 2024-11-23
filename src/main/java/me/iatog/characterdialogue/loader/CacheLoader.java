@@ -31,7 +31,8 @@ public class CacheLoader implements Loader {
 				new ChoiceMethod(main),
 				new SneakMethod(main),
 				new ConditionalMethod(main),
-				new GiveMethod()
+				new GiveMethod(),
+				new TalkMethod(main)
 				);
 		
 		main.registerChoices(
@@ -40,7 +41,7 @@ public class CacheLoader implements Loader {
 				new SendChoice(),
 				new DialogueChoice(),
 				new MessageChoice(),
-				new StartDialogChoice()
+				new StartDialogChoice(main)
 				);
 		main.getLogger().info(TextUtils.colorize("Correctly loaded " + cache.getChoices().size() + " choices."));
 		main.getLogger().info(TextUtils.colorize("Correctly loaded " + cache.getMethods().size() + " methods."));
