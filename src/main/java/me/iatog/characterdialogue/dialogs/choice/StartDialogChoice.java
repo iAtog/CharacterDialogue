@@ -9,8 +9,11 @@ import me.iatog.characterdialogue.session.DialogSession;
 
 public class StartDialogChoice extends DialogChoice {
 
-	public StartDialogChoice() {
+	private final CharacterDialoguePlugin main;
+
+	public StartDialogChoice(CharacterDialoguePlugin main) {
 		super("start_dialogue", true);
+		this.main = main;
 	}
 
 	@Override
@@ -22,7 +25,7 @@ public class StartDialogChoice extends DialogChoice {
 		if (dialogue != null) {
 			api.runDialogue(session.getPlayer(), dialogue);
 		} else {
-			CharacterDialoguePlugin.getInstance().getLogger().severe("The dialogue name in \"start_dialogue\" choice doesn't exists");
+			main.getLogger().severe("The dialogue name in \"start_dialogue\" choice doesn't exists");
 		}
 	}
 
