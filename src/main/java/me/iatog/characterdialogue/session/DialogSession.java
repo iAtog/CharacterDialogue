@@ -22,7 +22,7 @@ public class DialogSession implements Session {
 	private final ClickType clickType;
 	private final List<String> lines;
 	private final String displayName;
-	private int index;
+	private int index = 0;
 	private int npcId;
 	private boolean stop;
 
@@ -47,10 +47,11 @@ public class DialogSession implements Session {
 	}
 
 	public void start(int index) {
-		if (lines.isEmpty()) {
+		if (lines.isEmpty() || index >= lines.size() || index < 0) {
 			this.destroy();
 			return;
 		}
+
 		getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 59999, 4, true, false, false));
 
 		for (int i = index; i < lines.size(); i++) {
@@ -107,6 +108,10 @@ public class DialogSession implements Session {
 
 	public void pause() {
 		this.stop = true;
+	}
+
+	public void startNext() {
+		start(index + 1);
 	}
 
 	public void destroy() {
