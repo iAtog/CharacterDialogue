@@ -1,5 +1,7 @@
 package me.iatog.characterdialogue.libraries;
 
+import dev.dejvokep.boostedyaml.dvs.Pattern;
+import dev.dejvokep.boostedyaml.dvs.segment.Segment;
 import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
 import dev.dejvokep.boostedyaml.route.Route;
 import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
@@ -21,11 +23,14 @@ public class YamlVersions {
 
         @Override
         public UpdaterSettings getUpdaterSettings() {
+            //Pattern pattern = new Pattern(Segment.range(1, Integer.MAX_VALUE), Segment.literal("."), Segment.range(0, 10));
             return UpdaterSettings.builder()
                     .setAutoSave(true)
                     .setVersioning(new BasicVersioning("file-version"))
+                    //.setVersioning(pattern, "use-actionbar")
 
-                    .addIgnoredRoute("1.0.0", "npc", '.')
+                    .addIgnoredRoute("1", "placeholders", '.')
+                    .addIgnoredRoute("1", "npc", '.')
 
 
                     .build();
@@ -36,12 +41,19 @@ public class YamlVersions {
 
         @Override
         public LoaderSettings getLoaderSettings() {
-            return null;
+            return LoaderSettings.builder()
+                    .setAutoUpdate(true)
+                    .setCreateFileIfAbsent(true)
+                    .build();
         }
 
         @Override
         public UpdaterSettings getUpdaterSettings() {
-            return null;
+            return UpdaterSettings.builder()
+                    .setAutoSave(true)
+                    .setVersioning(new BasicVersioning("file-version"))
+
+                    .build();
         }
     }
 
