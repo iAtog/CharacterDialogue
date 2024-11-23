@@ -49,7 +49,10 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 			String actualExpression = conditionResult ? ifTrue : ifFalse;
 			String method;
 			String argument;
+
+			// DEBUG soon
 			//player.sendMessage(TextUtils.colorize("&e" + condition + "&7: &c" + conditionResult));
+
 			if(actualExpression.contains(":")) {
 				String[] parts = actualExpression.split(":", 2);
 				method = parts[0].trim().toUpperCase();
