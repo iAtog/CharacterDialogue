@@ -4,8 +4,12 @@ import dev.dejvokep.boostedyaml.YamlDocument;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
+import me.fixeddev.commandflow.annotated.annotation.ParentArg;
+import me.fixeddev.commandflow.annotated.annotation.SubCommandClasses;
+import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.DialogueImpl;
+import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.libraries.Cache;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
@@ -15,17 +19,25 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Command(names = {
-		"characterdialogue"
+		"characterdialogue", "cdp"
 },      permission = "characterdialogue.use",
 		desc = "CharacterDialogue main command")
+@SubCommandClasses({DialogueCommands.class})
 public class CharacterDialogueCommand implements CommandClass {
-	
+
+	/*
+	* /characterdialogue
+	* /characterdialogue reload
+	* /characterdialogue clear-cache
+	* /characterdialogue dialogue view <name>
+	* /characterdialogue dialogue start <name> [player]
+	* /characterdialogue dialogues
+	* /characterdialogue gui
+	* */
+
 	private final CharacterDialoguePlugin main;
 	private final YamlDocument language;
 	

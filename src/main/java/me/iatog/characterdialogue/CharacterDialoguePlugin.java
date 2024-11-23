@@ -32,6 +32,7 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 	private Hooks hooks;
 	private String defaultChannel;
 	private long startup;
+
 	private List<YamlDocument> dialogues;
 	
 	private static CharacterDialoguePlugin instance;
@@ -53,7 +54,7 @@ public class CharacterDialoguePlugin extends JavaPlugin {
         }
 
         Messenger messenger = getServer().getMessenger();
-		if(!messenger.isOutgoingChannelRegistered(this, defaultChannel)) { // idk
+		if(!messenger.isOutgoingChannelRegistered(this, defaultChannel)) {
 			messenger.registerOutgoingPluginChannel(this, defaultChannel);
 		}
 		
@@ -95,9 +96,8 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 	 * Register your own methods
 	 * @param methods methods to register
 	 */
-	
-	@SuppressWarnings("unchecked")
-	public void registerMethods(DialogMethod<? extends JavaPlugin>... methods) {
+	@SafeVarargs
+    public final void registerMethods(DialogMethod<? extends JavaPlugin>... methods) {
 		Map<String, DialogMethod<? extends JavaPlugin>> mapMethods = getCache().getMethods();
 		
 		for (DialogMethod<? extends JavaPlugin> method : methods) {
@@ -114,7 +114,8 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 			}
 		}
 	}
-	
+
+
 	public void registerChoices(DialogChoice... choices) {
 		Map<String, DialogChoice> choiceCache = getCache().getChoices();
 		
@@ -132,6 +133,10 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 		return dialogues;
 	}
 
+	/**
+	 * Load all files from the folder CharacterDialogue/dialogues/
+	 * @throws IOException
+	 */
 	public void loadAllDialogues() throws IOException {
 		String folderName = "dialogues";
 		File folder = new File(this.getDataFolder() + "/" + folderName);
@@ -151,13 +156,9 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 					YamlDocument yamlDocument = YamlDocument.create(file); // Objects.requireNonNull(getResource(folderName + "/" + file.getName()))
 
 					dialogues.add(yamlDocument);
-					//YamlFile yamlFile = new YamlFile(this, file.getName(), folderName);
-					//dialogues.add(yamlFile);
 				}
 			}
 		}
-
-		//getLogger().info("Loaded " + dialogues.size() + " dialogues.");
 	}
 
 	public void clearAllDialogues() {
