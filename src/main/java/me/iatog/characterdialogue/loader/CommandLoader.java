@@ -8,7 +8,10 @@ import me.fixeddev.commandflow.annotated.part.defaults.DefaultsModule;
 import me.fixeddev.commandflow.bukkit.BukkitCommandManager;
 import me.fixeddev.commandflow.bukkit.factory.BukkitModule;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.command.CharacterDialogueCommand;
+import me.iatog.characterdialogue.command.DialogueCommands;
+import me.iatog.characterdialogue.part.DialoguePartFactory;
 
 public class CommandLoader implements Loader {
 	
@@ -22,13 +25,17 @@ public class CommandLoader implements Loader {
 		PartInjector injector = PartInjector.create();
 		injector.install(new DefaultsModule());
 		injector.install(new BukkitModule());
+
+		injector.bindFactory(Dialogue.class, new DialoguePartFactory(main));
+		//injector.bindPart(Dialogue.class, new DialoguePart("dialogue-part", main));
 		this.builder = new AnnotatedCommandTreeBuilderImpl(injector);
 	}
 	
 	@Override
 	public void load() {
 		registerCommands(
-				new CharacterDialogueCommand(main)
+				new CharacterDialogueCommand(main)//,
+				//new DialogueCommands()
 				);
 	}
 	
