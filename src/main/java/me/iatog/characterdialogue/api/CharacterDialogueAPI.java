@@ -32,8 +32,8 @@ public interface CharacterDialogueAPI {
 	void runDialogueExpression(Player player, String dialog);
 	void runDialogueExpression(Player player, String dialog, String npcName);
 	void runDialogueExpression(Player player, String dialog, String npcName, Consumer<String> fail, DialogSession session);
-	void runDialogueExpressions(Player player, List<String> lines, ClickType type, int npcId, String displayName);
-	void runDialogueExpressions(Player player, List<String> lines, String displayName);
+	void runDialogueExpressions(Player player, List<String> lines, ClickType type, int npcId, String displayName, String dialogueName);
+	void runDialogueExpressions(Player player, List<String> lines, String displayName, String dialogueName) ;
 	
 	Dialogue getNPCDialogue(int id);
 	Map<String, Dialogue> getDialogues();

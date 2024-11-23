@@ -18,7 +18,7 @@ public class DialogSession implements Session {
 
 	private final CharacterDialoguePlugin main;
 	private final UUID uuid;
-	private Dialogue dialogue;
+	private final Dialogue dialogue;
 	private final ClickType clickType;
 	private final List<String> lines;
 	private final String displayName;
@@ -29,17 +29,25 @@ public class DialogSession implements Session {
 	private boolean isDestroyed = false;
 
 	public DialogSession(CharacterDialoguePlugin main, Player player, List<String> lines, ClickType clickType,
-			int npcId, String displayName) {
+			int npcId, String displayName, String dialogueName) {
 		this.main = main;
 		this.uuid = player.getUniqueId();
 		this.clickType = clickType;
 		this.lines = lines;
 		this.displayName = displayName;
+		this.dialogue = main.getCache().getDialogues().get(dialogueName);
 	}
 
 	public DialogSession(CharacterDialoguePlugin main, Player player, Dialogue dialogue, int npcId) {
-		this(main, player, dialogue.getLines(), dialogue.getClickType(), npcId, dialogue.getDisplayName());
+		this(main, player, dialogue.getLines(), dialogue.getClickType(), npcId, dialogue.getDisplayName(), dialogue.getName());
+		//this.dialogue = dialogue;
+		/*this.main = main;
+		this.uuid = player.getUniqueId();
+		this.clickType = dialogue.getClickType();
+		this.lines = dialogue.getLines();
+		this.displayName = dialogue.getDisplayName();
 		this.dialogue = dialogue;
+		this.npcId = npcId;*/
 	}
 
 	public DialogSession(CharacterDialoguePlugin main, Player player, Dialogue dialogue) {

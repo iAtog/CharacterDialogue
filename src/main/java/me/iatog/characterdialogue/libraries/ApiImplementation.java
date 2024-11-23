@@ -29,8 +29,8 @@ import java.util.function.Consumer;
 
 public class ApiImplementation implements CharacterDialogueAPI {
 
-	private CharacterDialoguePlugin main;
-	private HologramLibrary hologramLibrary;
+	private final CharacterDialoguePlugin main;
+	private final HologramLibrary hologramLibrary;
 
 	public ApiImplementation(CharacterDialoguePlugin main) {
 		this.main = main;
@@ -192,21 +192,21 @@ public class ApiImplementation implements CharacterDialogueAPI {
 
 	@Override
 	public void runDialogueExpressions(Player player, List<String> lines, ClickType clickType, int npcId,
-			String displayName) {
+			String displayName, String dialogueName) {
 		if (main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
 			return;
 		}
 
 		DialogSession session = new DialogSession(main, player, lines, clickType, npcId,
-				displayName == null ? "Dummy" : displayName);
+				displayName == null ? "Dummy" : displayName, dialogueName);
 
 		main.getCache().getDialogSessions().put(player.getUniqueId(), session);
 		session.start(0);
 	}
 
 	@Override
-	public void runDialogueExpressions(Player player, List<String> lines, String displayName) {
-		runDialogueExpressions(player, lines, ClickType.ALL, -999, displayName);
+	public void runDialogueExpressions(Player player, List<String> lines, String displayName, String dialogueName) {
+		runDialogueExpressions(player, lines, ClickType.ALL, -999, displayName, dialogueName);
 	}
 
 	@Override

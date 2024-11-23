@@ -9,7 +9,7 @@ import java.util.List;
 public class EmptyDialogSession extends DialogSession {
 
 	public EmptyDialogSession(CharacterDialoguePlugin main, Player player, List<String> lines, String name) {
-		super(main, player, lines, ClickType.ALL, -999, name);
+		super(main, player, lines, ClickType.ALL, -999, name, name);
 	}
 	
 	@Override

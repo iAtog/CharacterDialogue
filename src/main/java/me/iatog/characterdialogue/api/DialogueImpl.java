@@ -125,7 +125,7 @@ public class DialogueImpl implements Dialogue {
             }
         }
 		
-		main.getApi().runDialogueExpressions(player, firstInteraction, displayName);	
+		main.getApi().runDialogueExpressions(player, firstInteraction, displayName, this.dialogName);
 		return true;
 	}
 	
