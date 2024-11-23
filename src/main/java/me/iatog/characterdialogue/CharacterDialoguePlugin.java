@@ -149,6 +149,7 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 		}
 
 		if(folder.isDirectory()) {
+			clearAllDialogues();
 			File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".yml"));
 			if(files != null) {
 				for(File file : files) {

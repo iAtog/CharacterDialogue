@@ -68,18 +68,25 @@ public class CharacterDialogueCommand implements CommandClass {
 		
 		cache.getDialogues().clear();
 
-		main.clearAllDialogues();
 		try {
 			main.loadAllDialogues();
+
+			for(YamlDocument dialogueFile : main.getAllDialogues()) {
+				if(dialogueFile == null) continue;
+				dialogueFile.getSection("dialogue").getRoutesAsStrings(false).forEach(name -> {
+					cache.getDialogues().put(name, new DialogueImpl(main, name, dialogueFile));
+				});
+			}
+
 		} catch(IOException exception) {
+			sender.sendMessage("Error loading all dialogues");
 			exception.printStackTrace();
+			return;
 		}
 
-		for(YamlDocument dialogueFile : main.getAllDialogues()) {
-			dialogueFile.getSection("dialogue").getRoutesAsStrings(false).forEach(name -> {
-				cache.getDialogues().put(name, new DialogueImpl(main, name, dialogueFile));
-			});
-		}
+
+
+		sender.sendMessage(TextUtils.colorize("&aLoaded " + cache.getDialogues().size() + " dialogues."));
 
 		/*
 		dialogs.getConfigurationSection("dialogue").getKeys(false).forEach(name -> {
