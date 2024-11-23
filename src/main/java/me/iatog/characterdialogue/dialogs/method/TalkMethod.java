@@ -13,7 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements Listener {
 
@@ -57,18 +56,25 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
 
             @Override
             public void run() {
-                if (index < message.length()) {
-                    String writingMessage = message.substring(0, index + 1);
-                    String npcName = session.getDialogue().getDisplayName();
+                try {
+                    if (index < message.length()) {
+                        String writingMessage = message.substring(0, index + 1);
+                        String npcName = session.getDialogue().getDisplayName();
 
-                    index++;
+                        index++;
 
-                    String text = Placeholders.translate(player, "&7[&c" + npcName + "&7] &f" + writingMessage);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 0.5f, 0.5f);
-                    type.execute(player, text);
-                } else {
+                        String text = Placeholders.translate(player, "&7[&c" + npcName + "&7] &f" + writingMessage);
+                        player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 0.5f, 0.5f);
+                        type.execute(player, text);
+                    } else {
+                        this.cancel();
+                        Bukkit.getScheduler().runTaskLater(getProvider(), session::startNext, 20);
+                    }
+                } catch(NullPointerException ex) {
+                    getProvider().getLogger().severe("Null pointer exception in talkMethod [" + message + "]");
+                    ex.printStackTrace();
+                    session.destroy();
                     this.cancel();
-                    Bukkit.getScheduler().runTaskLater(getProvider(), session::startNext, 20);
                 }
             }
         }.runTaskTimer(getProvider(), 2L, 2L);
