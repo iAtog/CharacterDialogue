@@ -5,40 +5,43 @@ import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import me.fixeddev.commandflow.annotated.annotation.Suggestions;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.api.CharacterDialogueAPI;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
+import me.iatog.characterdialogue.util.TextUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
 
-@Command(names = "dialogue", desc = "Blah")
+@Command(names = "dialogue",
+        desc = "Blah",
+        permission = "characterdialogue.command.dialogue")
 public class DialogueCommands implements CommandClass {
 
-    @Command(names = "run", desc = "Run dialogue")
+    @Command(names = "start", desc = "Run a dialogue")
     public void dialoguesCommand(@Sender CommandSender sender,
                                  Dialogue dialogue,
-                                 @OptArg Optional<Player> playerOpt) {
+                                 @OptArg Player playerOpt) {
         Player target;
         if(dialogue == null) {
-            sender.sendMessage("No encontrado");
+            sender.sendMessage(TextUtils.colorize("&cDialogue with that name was not found."));
             return;
         }
 
-        if(!playerOpt.isPresent()) {
+        if(playerOpt == null) {
             if(!(sender instanceof Player)) {
-                sender.sendMessage("You arent a player");
+                sender.sendMessage(TextUtils.colorize("&cYou need to specify the target player."));
                 return;
             }
+
             target = (Player) sender;
         } else {
-            if(!playerOpt.get().isOnline()) {
-                sender.sendMessage("offlain");
-                return;
-            }
-            target = playerOpt.get();
+            target = playerOpt;
         }
 
-        sender.sendMessage(dialogue.getDisplayName() + ": test - " + target.getName());
+        sender.sendMessage(TextUtils.colorize("&aStarted '&c" + dialogue.getName() + "&a' dialogue for &c" + target.getName() + "&a."));
+        dialogue.start(target);
     }
 
 }
