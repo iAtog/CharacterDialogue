@@ -17,10 +17,12 @@ public class DialoguePart implements ArgumentPart {
 
     private final String name;
     private final CharacterDialoguePlugin main;
+    private final Map<String, Dialogue> dialogues;
 
     public DialoguePart(String name, CharacterDialoguePlugin main) {
         this.main = main;
         this.name = name;
+        this.dialogues = main.getCache().getDialogues();
     }
 
     @Override
@@ -31,19 +33,20 @@ public class DialoguePart implements ArgumentPart {
     @Override
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
         String next = stack.hasNext() ? stack.next() : null;
-        Map<String, Dialogue> dialogues = main.getCache().getDialogues();
-
+        main.getLogger().info("Dialogue Part 1");
         if(next == null) {
+            main.getLogger().info("Dialogue Part empty 1");
             return Collections.emptyList();
         }
 
         List<String> suggest = new ArrayList<>();
-
+        main.getLogger().info("Dialogue Part 2");
         for(String dialogueName : dialogues.keySet()) {
             if(next.isEmpty() || dialogueName.startsWith(next)) {
                 suggest.add(dialogueName);
             }
         }
+        main.getLogger().info("Dialogue Part 3: dialogues: " + suggest.size());
         /*
         if(suggest.size() == 1 && dialogues.containsKey(next)) {
             return Collections.emptyList();

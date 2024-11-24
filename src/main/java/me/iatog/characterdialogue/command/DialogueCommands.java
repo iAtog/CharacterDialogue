@@ -3,6 +3,7 @@ package me.iatog.characterdialogue.command;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
+import me.fixeddev.commandflow.annotated.annotation.Suggestions;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import org.bukkit.command.CommandSender;
@@ -12,14 +13,16 @@ import java.util.Optional;
 
 @Command(names = "dialogue", desc = "Blah")
 public class DialogueCommands implements CommandClass {
+
     @Command(names = "run", desc = "Run dialogue")
-    public void dialoguesCommand(@Sender CommandSender sender, @OptArg Optional<Dialogue> dialogueOpt, @OptArg Optional<Player> playerOpt) {
+    public void dialoguesCommand(@Sender CommandSender sender,
+                                 Dialogue dialogue,
+                                 @OptArg Optional<Player> playerOpt) {
         Player target;
-        if(!dialogueOpt.isPresent()) {
+        if(dialogue == null) {
             sender.sendMessage("No encontrado");
             return;
         }
-        Dialogue dialogue = dialogueOpt.get();
 
         if(!playerOpt.isPresent()) {
             if(!(sender instanceof Player)) {

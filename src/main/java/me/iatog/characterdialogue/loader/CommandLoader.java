@@ -27,7 +27,6 @@ public class CommandLoader implements Loader {
 		injector.install(new BukkitModule());
 
 		injector.bindFactory(Dialogue.class, new DialoguePartFactory(main));
-		//injector.bindPart(Dialogue.class, new DialoguePart("dialogue-part", main));
 		this.builder = new AnnotatedCommandTreeBuilderImpl(injector);
 	}
 	
