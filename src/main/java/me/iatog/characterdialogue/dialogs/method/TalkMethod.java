@@ -157,7 +157,7 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
 
     public enum TalkType {
         ACTION_BAR((player, text, npcName) -> {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("&7[&c" + npcName + "&7] &f" + text));
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(TextUtils.colorize("&7[&c" + npcName + "&7] &f" + text)));
         }),
         MESSAGE((player, text, npcName) -> {
             String npc = TextUtils.colorize("&8[&b" + npcName + "&8] &7");
