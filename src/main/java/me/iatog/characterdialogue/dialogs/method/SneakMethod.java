@@ -39,9 +39,9 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
         session.pause();
 
         if(!actionBar) {
-            player.sendMessage("&7");
+            player.sendMessage(TextUtils.colorize("&7"));
             player.sendMessage(TextUtils.colorize("&c[ Sneak to continue ]"));
-            player.sendMessage("&7");
+            player.sendMessage(TextUtils.colorize("&7"));
         }
     }
 
