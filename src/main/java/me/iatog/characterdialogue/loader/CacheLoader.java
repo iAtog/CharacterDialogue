@@ -3,6 +3,7 @@ package me.iatog.characterdialogue.loader;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.choice.*;
 import me.iatog.characterdialogue.dialogs.method.*;
+import me.iatog.characterdialogue.dialogs.method.talk.TalkMethod;
 import me.iatog.characterdialogue.libraries.Cache;
 import me.iatog.characterdialogue.util.TextUtils;
 
