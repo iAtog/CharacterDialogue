@@ -37,7 +37,7 @@ public class MethodCommands implements CommandClass {
     }
 
     @Command(names = "execute")
-    @Usage("/<command> (method) (arguments)")
+    @Usage("<method> <arguments>")
     public void execute(@Sender Player sender, DialogMethodArgument method, @ConsumeAll List<String> args) {
         if(method == null) {
             sender.sendMessage(TextUtils.colorize("&cMethod not found"));
@@ -48,6 +48,7 @@ public class MethodCommands implements CommandClass {
             sender.sendMessage(TextUtils.colorize("&cInvalid arguments provided."));
             return;
         }
+
         StringBuilder arguments = new StringBuilder();
         for(String arg : args)
             arguments.append(" ").append(arg);
@@ -63,9 +64,11 @@ public class MethodCommands implements CommandClass {
         Dialogue dialogue = new TestDialogueImpl();
 
         DialogSession session = new DialogSession(main, sender, dialogue);
-        
+        sessions.put(sender.getUniqueId(), session);
+
         method.getMethod().execute(sender, arguments.toString().trim(), session, SingleUseConsumer.create((res) -> {
-            sender.sendMessage(TextUtils.colorize("&8[&e&8] &aMethod &8'&7" + method.getName() + "&8' &aexecuted correctly with result: " + res));
+            sessions.remove(sender.getUniqueId());
+            sender.sendMessage(TextUtils.colorize("&8[&eCharacterDialogue&8] &aMethod &8'&7" + method.getName() + "&8' &aexecuted correctly with result: " + res));
         }));
     }
 
