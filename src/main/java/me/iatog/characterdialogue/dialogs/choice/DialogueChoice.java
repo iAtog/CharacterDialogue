@@ -13,11 +13,11 @@ public class DialogueChoice extends DialogChoice {
 
 	@Override
 	public void onSelect(String argument, DialogSession dialogSession, ChoiceSession choiceSession) {
-		CharacterDialogueAPI.get().runDialogueExpression(dialogSession.getPlayer(), argument);
-		
-		if(dialogSession.hasNext()) {
-			dialogSession.start(dialogSession.getCurrentIndex() + 1);
-		}
+		CharacterDialogueAPI.get().runDialogueExpression(dialogSession.getPlayer(),
+				argument,
+				dialogSession.getDisplayName());
+
+		dialogSession.startNext();
 	}
 
 }
