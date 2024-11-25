@@ -19,7 +19,7 @@ public class PlayerDataDatabase {
 
     private final CharacterDialoguePlugin main;
 
-    private Connection connection;
+    //private Connection connection;
     public final String tableName;
 
     public PlayerDataDatabase(CharacterDialoguePlugin main) {
@@ -28,9 +28,7 @@ public class PlayerDataDatabase {
     }
 
     public void initialize() {
-        connection = getConnection();
-
-        try {
+        try(Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE uuid = ?");
             ResultSet resultSet = statement.executeQuery();
 
@@ -52,23 +50,17 @@ public class PlayerDataDatabase {
         }
 
         try {
-            if (connection != null && !connection.isClosed()) {
-                return connection;
-            }
-
             Class.forName("org.sqlite.JDBC");
 
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile);
-            return connection;
+            return DriverManager.getConnection("jdbc:sqlite:" + dbFile);
         } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            main.getLogger().severe("SQLite not found, using default yaml.");
+            return null;
         }
     }
 
     public void load() {
-        connection = getConnection();
-
-        try {
+        try(Connection connection = getConnection()) {
             Statement s = connection.createStatement();
             s.executeUpdate("CREATE TABLE IF NOT EXISTS " + tableName + "(`uuid` text, " +
                     "`readedDialogs` text NOT NULL, " +
@@ -113,8 +105,7 @@ public class PlayerDataDatabase {
     public void save(Player player, List<String> readedDialogs, boolean removeEffect, double lastSpeed) {
         PreparedStatement statement = null;
 
-        try {
-            connection = getConnection();
+        try(Connection connection = getConnection()) {
             statement = connection.prepareStatement("REPLACE INTO " + tableName + " (uuid, readedDialogs, removeEffect, lastSpeed) VALUES (?,?,?)");
             String parsedList = listToString(readedDialogs, ',');
 
@@ -131,14 +122,12 @@ public class PlayerDataDatabase {
             try {
                 if (statement != null)
                     statement.close();
-                if (connection != null)
-                    connection.close();
             } catch(SQLException e) {
-                // SIDA
                 main.getLogger().severe("Error while saving player data");
                 e.printStackTrace();
             }
         }
+
     }
 
     public void save(PlayerData playerData) {
@@ -150,8 +139,7 @@ public class PlayerDataDatabase {
         PreparedStatement statement = null;
         ResultSet result = null;
 
-        try {
-            connection = getConnection();
+        try(Connection connection = getConnection()) {
             statement = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE uuid = '" + uuid + "'");
             result = statement.executeQuery();
 
