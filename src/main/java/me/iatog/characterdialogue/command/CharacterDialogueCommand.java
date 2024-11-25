@@ -55,7 +55,7 @@ public class CharacterDialogueCommand implements CommandClass {
         try {
             main.getFileFactory().reload();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            main.getLogger().severe("Error reloading CharacterDialogue files.");
         }
 
         main.getApi().reloadHolograms();

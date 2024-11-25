@@ -14,22 +14,23 @@ import java.util.List;
 
 public class DialogueImpl implements Dialogue {
 	
-	private final String dialogName;
-	private final List<String> lines;
-	private final ClickType clickType;
-	private final String displayName;
+	private String dialogName;
+	private List<String> lines;
+	private ClickType clickType;
+	private String displayName;
 	private DialogHologram hologram;
-	private final List<String> firstInteraction;
+	private List<String> firstInteraction;
 	private DialoguePermission permissions;
-	private final boolean movement;
+	private boolean movement;
 	
-	private final CharacterDialoguePlugin main;
+	private CharacterDialoguePlugin main;
 	
 	public DialogueImpl(CharacterDialoguePlugin instance, String dialogName, YamlDocument dialogsFile) {
 		Section section = dialogsFile.getSection("dialogue." + dialogName);
 		
 		if(!dialogsFile.contains("dialogue." + dialogName)) {
-			throw new NullPointerException("No dialog named \"" + dialogName + "\" was found.");
+			instance.getLogger().severe("No dialogue named \"" + dialogName + "\" was found.");
+			return;
 		}
 		
 		String click = section.getString("click", "RIGHT").toUpperCase();
@@ -121,7 +122,7 @@ public class DialogueImpl implements Dialogue {
             try {
                 playerCache.save();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                this.main.getLogger().severe("Error saving player cache for " + player.getName() + "'s");
             }
         }
 		

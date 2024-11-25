@@ -50,7 +50,8 @@ public class CharacterDialoguePlugin extends JavaPlugin {
         try {
             loadAllDialogues();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            getLogger().severe("Error loading dialogues directory");
+			return;
         }
 
         Messenger messenger = getServer().getMessenger();
@@ -135,8 +136,7 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 
 	/**
 	 * Load all files from the folder CharacterDialogue/dialogues/
-	 * @throws IOException
-	 */
+     */
 	public void loadAllDialogues() throws IOException {
 		String folderName = "dialogues";
 		File folder = new File(this.getDataFolder() + "/" + folderName);
