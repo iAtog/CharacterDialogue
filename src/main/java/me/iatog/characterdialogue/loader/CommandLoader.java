@@ -10,8 +10,9 @@ import me.fixeddev.commandflow.bukkit.factory.BukkitModule;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.command.CharacterDialogueCommand;
-import me.iatog.characterdialogue.command.DialogueCommands;
-import me.iatog.characterdialogue.part.DialoguePartFactory;
+import me.iatog.characterdialogue.part.dialogue.DialoguePartFactory;
+import me.iatog.characterdialogue.part.method.DialogMethodArgument;
+import me.iatog.characterdialogue.part.method.MethodPartFactory;
 
 public class CommandLoader implements Loader {
 	
@@ -27,6 +28,7 @@ public class CommandLoader implements Loader {
 		injector.install(new BukkitModule());
 
 		injector.bindFactory(Dialogue.class, new DialoguePartFactory(main));
+		injector.bindFactory(DialogMethodArgument.class, new MethodPartFactory(main));
 		this.builder = new AnnotatedCommandTreeBuilderImpl(injector);
 	}
 	
