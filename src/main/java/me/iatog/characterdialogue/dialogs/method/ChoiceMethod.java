@@ -46,6 +46,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		YamlDocument config = provider.getFileFactory().getConfig();
 
 		if (sessions.containsKey(player.getUniqueId())) {
+			session.sendDebugMessage("Choice session found, cancelling.", "ChoiceMethod");
 			return;
 		}
 
@@ -125,6 +126,8 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		Player player = event.getPlayer();
 		UUID playerId = player.getUniqueId();
 		Map<UUID, ChoiceSession> sessions = provider.getCache().getChoiceSessions();
+		Map<UUID, DialogSession> dialogSessionMap = provider.getCache().getDialogSessions();
+
 		// Command: /;/select 4a8d7587-38f3-35e7-b29c-88c715aa6ba8 1
 
 		String[] args = command.split(" ");
@@ -137,12 +140,13 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		if (!sessions.containsKey(playerId) || args.length != 3) {
 			return;
 		}
-
+		DialogSession dialogSession = dialogSessionMap.get(playerId);
 		ChoiceSession session = sessions.get(playerId);
 		UUID uuid = UUID.fromString(args[1]);
 		int choice = Integer.parseInt(args[2]);
 
 		if (!uuid.toString().equals(session.getUniqueId().toString())) {
+			dialogSession.sendDebugMessage("UUID's dont match", "ChoiceMethod:onCommand");
 			return;
 		}
 
@@ -152,8 +156,6 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 	@EventHandler
 	public void onHeld(PlayerItemHeldEvent event) {
 		Player player = event.getPlayer();
-		UUID uuid = player.getUniqueId();
-		Map<UUID, ChoiceSession> sessions = provider.getCache().getChoiceSessions();
 
 		runChoice(player, (event.getNewSlot() + 1));
 	}
