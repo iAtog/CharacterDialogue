@@ -21,7 +21,7 @@ public class DialogSession implements Session {
 
 	private final CharacterDialoguePlugin main;
 	private final UUID uuid;
-	private final Dialogue dialogue;
+	private Dialogue dialogue;
 	private final ClickType clickType;
 	private final List<String> lines;
 	private final String displayName;
@@ -43,6 +43,7 @@ public class DialogSession implements Session {
 
 	public DialogSession(CharacterDialoguePlugin main, Player player, Dialogue dialogue, int npcId) {
 		this(main, player, dialogue.getLines(), dialogue.getClickType(), npcId, dialogue.getDisplayName(), dialogue.getName());
+		this.dialogue = dialogue;
 	}
 
 	public DialogSession(CharacterDialoguePlugin main, Player player, Dialogue dialogue) {
@@ -127,13 +128,8 @@ public class DialogSession implements Session {
 		return this.stop;
 	}
 
-	public void pause() {
-		this.stop = true;
-	}
-
 	public void destroy() {
 		this.stop = true;
-		//sendDebugMessage("Attempting to destroy.", "DialogSession:135");
 		if(isDestroyed) {
 			return;
 		}
@@ -142,18 +138,15 @@ public class DialogSession implements Session {
 			if(getPlayer().isOnline()) {
 				getPlayer().removePotionEffect(PotionEffectType.SLOW);
 			}
-
 		}
+		Map<UUID, DialogSession> sessions = main.getCache().getDialogSessions();
+
+		Bukkit.getPluginManager().callEvent(new DialogueFinishEvent(getPlayer(), this));
+		main.getApi().enableMovement(this.getPlayer());
+		sessions.remove(uuid);
+		this.isDestroyed = true;
 
 		sendDebugMessage("Session destroyed", "DialogSession:147");
-		DialogueFinishEvent dialogueFinishEvent = new DialogueFinishEvent(getPlayer(), this);
-		Bukkit.getPluginManager().callEvent(dialogueFinishEvent);
-		main.getApi().enableMovement(this.getPlayer());
-
-		Map<UUID, DialogSession> sessions = main.getCache().getDialogSessions();
-		sessions.remove(uuid);
-
-		this.isDestroyed = true;
 	}
 
 	public ClickType getClickType() {
