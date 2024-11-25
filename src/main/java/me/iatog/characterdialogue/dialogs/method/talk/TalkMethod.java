@@ -1,4 +1,4 @@
-package me.iatog.characterdialogue.dialogs.method;
+package me.iatog.characterdialogue.dialogs.method.talk;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
@@ -6,11 +6,6 @@ import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.util.SingleUseConsumer;
-import me.iatog.characterdialogue.util.TextUtils;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.apache.logging.log4j.util.TriConsumer;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,9 +20,6 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements Listener {
-
-    private static final String empty = TextUtils.colorize("&7");
-    private static final String[] emptyMessages = TalkType.getEmptyList();
 
     // List of players to wait sneak
     private final List<UUID> players;
@@ -46,64 +38,55 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
     @Override
     public void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> completed) {
         String[] args = arg.split("\\|", 2);
-
-        session.sendDebugMessage("Session paused", "TalkMethod:52");
-
-        TalkType type;
-        String message = "";
-        Sound sound = Sound.BLOCK_STONE_BUTTON_CLICK_OFF;
-        long tickSpeed = 2L;
-
-        float yaw = 0.5f;
-        float pitch = 0.5f;
-        boolean skippeable = false;
+        TalkConfiguration configuration = new TalkConfiguration(session);
+        //session.sendDebugMessage("Session paused", "TalkMethod:52");
 
         try {
             String[] typeArgs = args[0].split("[(),]");
-
-            type = TalkType.valueOf(typeArgs[0].toUpperCase());
+            configuration.setType(TalkType.valueOf(typeArgs[0].toUpperCase()));
 
             if (typeArgs.length > 1) {
                 String[] soundSplit = typeArgs[1].split("/");
                 if(soundSplit.length > 1) {
-                    sound = Sound.valueOf(soundSplit[0]);
-                    yaw = Float.parseFloat(soundSplit[1]);
-                    pitch = Float.parseFloat(soundSplit[2]);
+                    configuration.setSound(Sound.valueOf(soundSplit[0]));
+                    configuration.setVolume(Float.parseFloat(soundSplit[1]));
+                    configuration.setPitch(Float.parseFloat(soundSplit[2]));
                 } else {
-                    sound = Sound.valueOf(typeArgs[1]);
+                    configuration.setSound(Sound.valueOf(typeArgs[1]));
                 }
             }
             if (typeArgs.length > 2) {
-                tickSpeed = Long.parseLong(typeArgs[2]);
+                configuration.setTickSpeed(Long.parseLong(typeArgs[2]));
             }
             if (typeArgs.length > 3) {
-                skippeable = Boolean.parseBoolean(typeArgs[3]);
+                configuration.setSkippable(Boolean.parseBoolean(typeArgs[3]));
             }
 
-            message = args[1];
+            configuration.setMessage(args[1]);
         } catch(IndexOutOfBoundsException|NullPointerException ex) {
             getProvider().getLogger().severe("The line L" + session.getCurrentIndex() + " in " + session.getDialogue().getName() + " is not valid. (parse error)");
+            session.sendDebugMessage("Error parsing data: " + ex.getMessage(), "TalkMethod:73");
             completed.accept(CompletedType.DESTROY);
             return;
         }
 
-        if(message.isEmpty()) {
+        if(configuration.getMessage().isEmpty()) {
             getProvider().getLogger().severe("The line L" + session.getCurrentIndex() + " in " + session.getDialogue().getName() + " is not valid. (empty message)");
+            session.sendDebugMessage("Error parsing data: message is empty", "TalkMethod:80");
             completed.accept(CompletedType.DESTROY);
             return;
         }
 
         this.players.add(player.getUniqueId());
 
-        animateMessage(player, message, type, session, tickSpeed, sound, yaw, pitch, skippeable, completed);
+        animateMessage(player, configuration, completed);
     }
 
-    public void animateMessage(Player player, String message, TalkType type, DialogSession session, long tickSpeed,
-                                     Sound sound, float yaw, float pitch, boolean skippable, Consumer<CompletedType> completed) {
+    public void animateMessage(Player player, TalkConfiguration configuration, Consumer<CompletedType> completed) {
         UUID uuid = player.getUniqueId();
+        final DialogSession session = configuration.getSession();
         final String npcName = session.getDialogue().getDisplayName();
-        final String translatedMessage = Placeholders.translate(player, message);
-
+        final String translatedMessage = Placeholders.translate(player, configuration.getMessage());
 
         new BukkitRunnable() {
             int index = 0;
@@ -112,12 +95,12 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
             @Override
             public void run() {
                 try {
-                    if ((!players.contains(uuid) && skippable && !isCancelled()) && !finished) {
+                    if ((!players.contains(uuid) && configuration.isSkippable() && !isCancelled()) && !finished) {
                         stopAnimation();
                         return;
                     }
 
-                    if (index < message.length()) {
+                    if (index < configuration.getMessage().length()) {
                         animateText();
                     } else {
                         cancel();
@@ -134,9 +117,9 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
             private void stopAnimation() {
                 this.cancel();
                 this.finished = true;
-                type.execute(player, translatedMessage, npcName);
-                player.playSound(player.getLocation(), sound, 1f, 2f);
-                session.sendDebugMessage("Finished talk because: " + !players.contains(uuid) + " | " + skippable + " | " + !isCancelled(), "TalkMethod:134");
+                configuration.getType().execute(player, translatedMessage, npcName);
+                player.playSound(player.getLocation(), configuration.getSound(), 1f, 2f);
+                session.sendDebugMessage("Finished talk because: " + !players.contains(uuid) + " | " + configuration.isSkippable() + " | " + !isCancelled(), "TalkMethod:134");
                 players.remove(uuid);
                 completed.accept(CompletedType.CONTINUE);
                 //session.startNext();
@@ -145,8 +128,11 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
             private void animateText() {
                 String writingMessage = translatedMessage.substring(0, index + 1);
                 index++;
-                player.playSound(player.getLocation(), sound, 0.5f, 0.5f);
-                type.execute(player, writingMessage, npcName);
+                player.playSound(player.getLocation(),
+                        configuration.getSound(),
+                        configuration.getVolume(),
+                        configuration.getPitch());
+                configuration.getType().execute(player, writingMessage, npcName);
             }
 
             private void finishAnimation() {
@@ -155,21 +141,21 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
                     session.sendDebugMessage("Starting next... (else) (finishAnimation)", "TalkMethod:149");
                 }
                 this.finished = true;
-                session.sendDebugMessage("Finished because message " + index + " < " + message.length() +
+                session.sendDebugMessage("Finished because message " + index + " < " + configuration.getMessage().length() +
                         " (cancelled: " + isCancelled() + ")", "TalkMethod:152");
                 players.remove(uuid);
                 this.cancel();
             }
 
             private void handleException(Exception ex) {
-                getProvider().getLogger().severe("exception in talkMethod [" + message + "]");
+                getProvider().getLogger().severe("exception in talkMethod [" + configuration.getMessage() + "]");
                 ex.printStackTrace();
                 completed.accept(CompletedType.DESTROY);
                 this.cancel();
                 this.finished = true;
             }
 
-        }.runTaskTimer(getProvider(), 10L, tickSpeed);
+        }.runTaskTimer(getProvider(), 10L, configuration.getTickSpeed());
     }
 
     @EventHandler
@@ -187,55 +173,4 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
 
         players.remove(player.getUniqueId());
     }
-
-    public enum TalkType {
-        ACTION_BAR((player, text, npcName) -> {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(TextUtils.colorize("&7[&c" + npcName + "&7] &f" + text)));
-        }),
-        MESSAGE((player, text, npcName) -> {
-            String npc = TextUtils.colorize("&8[&b" + npcName + "&8] &7");
-
-            player.sendMessage(emptyMessages);
-            player.sendMessage(npc + text);
-        }),
-        FULL_CHAT((player, text, npcName) -> {
-            String line = "&7&m                                                                                ";
-            String colorizedText = TextUtils.colorize("&8[&b" + npcName + "&8] &7" + text);
-            List<String> wrapped = TextUtils.wrapText(colorizedText, 55);
-
-            player.sendMessage(emptyMessages);
-            player.sendMessage(TextUtils.colorize(line));
-            player.sendMessage(empty);
-
-            for(String wrap : wrapped) {
-                TextUtils.sendCenteredMessage(player, "&7" + wrap);
-            }
-
-            player.sendMessage(empty);
-            player.sendMessage(TextUtils.colorize(line));
-        });
-
-        private final TriConsumer<Player, String, String> consumer;
-
-        TalkType(TriConsumer<Player, String, String> consumer) {
-            this.consumer = consumer;
-
-        }
-
-        public void execute(Player target, String message, String npcName) {
-            consumer.accept(target, message, npcName);
-        }
-
-        public static String[] getEmptyList() {
-            List<String> list = new ArrayList<>();
-
-            for(int i = 0; i < 40;i++) {
-                list.add(ChatColor.translateAlternateColorCodes('&', "&7"));
-            }
-
-            return list.stream().toArray(String[]::new);
-        }
-    }
-
-
 }
