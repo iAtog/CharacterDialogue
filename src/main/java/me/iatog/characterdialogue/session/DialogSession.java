@@ -175,7 +175,7 @@ public class DialogSession implements Session {
 
 	public void sendDebugMessage(String message, String codeReference) {
 		if(getPlayer() != null && debug) {
-			getPlayer().sendMessage(TextUtils.colorize("&7[&c" + this.getDialogue().getName() + "&7] &f" + message + " &8(&7" + codeReference + "&8)"));
+			getPlayer().sendMessage(TextUtils.colorize("&7[&cCharacterDialogue&7] &7" + message + " &8(&7" + codeReference + "&8)"));
 		}
 	}
 }
