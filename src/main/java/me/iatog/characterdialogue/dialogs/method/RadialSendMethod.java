@@ -2,7 +2,9 @@ package me.iatog.characterdialogue.dialogs.method;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.session.DialogSession;
+import me.iatog.characterdialogue.util.SingleUseConsumer;
 import org.bukkit.entity.Player;
 
 public class RadialSendMethod extends DialogMethod<CharacterDialoguePlugin> {
@@ -12,7 +14,7 @@ public class RadialSendMethod extends DialogMethod<CharacterDialoguePlugin> {
 	}
 
 	@Override
-	public void execute(Player player, String arg, DialogSession session) {
+	public void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> completed) {
 		
 	}
 

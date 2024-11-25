@@ -19,7 +19,7 @@ public class ContinueChoice extends DialogChoice {
 		}
 		
 		if(dialogSession.hasNext()) {
-			dialogSession.start(dialogSession.getCurrentIndex() + 1);
+			dialogSession.startNext();
 		}
 	}
 }

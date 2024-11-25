@@ -6,9 +6,13 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.events.ChoiceSelectEvent;
 import me.iatog.characterdialogue.dialogs.DialogChoice;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.misc.Choice;
+import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
+import me.iatog.characterdialogue.util.SingleUseConsumer;
+import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -36,7 +40,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void execute(Player player, String arg, DialogSession session) {
+	public void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> completed) {
 		Map<UUID, ChoiceSession> sessions = provider.getCache().getChoiceSessions();
 		YamlDocument choicesFile = provider.getFileFactory().getChoicesFile();
 		YamlDocument config = provider.getFileFactory().getConfig();
@@ -52,7 +56,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 			return;
 		}
 
-		session.pause();
+		completed.accept(CompletedType.PAUSE);
 
 		for (String choice : choicesFile.getSection("choices." + arg).getRoutesAsStrings(false)) {
 			Section section = choicesFile.getSection("choices." + arg + "." + choice);
@@ -83,7 +87,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 			String parsedModel = colorize(model).replace("{I}", String.valueOf(index)).replace("{S}",
 					choice.getMessage());
 
-			questions.append(parsedModel + " \n")
+			questions.append(Placeholders.translate(player, parsedModel) + " \n")
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
 							COMMAND_NAME + " " + choiceSession.getUniqueId() + " " + index))
 					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, getSelectText(index)));
@@ -92,7 +96,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		player.spigot().sendMessage(questions.create());
 
 		BukkitTask task = Bukkit.getScheduler().runTaskLater(getProvider(), () -> {
-			Map<UUID, DialogSession> dialogSessionMap = getProvider().getCache().getDialogSessions();
+			//Map<UUID, DialogSession> dialogSessionMap = getProvider().getCache().getDialogSessions();
 			UUID uuid = player.getUniqueId();
 
 			choiceSession.destroy();
@@ -100,10 +104,11 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 			taskList.remove(uuid);
 
 			if(player != null) {
-				player.sendMessage(colorize("&cYou took a long time to answer"));
+				player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
+						TextComponent.fromLegacyText(colorize("&cYou took a long time to answer")));
 
 			}
- 		}, (long)(20 * 10));
+ 		}, 20 * 10);
 
 		taskList.put(player.getUniqueId(), task);
 	}
@@ -157,7 +162,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		Map<UUID, ChoiceSession> sessions = provider.getCache().getChoiceSessions();
 		UUID uuid = player.getUniqueId();
 
-		if(!sessions.containsKey(uuid)) {
+		if(!sessions.containsKey(uuid) || player == null) {
 			return;
 		}
 
@@ -171,7 +176,6 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		ChoiceSelectEvent choiceEvent = new ChoiceSelectEvent(player, uuid, choiceObject, session);
 		Bukkit.getPluginManager().callEvent(choiceEvent);
 
-
 		if (choiceEvent.isCancelled()) {
 			return;
 		}
@@ -179,12 +183,8 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 		DialogChoice choiceTarget = getByClassName(choiceObject.getChoiceClass());
 		DialogSession dialogSession = provider.getCache().getDialogSessions().get(uuid);
 
-		if (dialogSession == null) {
+		if (dialogSession == null || choiceTarget == null) {
 			sessions.remove(uuid);
-			return;
-		}
-
-		if(choiceTarget == null) {
 			return;
 		}
 

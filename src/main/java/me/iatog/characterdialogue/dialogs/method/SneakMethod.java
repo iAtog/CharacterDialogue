@@ -3,7 +3,9 @@ package me.iatog.characterdialogue.dialogs.method;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.events.DialogueFinishEvent;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.session.DialogSession;
+import me.iatog.characterdialogue.util.SingleUseConsumer;
 import me.iatog.characterdialogue.util.TextUtils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -34,9 +36,9 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
     }
 
     @Override
-    public void execute(Player player, String arg, DialogSession session) {
+    public void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> completed) {
         waitingPlayers.put(player.getUniqueId(), session.getCurrentIndex());
-        session.pause();
+        completed.accept(CompletedType.PAUSE);
 
         if(!actionBar) {
             player.sendMessage(TextUtils.colorize("&7"));
@@ -61,6 +63,8 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
 
     @EventHandler
     public void onFinish(DialogueFinishEvent event) {
+        if(event.getPlayer() == null) return;
+
         waitingPlayers.remove(event.getPlayer().getUniqueId());
     }
 

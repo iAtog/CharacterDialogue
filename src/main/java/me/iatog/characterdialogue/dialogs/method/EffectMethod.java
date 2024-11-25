@@ -2,7 +2,9 @@ package me.iatog.characterdialogue.dialogs.method;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.session.DialogSession;
+import me.iatog.characterdialogue.util.SingleUseConsumer;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -18,8 +20,7 @@ public class EffectMethod extends DialogMethod<CharacterDialoguePlugin> {
 	}
 
 	@Override
-	public void execute(Player player, String arg, DialogSession session) {
-		
+	public void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> completed) {
 		String[] split = arg.split(",");
 		if(arg.toLowerCase().startsWith("clear")) {
 			String[] separator = arg.split(" ");
@@ -34,6 +35,7 @@ public class EffectMethod extends DialogMethod<CharacterDialoguePlugin> {
 					player.removePotionEffect(effect.get());
 				}				
 			}
+			completed.accept(CompletedType.CONTINUE);
 			return;
 		}
 		// EFFECT: effect_name,seconds,amplifier
@@ -50,11 +52,13 @@ public class EffectMethod extends DialogMethod<CharacterDialoguePlugin> {
 		
 		if(!effectType.isPresent()) {
 			getProvider().getLogger().log(Level.WARNING, "The name of the \""+name+"\" effect has not been found.");
+			completed.accept(CompletedType.DESTROY);
 			return;
 		}
 		
 		PotionEffect potionEffect = new PotionEffect(effectType.get(), seconds * 20, amplifier, true);
 		player.addPotionEffect(potionEffect);
+		completed.accept(CompletedType.CONTINUE);
 	}
 
 }

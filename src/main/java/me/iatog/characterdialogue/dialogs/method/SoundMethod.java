@@ -2,7 +2,9 @@ package me.iatog.characterdialogue.dialogs.method;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.session.DialogSession;
+import me.iatog.characterdialogue.util.SingleUseConsumer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -15,7 +17,7 @@ public class SoundMethod extends DialogMethod<CharacterDialoguePlugin> {
 	}
 
 	@Override
-	public void execute(Player player, String arg, DialogSession session) {
+	public void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> completed) {
 		String[] part = arg.split(",");
 		Sound sound = null;
 		
@@ -23,21 +25,22 @@ public class SoundMethod extends DialogMethod<CharacterDialoguePlugin> {
 			sound = Sound.valueOf(part[0]);
 		} catch(Exception exception) {
 			getProvider().getLogger().log(Level.SEVERE, "Unknown sound \"" + part[0] + "\", stopping dialogue.", exception);
-			session.destroy();
+			completed.accept(CompletedType.DESTROY);
 			return;
 		}
 		
-		float volume = def(part, 1, 1);
-		float pitch = def(part, 2, 1);
+		float volume = def(part, 1);
+		float pitch = def(part, 2);
 		
 		player.playSound(player.getLocation(), sound, volume, pitch);
+		completed.accept(CompletedType.CONTINUE);
 	}
 	
-	private float def(String[] value, int index, float defaultValue) {
+	private float def(String[] value, int index) {
 		if(index >= value.length) {
-			return defaultValue;
+			return (float) 1;
 		} else {
-			return isInt(value[index]) ? Float.valueOf(value[index]) : defaultValue;
+			return isInt(value[index]) ? Float.parseFloat(value[index]) : (float) 1;
 		}
 	}
 	

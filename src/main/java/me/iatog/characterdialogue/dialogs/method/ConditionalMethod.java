@@ -2,13 +2,16 @@ package me.iatog.characterdialogue.dialogs.method;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.session.EmptyDialogSession;
+import me.iatog.characterdialogue.util.SingleUseConsumer;
 import me.iatog.characterdialogue.util.TextUtils;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -28,7 +31,7 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 	}
 
 	@Override
-	public void execute(Player player, String arg, DialogSession session) {
+	public void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> completed) {
 		try {
 			String[] arguments = arg.split("\\|");
 			String condition = arguments[0].trim();
@@ -63,12 +66,13 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 			}
 
 			ConditionalExpression expression = ConditionalExpression.valueOf(method);
-			expression.execute(new ConditionData(session, getProvider(), argument));
+			expression.execute(new ConditionData(session, getProvider(), argument), completed);
 			// pero estas chill de cojones
 		} catch(IndexOutOfBoundsException|IllegalArgumentException e) {
 			player.sendMessage(TextUtils.colorize("&c&lFatal error occurred."));
 			getProvider().getLogger().warning("The dialogue '" + session.getDialogue().getName() + "' has an invalid format in L" + session.getCurrentIndex());
 			e.printStackTrace();
+			completed.accept(CompletedType.DESTROY);
 		}
 	}
 
@@ -157,11 +161,12 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 
 	public enum ConditionalExpression {
 		//RUN_DIALOGUE/STOP_AND_SEND_MESSAGE/STOP/RUN_METHOD/CONTINUE
-		RUN_DIALOGUE(data -> {
+		RUN_DIALOGUE((data, completed) -> {
 			DialogSession session = data.getSession();
 			Player player = session.getPlayer();
 			String expression = data.getExpression();
-			session.destroy();
+			//session.destroy();
+			completed.accept(CompletedType.DESTROY);
 
 			if(!data.getMain().getCache().getDialogues().containsKey(expression) || expression.isEmpty()) {
 				data.getMain().getLogger().severe("The dialogue '" + expression + "' was not found.");
@@ -169,47 +174,49 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 				return;
 			}
 
-			data.getMain().getApi().runDialogue(player, expression);
+			data.getMain().getApi().runDialogue(player, expression, false);
 		}),
-		STOP_SEND_MSG(data -> {
+		STOP_SEND_MSG((data, completed) -> {
 			Player player = data.getSession().getPlayer();
-			data.getSession().destroy();
+			completed.accept(CompletedType.DESTROY);
 			player.sendMessage(Placeholders.translate(player, data.getExpression()));
 		}),
-		STOP(data -> {
-			data.getSession().destroy();
+		STOP((data, completed) -> {
+			completed.accept(CompletedType.DESTROY);
 		}),
-		RUN_METHOD(data -> {
+		RUN_METHOD((data, completed) -> {
+			//completed.accept(CompletedType.PAUSE);
 			DialogSession session = data.getSession();
 			Player player = session.getPlayer();
 			String expression = data.getExpression();
 
-			if(data.getExpression().isEmpty() || data.getMain().getCache().getMethods().containsKey(expression)) {
+			if (data.getExpression().isEmpty() || data.getMain().getCache().getMethods().containsKey(expression)) {
 				session.destroy();
 				data.getMain().getLogger().severe("The dialogue '" + expression + "' was not found.");
 				player.sendMessage("&c&lUnknown method found.");
 				return;
 			}
 
-			data.getMain().getApi().runDialogueExpression(player, expression, session.getDisplayName(), fail -> {
-				player.sendMessage(TextUtils.colorize("&c&lUnknown method found"));
-				session.destroy();
-				data.getMain().getLogger().severe("The method '" + expression + "' was not found.");
-			}, new EmptyDialogSession(data.getMain(), player, Arrays.asList(expression), session.getDisplayName()));
+			data.getMain().getApi().runDialogueExpression(player, expression, session.getDisplayName(), SingleUseConsumer.create(completedRes -> {
+				//player.sendMessage(TextUtils.colorize("&c&lUnknown method found"));
+				//session.destroy();
+				//data.getMain().getLogger().severe("The method '" + expression + "' was not found.");
+				completed.accept(CompletedType.CONTINUE);
+			}), new EmptyDialogSession(data.getMain(), player, Collections.singletonList(expression), session.getDisplayName()));
+
 		}),
-		CONTINUE(data -> {
-			// yeah
-			data.getSession().startNext();
+		CONTINUE((data, completed) -> {
+			completed.accept(CompletedType.CONTINUE);
 		});
 
-		private final Consumer<ConditionData> action;
+		private final BiConsumer<ConditionData, Consumer<CompletedType>> action;
 
-		ConditionalExpression(Consumer<ConditionData> action) {
+		ConditionalExpression(BiConsumer<ConditionData, Consumer<CompletedType>> action) {
 			this.action = action;
 		}
 
-		public void execute(ConditionData data) {
-			action.accept(data);
+		public void execute(ConditionData data, Consumer<CompletedType> completed) {
+			action.accept(data, completed);
 		}
 	}
 

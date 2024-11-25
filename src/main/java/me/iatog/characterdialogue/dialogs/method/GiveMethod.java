@@ -2,7 +2,9 @@ package me.iatog.characterdialogue.dialogs.method;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.session.DialogSession;
+import me.iatog.characterdialogue.util.SingleUseConsumer;
 import me.iatog.characterdialogue.util.TextUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,7 +17,7 @@ public class GiveMethod extends DialogMethod<CharacterDialoguePlugin> {
     }
 
     @Override
-    public void execute(Player player, String arg, DialogSession session) {
+    public void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> completed) {
         // DESIGN = GIVE: GOLDEN_APPLE,1
         Material material;
         int amount = 1;
@@ -29,10 +31,11 @@ public class GiveMethod extends DialogMethod<CharacterDialoguePlugin> {
             }
         } catch(NumberFormatException|EnumConstantNotPresentException|IndexOutOfBoundsException e) {
             player.sendMessage(TextUtils.colorize("&c&lFatal error ocurred."));
-            session.destroy();
+            completed.accept(CompletedType.DESTROY);
             return;
         }
 
         player.getInventory().addItem(new ItemStack(material, amount));
+        completed.accept(CompletedType.CONTINUE);
     }
 }
