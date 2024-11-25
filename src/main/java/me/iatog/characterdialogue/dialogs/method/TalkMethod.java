@@ -2,14 +2,14 @@ package me.iatog.characterdialogue.dialogs.method;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.session.DialogSession;
+import me.iatog.characterdialogue.util.SingleUseConsumer;
 import me.iatog.characterdialogue.util.TextUtils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.util.TriConsumer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -22,7 +22,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements Listener {
 
@@ -44,8 +44,10 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
     }
 
     @Override
-    public void execute(Player player, String arg, DialogSession session) {
+    public void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> completed) {
         String[] args = arg.split("\\|", 2);
+
+        session.sendDebugMessage("Session paused", "TalkMethod:52");
 
         TalkType type;
         String message = "";
@@ -54,7 +56,7 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
 
         float yaw = 0.5f;
         float pitch = 0.5f;
-        boolean skippeable = true;
+        boolean skippeable = false;
 
         try {
             String[] typeArgs = args[0].split("[(),]");
@@ -77,66 +79,97 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
             if (typeArgs.length > 3) {
                 skippeable = Boolean.parseBoolean(typeArgs[3]);
             }
-            /*type = TalkType.valueOf(args[0].toUpperCase());*/
+
             message = args[1];
         } catch(IndexOutOfBoundsException|NullPointerException ex) {
             getProvider().getLogger().severe("The line L" + session.getCurrentIndex() + " in " + session.getDialogue().getName() + " is not valid. (parse error)");
-            session.destroy();
+            completed.accept(CompletedType.DESTROY);
             return;
         }
 
         if(message.isEmpty()) {
             getProvider().getLogger().severe("The line L" + session.getCurrentIndex() + " in " + session.getDialogue().getName() + " is not valid. (empty message)");
-            session.destroy();
+            completed.accept(CompletedType.DESTROY);
             return;
         }
 
-        session.pause();
         this.players.add(player.getUniqueId());
 
-        animateMessage(player, message, type, session, tickSpeed, sound, yaw, pitch, skippeable);
+        animateMessage(player, message, type, session, tickSpeed, sound, yaw, pitch, skippeable, completed);
     }
 
     public void animateMessage(Player player, String message, TalkType type, DialogSession session, long tickSpeed,
-                               Sound sound,  float yaw, float pitch, boolean skippable) {
+                                     Sound sound, float yaw, float pitch, boolean skippable, Consumer<CompletedType> completed) {
         UUID uuid = player.getUniqueId();
-        String npcName = session.getDialogue().getDisplayName();
-        String translatedMessage = Placeholders.translate(player, message);
+        final String npcName = session.getDialogue().getDisplayName();
+        final String translatedMessage = Placeholders.translate(player, message);
+
 
         new BukkitRunnable() {
             int index = 0;
+            boolean finished = false;
 
             @Override
             public void run() {
                 try {
-                    if(!players.contains(uuid) && skippable) {
-                        type.execute(player, translatedMessage, npcName);
-                        player.playSound(player.getLocation(), sound, 1f, 2f);
-                        this.cancel();
-                        players.remove(uuid);
-                        Bukkit.getScheduler().runTaskLater(getProvider(), session::startNext, 10);
+                    if ((!players.contains(uuid) && skippable && !isCancelled()) && !finished) {
+                        stopAnimation();
                         return;
                     }
 
                     if (index < message.length()) {
-                        String writingMessage = translatedMessage.substring(0, index + 1);
-                        index++;
-
-                        player.playSound(player.getLocation(), sound, 0.5f, 0.5f);
-                        type.execute(player, writingMessage, npcName);
+                        animateText();
                     } else {
-                        players.remove(uuid);
-                        this.cancel();
-                        Bukkit.getScheduler().runTaskLater(getProvider(), session::startNext, 10);
+                        cancel();
+
+                        if(!finished) {
+                            finishAnimation();
+                        }
                     }
-                } catch(NullPointerException ex) {
-                    getProvider().getLogger().severe("Null exception in talkMethod [" + message + "]");
-                    ex.printStackTrace();
-                    session.destroy();
-                    this.cancel();
+                } catch (NullPointerException ex) {
+                    handleException(ex);
                 }
             }
-        }.runTaskTimer(getProvider(), 1L, tickSpeed);
+
+            private void stopAnimation() {
+                this.cancel();
+                this.finished = true;
+                type.execute(player, translatedMessage, npcName);
+                player.playSound(player.getLocation(), sound, 1f, 2f);
+                session.sendDebugMessage("Finished talk because: " + !players.contains(uuid) + " | " + skippable + " | " + !isCancelled(), "TalkMethod:134");
+                players.remove(uuid);
+                completed.accept(CompletedType.CONTINUE);
+                //session.startNext();
+            }
+
+            private void animateText() {
+                String writingMessage = translatedMessage.substring(0, index + 1);
+                index++;
+                player.playSound(player.getLocation(), sound, 0.5f, 0.5f);
+                type.execute(player, writingMessage, npcName);
+            }
+
+            private void finishAnimation() {
+                if (!this.finished) {
+                    completed.accept(CompletedType.CONTINUE);
+                    session.sendDebugMessage("Starting next... (else) (finishAnimation)", "TalkMethod:149");
+                }
+                this.finished = true;
+                session.sendDebugMessage("Finished because message " + index + " < " + message.length() +
+                        " (cancelled: " + isCancelled() + ")", "TalkMethod:152");
+                players.remove(uuid);
+                this.cancel();
+            }
+
+            private void handleException(Exception ex) {
+                getProvider().getLogger().severe("exception in talkMethod [" + message + "]");
+                ex.printStackTrace();
+                completed.accept(CompletedType.DESTROY);
+                this.cancel();
+                this.finished = true;
+            }
+
+        }.runTaskTimer(getProvider(), 10L, tickSpeed);
     }
 
     @EventHandler
