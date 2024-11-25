@@ -81,6 +81,8 @@ public class DialogSession implements Session {
 				this.destroy();
 				return;
 			} else if (result == CompletedType.PAUSE) {
+				if(getPlayer() != null)
+					getPlayer().removePotionEffect(PotionEffectType.SLOW);
 				sendDebugMessage("Dialogue paused", "SingleUseConsumer");
 				return;
 			}
@@ -93,113 +95,6 @@ public class DialogSession implements Session {
 				consumer, this);
 	}
 
-
-/*
-	public void startOldNew(int index) {
-		if(lines.isEmpty() || index >= lines.size() || getPlayer() == null) {
-			this.destroy();
-			return;
-		}
-
-		sendDebugMessage("Started in: " + index + " &7[&c"+ this.stop + "&7]", "DialogSession:58");
-
-		getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 4, true, false, false));
-
-		while (index < lines.size()) {
-			if(stop) {
-				stop = false;
-				break;
-			}
-
-			String dialog = lines.get(index);
-			this.index = index;
-
-			if(!dialog.contains(":")) {
-				index++;
-				continue;
-			}
-
-			sendDebugMessage("Running expression", "DialogSession:71");
-			AtomicReference<CompletedType> completionAtomic = new AtomicReference<>(CompletedType.CONTINUE);
-			CountDownLatch latch = new CountDownLatch(1);
-
-			main.getApi().runDialogueExpression(getPlayer(), dialog, displayName, SingleUseConsumer.create(completed -> {
-				completionAtomic.set(completed);
-				latch.countDown();
-			}), this);
-
-			try {
-				latch.await();
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
-
-			index++;
-			CompletedType result = completionAtomic.get();
-
-			if(result == CompletedType.PAUSE) {
-				this.stop = true;
-				break;
-			} else if(result == CompletedType.DESTROY) {
-				this.destroy();
-				break;
-			}
-
-			if (index >= lines.size()) {
-				this.sendDebugMessage("Dialogue reached the end", "DialogSession:98");
-				destroy();
-				if (main.getApi().canEnableMovement(getPlayer())) {
-					main.getApi().enableMovement(getPlayer());
-				}
-				break;
-			}
-		}
-	}
-
-	public void startOld(int index) {
-
-			if (lines.isEmpty() || index >= lines.size() || index < 0) {
-				this.destroy();
-				sendDebugMessage("Destroyed &7| &c" + lines.isEmpty() + " &7| &c" + (index >= lines.size()) + " &7| &c" + (index < 0), "DialogSession:56");
-				return;
-			}
-
-			if(getPlayer() == null) {
-				destroy();
-				return;
-			}
-
-			sendDebugMessage("Started in: " + index + " &7[&c"+ this.stop + "&7]", "DialogSession:60");
-			getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 4, true, false, false));
-
-			while (index < lines.size() && !stop) {
-				String dialog = lines.get(index);
-				this.index = index;
-
-				if (!dialog.contains(":")) {
-					index++;
-					continue;
-				}
-
-				sendDebugMessage("Running expression", "DialogSession:72");
-				//main.getApi().runDialogueExpression(getPlayer(), dialog, displayName, (x) -> destroy(), this);
-
-				index++;
-
-				if (index >= lines.size()) {
-					this.sendDebugMessage("Dialogue reached the end", "DialogSession:78");
-					destroy();
-					if (main.getApi().canEnableMovement(getPlayer())) {
-						main.getApi().enableMovement(getPlayer());
-					}
-					break;
-				}
-			}
-
-			this.stop = false;
-	}
-
-*/
 	public boolean hasNext() {
 		return (index + 1) < lines.size();
 	}
@@ -209,10 +104,7 @@ public class DialogSession implements Session {
 	}
 
 	public void startNext() {
-
 		start(index + 1);
-
-		//this.sendDebugMessage("Started next", "DialogSession:130");
 	}
 
 	public void setCurrentIndex(int index) {
@@ -235,7 +127,7 @@ public class DialogSession implements Session {
 		return this.stop;
 	}
 
-	public void pausee() {
+	public void pause() {
 		this.stop = true;
 	}
 
@@ -282,6 +174,10 @@ public class DialogSession implements Session {
 
 	public void setDebugMode(boolean debug) {
 		this.debug = debug;
+	}
+
+	public boolean isOnDebugMode() {
+		return this.debug;
 	}
 
 	public void sendDebugMessage(String message, String codeReference) {
