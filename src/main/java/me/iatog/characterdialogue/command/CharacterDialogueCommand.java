@@ -3,18 +3,13 @@ package me.iatog.characterdialogue.command;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
-import me.fixeddev.commandflow.annotated.annotation.OptArg;
-import me.fixeddev.commandflow.annotated.annotation.ParentArg;
 import me.fixeddev.commandflow.annotated.annotation.SubCommandClasses;
-import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.DialogueImpl;
-import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.libraries.Cache;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.util.TextUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -25,7 +20,7 @@ import java.util.*;
 		"characterdialogue", "cdp"
 },      permission = "characterdialogue.use",
 		desc = "CharacterDialogue main command")
-@SubCommandClasses({DialogueCommands.class})
+@SubCommandClasses({DialogueCommands.class, MethodCommands.class})
 public class CharacterDialogueCommand implements CommandClass {
 
 	/*
@@ -55,7 +50,6 @@ public class CharacterDialogueCommand implements CommandClass {
 			permission = "characterdialogue.reload",
 			desc = "Reload the plugin")
 	public void reloadCommand(CommandSender sender) {
-		//YamlFile dialogs = main.getFileFactory().getDialogs();
 		Cache cache = main.getCache();
 
         try {
@@ -84,14 +78,7 @@ public class CharacterDialogueCommand implements CommandClass {
 			return;
 		}
 
-
-
 		sender.sendMessage(TextUtils.colorize("&aLoaded " + cache.getDialogues().size() + " dialogues."));
-
-		/*
-		dialogs.getConfigurationSection("dialogue").getKeys(false).forEach(name -> {
-			cache.getDialogues().put(name, new DialogueImpl(main, name, main.getAllDialogues()));
-		});*/
 		
 		sender.sendMessage(TextUtils.colorize(language.getString("reload-message")));
 	}
@@ -99,15 +86,9 @@ public class CharacterDialogueCommand implements CommandClass {
 	@Command(names = "clear-cache",
 	         permission = "characterdialogue.clear-cache",
 	         desc = "Clear a player memory cache")
-	public void clearCache(CommandSender sender, @OptArg("") String arg) {
-		if(arg.isEmpty()) {
-			sender.sendMessage(TextUtils.colorize("&cYou need to specify a player name."));
-			return;
-		}
-		
-		Player target = Bukkit.getPlayer(arg);
+	public void clearCache(CommandSender sender, Player target) {
 		if(target == null || !target.isOnline()) {
-			sender.sendMessage("�cThe player \"" + arg + "\" isn't online.");
+			sender.sendMessage(TextUtils.colorize("&cThe player isn't online."));
 			return;
 		}
 		
@@ -116,8 +97,7 @@ public class CharacterDialogueCommand implements CommandClass {
 		boolean done = false;
 		
 		if(dialogSessions.containsKey(target.getUniqueId())) {
-			DialogSession session = dialogSessions.get(target.getUniqueId());
-			session.destroy();
+			dialogSessions.get(target.getUniqueId()).destroy();
 			done = true;
 		}
 		
@@ -128,10 +108,9 @@ public class CharacterDialogueCommand implements CommandClass {
 		
 		if(!done) {
 			sender.sendMessage(TextUtils.colorize("&cThat player doesn't have any data in the memory cache."));
-			return;
+		} else {
+			sender.sendMessage(TextUtils.colorize("&aCleared " + target.getName() + "'s cache"));
 		}
-		
-		sender.sendMessage(TextUtils.colorize("&aCleared " + arg + "'s cache"));
 	}
 
 	private List<String> translateList(List<String> list) {
