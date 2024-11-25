@@ -31,13 +31,13 @@ public class WaitMethod extends DialogMethod<CharacterDialoguePlugin> {
 		}
 
 		int next = session.getCurrentIndex() + 1;
-		completed.accept(CompletedType.PAUSE);
+		//completed.accept(CompletedType.PAUSE);
 
 		Bukkit.getScheduler().runTaskLater(getProvider(), () -> {
             if(next < session.getLines().size() && (player != null && player.isOnline())) {
-                session.start(next);
+				completed.accept(CompletedType.CONTINUE);
             } else {
-                session.destroy();
+				completed.accept(CompletedType.DESTROY);
             }
         }, (long)(20 * seconds));
 	}
