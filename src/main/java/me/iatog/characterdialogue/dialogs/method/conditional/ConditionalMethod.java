@@ -1,4 +1,4 @@
-package me.iatog.characterdialogue.dialogs.method;
+package me.iatog.characterdialogue.dialogs.method.conditional;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
@@ -55,6 +55,8 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 
 			// DEBUG soon
 			//player.sendMessage(TextUtils.colorize("&e" + condition + "&7: &c" + conditionResult));
+
+			session.sendDebugMessage("&a" + condition + "&7: &c" + conditionResult, "ConditionalMethod");
 
 			if(actualExpression.contains(":")) {
 				String[] parts = actualExpression.split(":", 2);
@@ -136,112 +138,6 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 			return true;
 		} catch(NumberFormatException e) {
 			return false;
-		}
-	}
-
-	public enum Operator {
-		LESS_THAN_EQUAL("<="),
-		MORE_THAN_EQUAL(">="),
-		NOT_EQUAL_TO("!="),
-		LESS_THAN("<"),
-		MORE_THAN(">"),
-		EQUAL_TO("==");
-
-
-		private final String text;
-
-		Operator(String text) {
-			this.text = text;
-		}
-
-		public String getText() {
-			return this.text;
-		}
-	}
-
-	public enum ConditionalExpression {
-		//RUN_DIALOGUE/STOP_AND_SEND_MESSAGE/STOP/RUN_METHOD/CONTINUE
-		RUN_DIALOGUE((data, completed) -> {
-			DialogSession session = data.getSession();
-			Player player = session.getPlayer();
-			String expression = data.getExpression();
-			//session.destroy();
-			completed.accept(CompletedType.DESTROY);
-
-			if(!data.getMain().getCache().getDialogues().containsKey(expression) || expression.isEmpty()) {
-				data.getMain().getLogger().severe("The dialogue '" + expression + "' was not found.");
-				player.sendMessage(TextUtils.colorize("&c&lUnknown dialogue found."));
-				return;
-			}
-
-			data.getMain().getApi().runDialogue(player, expression, false);
-		}),
-		STOP_SEND_MSG((data, completed) -> {
-			Player player = data.getSession().getPlayer();
-			completed.accept(CompletedType.DESTROY);
-			player.sendMessage(Placeholders.translate(player, data.getExpression()));
-		}),
-		STOP((data, completed) -> {
-			completed.accept(CompletedType.DESTROY);
-		}),
-		RUN_METHOD((data, completed) -> {
-			//completed.accept(CompletedType.PAUSE);
-			DialogSession session = data.getSession();
-			Player player = session.getPlayer();
-			String expression = data.getExpression();
-
-			if (data.getExpression().isEmpty() || data.getMain().getCache().getMethods().containsKey(expression)) {
-				session.destroy();
-				data.getMain().getLogger().severe("The dialogue '" + expression + "' was not found.");
-				player.sendMessage("&c&lUnknown method found.");
-				return;
-			}
-
-			data.getMain().getApi().runDialogueExpression(player, expression, session.getDisplayName(), SingleUseConsumer.create(completedRes -> {
-				//player.sendMessage(TextUtils.colorize("&c&lUnknown method found"));
-				//session.destroy();
-				//data.getMain().getLogger().severe("The method '" + expression + "' was not found.");
-				completed.accept(CompletedType.CONTINUE);
-			}), new EmptyDialogSession(data.getMain(), player, Collections.singletonList(expression), session.getDisplayName()));
-
-		}),
-		CONTINUE((data, completed) -> {
-			completed.accept(CompletedType.CONTINUE);
-		});
-
-		private final BiConsumer<ConditionData, Consumer<CompletedType>> action;
-
-		ConditionalExpression(BiConsumer<ConditionData, Consumer<CompletedType>> action) {
-			this.action = action;
-		}
-
-		public void execute(ConditionData data, Consumer<CompletedType> completed) {
-			action.accept(data, completed);
-		}
-	}
-
-	public static class ConditionData {
-
-		private final DialogSession session;
-		private final CharacterDialoguePlugin main;
-		private final String expression;
-
-		public ConditionData(DialogSession session, CharacterDialoguePlugin main, String expression) {
-			this.session = session;
-			this.main = main;
-			this.expression = expression;
-		}
-
-		public DialogSession getSession() {
-			return session;
-		}
-
-		public String getExpression() {
-			return expression;
-		}
-
-		public CharacterDialoguePlugin getMain() {
-			return main;
 		}
 	}
 }

@@ -52,7 +52,7 @@ public class TextUtils {
     private final static int CENTER_PX = 154;
 
     public static void sendCenteredMessage(Player player, String message){
-        if(message == null || message.equals("")) player.sendMessage("");
+        if(message == null || message.isEmpty()) player.sendMessage("");
         message = TextUtils.colorize(message);
 
         int messagePxSize = 0;
