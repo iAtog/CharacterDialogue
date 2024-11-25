@@ -29,7 +29,7 @@ public class PlayerQuitListener implements Listener {
 		}
 		
 		DialogSession session = cache.remove(player.getUniqueId());
-		session.pause();
+		session.destroy();
 	}
 	
 	@EventHandler
