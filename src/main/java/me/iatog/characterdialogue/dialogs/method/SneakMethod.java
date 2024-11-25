@@ -21,26 +21,22 @@ import java.util.UUID;
 
 public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implements Listener {
 
-    private final Map<UUID, Integer> waitingPlayers;
-
-    public final boolean actionBar;
+    private final Map<UUID, SingleUseConsumer<CompletedType>> waitingPlayers;
 
     public SneakMethod(CharacterDialoguePlugin main) {
         super("waitsneak", main);
         this.waitingPlayers = new HashMap<>();
-        this.actionBar = getProvider().getFileFactory().getConfig().getBoolean("use-actionbar", true);
 
-        if(actionBar) {
-            setupRunnable();
-        }
+        setupRunnable();
     }
 
     @Override
     public void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> completed) {
-        waitingPlayers.put(player.getUniqueId(), session.getCurrentIndex());
-        completed.accept(CompletedType.PAUSE);
+        boolean actionBar = getProvider().getFileFactory().getConfig().getBoolean("use-actionbar", true);
+        waitingPlayers.put(player.getUniqueId(), completed);
+        //completed.accept(CompletedType.PAUSE);
 
-        if(!actionBar) {
+        if (!actionBar) {
             player.sendMessage(TextUtils.colorize("&7"));
             player.sendMessage(TextUtils.colorize("&c[ Sneak to continue ]"));
             player.sendMessage(TextUtils.colorize("&7"));
@@ -52,33 +48,44 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
         Map<UUID, DialogSession> sessions = provider.getCache().getDialogSessions();
         UUID uid = event.getPlayer().getUniqueId();
 
-        if(sessions.containsKey(uid) && waitingPlayers.containsKey(uid)) {
-            DialogSession session = sessions.get(uid);
-            int current = waitingPlayers.get(uid);
+        if (sessions.containsKey(uid) && waitingPlayers.containsKey(uid)) {
+            //DialogSession session = sessions.get(uid);
+            waitingPlayers.get(uid).accept(CompletedType.CONTINUE);
 
-            session.start(current + 1);
+            //session.start(current + 1);
             waitingPlayers.remove(uid);
         }
     }
 
     @EventHandler
     public void onFinish(DialogueFinishEvent event) {
-        if(event.getPlayer() == null) return;
+        if (event.getPlayer() == null) return;
 
         waitingPlayers.remove(event.getPlayer().getUniqueId());
     }
 
     private void setupRunnable() {
-        Bukkit.getScheduler().runTaskTimer(getProvider(), () -> {
-            for(UUID uuid : waitingPlayers.keySet()) {
-                Player player = Bukkit.getPlayer(uuid);
-                if(player == null || !player.isOnline()) {
-                    waitingPlayers.remove(uuid);
-                    return;
-                }
+        Bukkit.getScheduler().runTaskTimer(getProvider(), new Runnable() {
+            private String colorCode = "c";
 
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(TextUtils.colorize("&c[ Sneak to continue ]")));
+            @Override
+            public void run() {
+                for (UUID uuid : waitingPlayers.keySet()) {
+                    Player player = Bukkit.getPlayer(uuid);
+                    if (player == null || !player.isOnline()) {
+                        waitingPlayers.remove(uuid);
+                        return;
+                    }
+
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(TextUtils.colorize("&" + colorCode + "[ Sneak to continue ]")));
+
+                    if (colorCode.equals("f")) {
+                        colorCode = "c";
+                    } else {
+                        colorCode = "f";
+                    }
+                }
             }
-        }, 40, 20);
+        }, 20, 20);
     }
 }
