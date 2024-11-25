@@ -3,18 +3,18 @@ package me.iatog.characterdialogue.api;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.enums.ClickType;
+import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.libraries.ApiImplementation;
 import me.iatog.characterdialogue.session.DialogSession;
+import me.iatog.characterdialogue.util.SingleUseConsumer;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public interface CharacterDialogueAPI {
-	//String searchDialogueByNPCId(int id);
-	
+
 	Dialogue getDialogue(String name);
 
 	void reloadHolograms();
@@ -27,11 +27,11 @@ public interface CharacterDialogueAPI {
 	boolean readDialogBy(Player player, Dialogue dialog);
 	boolean wasReadedBy(Player player, Dialogue dialog);
 	
-	void runDialogue(Player player, Dialogue dialogue);
-	void runDialogue(Player player, String dialogueName);
+	void runDialogue(Player player, Dialogue dialogue, boolean debugMode);
+	void runDialogue(Player player, String dialogueName, boolean debugMode);
 	void runDialogueExpression(Player player, String dialog);
 	void runDialogueExpression(Player player, String dialog, String npcName);
-	void runDialogueExpression(Player player, String dialog, String npcName, Consumer<String> fail, DialogSession session);
+	void runDialogueExpression(Player player, String dialog, String npcName, SingleUseConsumer<CompletedType> onComplete, DialogSession session);
 	void runDialogueExpressions(Player player, List<String> lines, ClickType type, int npcId, String displayName, String dialogueName);
 	void runDialogueExpressions(Player player, List<String> lines, String displayName, String dialogueName) ;
 	

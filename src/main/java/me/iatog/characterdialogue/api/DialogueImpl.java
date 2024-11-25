@@ -98,8 +98,8 @@ public class DialogueImpl implements Dialogue {
 	}
 
 	@Override
-	public boolean start(Player player) {
-		return runDialogue(player);
+	public boolean start(Player player, boolean debug) {
+		return runDialogue(player, debug);
 	}
 
 	@Override
@@ -129,8 +129,8 @@ public class DialogueImpl implements Dialogue {
 		return true;
 	}
 	
-	private boolean runDialogue(Player player) {
-		main.getApi().runDialogue(player, this);
+	private boolean runDialogue(Player player, boolean debug) {
+		main.getApi().runDialogue(player, this, debug);
 		return true;
 	}
 

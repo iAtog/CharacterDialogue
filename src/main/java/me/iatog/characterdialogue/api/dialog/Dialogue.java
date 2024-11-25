@@ -13,11 +13,15 @@ public interface Dialogue {
 	DialogHologram getHologram();
 	List<String> getFirstInteractionLines();
 	boolean isFirstInteractionEnabled();
-	boolean start(Player player);
+	boolean start(Player player, boolean debug);
 	boolean startFirstInteraction(Player player, boolean log);
 	DialoguePermission getPermissions();
 	boolean isMovementAllowed();
-	
+
+	default boolean start(Player player) {
+		return start(player, false);
+	}
+
 	public class DialoguePermission {
 		
 		private final String permission;
