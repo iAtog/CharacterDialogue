@@ -38,23 +38,21 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 			String ifTrue = arguments[1].trim();
 			String ifFalse = arguments[2].trim();
 
-			boolean conditionResult = false;
+			boolean conditionResult;
 
 			try {
 				conditionResult = evaluateCondition(player, condition);
 			} catch(IllegalArgumentException e) {
 				player.sendMessage(TextUtils.colorize("&c&lFatal error occurred."));
 				getProvider().getLogger().warning("The dialogue '" + session.getDialogue().getName() + "' has an invalid condition in L" + session.getCurrentIndex());
-				session.destroy();
+
+				completed.accept(CompletedType.DESTROY);
 				return;
 			}
 
 			String actualExpression = conditionResult ? ifTrue : ifFalse;
-			String method;
-			String argument;
-
-			// DEBUG soon
-			//player.sendMessage(TextUtils.colorize("&e" + condition + "&7: &c" + conditionResult));
+			String method = actualExpression.trim().toUpperCase();
+			String argument = "";
 
 			session.sendDebugMessage("&a" + condition + "&7: &c" + conditionResult, "ConditionalMethod");
 
@@ -62,9 +60,6 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 				String[] parts = actualExpression.split(":", 2);
 				method = parts[0].trim().toUpperCase();
 				argument = parts.length > 1 ? parts[1].trim() : "";
-			} else {
-				method = actualExpression.trim().toUpperCase();
-				argument = "";
 			}
 
 			ConditionalExpression expression = ConditionalExpression.valueOf(method);
