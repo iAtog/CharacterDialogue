@@ -62,7 +62,6 @@ public class MethodCommands implements CommandClass {
         }
 
         Dialogue dialogue = new TestDialogueImpl();
-
         DialogSession session = new DialogSession(main, sender, dialogue);
         sessions.put(sender.getUniqueId(), session);
 

@@ -18,12 +18,12 @@ public class PlayerCache {
 	private final List<String> readedDialogs;
 	private final YamlDocument file;
 	
-	public PlayerCache(CharacterDialoguePlugin main, UUID uuid) {
+	public PlayerCache(CharacterDialoguePlugin main, UUID uuid) throws IOException {
 		this.uuid = uuid;
         try {
             this.file = YamlDocument.create(new File("cache/"+uuid.toString()+".yml"));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IOException("No file found");
         }
         //this.file = new YamlFile(main, uuid.toString(), "cache");
 		

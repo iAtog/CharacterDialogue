@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 
 public class TextUtils {
 
+    private final static int CENTER_PX = 154;
+
     public static String colorize(String message) {
         String version = Bukkit.getBukkitVersion().split("-")[0].split("\\.")[1];
 
@@ -49,11 +51,10 @@ public class TextUtils {
         return lines;
     }
 
-    private final static int CENTER_PX = 154;
+    public static void sendCenteredMessage(Player player, String rawMessage){
+        if(rawMessage == null || rawMessage.isEmpty()) return;
 
-    public static void sendCenteredMessage(Player player, String message){
-        if(message == null || message.isEmpty()) player.sendMessage("");
-        message = TextUtils.colorize(message);
+        String message = TextUtils.colorize(rawMessage);
 
         int messagePxSize = 0;
         boolean previousCode = false;
@@ -62,14 +63,10 @@ public class TextUtils {
         for(char c : message.toCharArray()){
             if(c == '§'){
                 previousCode = true;
-                continue;
             }else if(previousCode){
                 previousCode = false;
-                if(c == 'l' || c == 'L'){
-                    isBold = true;
-                    continue;
-                }else isBold = false;
-            }else{
+                isBold = c == 'l' || c == 'L';
+            } else {
                 DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
                 messagePxSize += isBold ? dFI.getBoldLength() : dFI.getLength();
                 messagePxSize++;
@@ -81,10 +78,12 @@ public class TextUtils {
         int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
         int compensated = 0;
         StringBuilder sb = new StringBuilder();
+
         while(compensated < toCompensate){
             sb.append(" ");
             compensated += spaceLength;
         }
+
         player.sendMessage(sb.toString() + message);
     }
 }

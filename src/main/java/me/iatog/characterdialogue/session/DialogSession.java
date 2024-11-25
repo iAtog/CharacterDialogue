@@ -135,10 +135,9 @@ public class DialogSession implements Session {
 		}
 
 		if(getPlayer() != null) {
-			if(getPlayer().isOnline()) {
-				getPlayer().removePotionEffect(PotionEffectType.SLOW);
-			}
+			getPlayer().removePotionEffect(PotionEffectType.SLOW);
 		}
+
 		Map<UUID, DialogSession> sessions = main.getCache().getDialogSessions();
 
 		Bukkit.getPluginManager().callEvent(new DialogueFinishEvent(getPlayer(), this));
