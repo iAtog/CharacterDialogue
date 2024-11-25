@@ -8,9 +8,11 @@ import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.api.events.ExecuteMethodEvent;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.enums.ClickType;
+import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.session.EmptyDialogSession;
+import me.iatog.characterdialogue.util.SingleUseConsumer;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
@@ -21,10 +23,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class ApiImplementation implements CharacterDialogueAPI {
@@ -135,14 +134,14 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	}
 
 	@Override
-	public void runDialogue(Player player, Dialogue dialogue) {
+	public void runDialogue(Player player, Dialogue dialogue, boolean debugMode) {
 		if (main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
 			//player.sendMessage(TextUtils.colorize("&c["+dialogue.getName()+"] Session rejected"));
 			return;
 		}
 
 		DialogSession session = new DialogSession(main, player, dialogue);
-
+		session.setDebugMode(debugMode);
 		if (!dialogue.isMovementAllowed()) {
 			disableMovement(player);
 		}
@@ -153,8 +152,8 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	}
 
 	@Override
-	public void runDialogue(Player player, String dialogueName) {
-		runDialogue(player, getDialogue(dialogueName));
+	public void runDialogue(Player player, String dialogueName, boolean debugMode) {
+		runDialogue(player, getDialogue(dialogueName), debugMode);
 	}
 
 	@Override
@@ -163,18 +162,18 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	}
 	
 	public void runDialogueExpression(Player player, String dialog, String npcName) {
-		runDialogueExpression(player, dialog, npcName, (x) -> { }, new EmptyDialogSession(main, player, Arrays.asList(dialog), npcName));
+		runDialogueExpression(player, dialog, npcName, SingleUseConsumer.create((x) -> {}), new EmptyDialogSession(main, player, Collections.singletonList(dialog), npcName));
 	}
 	
 	@Override
-	public void runDialogueExpression(Player player, String dialog, String npcName, Consumer<String> function, DialogSession session) {
+	public void runDialogueExpression(Player player, String dialog, String npcName, SingleUseConsumer<CompletedType> onComplete, DialogSession session) {
 		String[] split = dialog.split(":");
 		String methodName = split[0].toUpperCase().trim();
 		String arg = dialog.substring(methodName.length() + 1).trim();
 
 		if (!main.getCache().getMethods().containsKey(methodName)) {
 			main.getLogger().warning("The method \"" + methodName + "\" doesn't exists");
-			function.accept(arg);
+			session.destroy();
 			return;
 		}
 
@@ -186,7 +185,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		Bukkit.getPluginManager().callEvent(event);
 
 		if (!event.isCancelled()) {
-			method.execute(player, arg, session);
+			method.execute(player, arg, session, onComplete);
 		}
 	}
 
