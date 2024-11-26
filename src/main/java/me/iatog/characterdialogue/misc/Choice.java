@@ -4,10 +4,10 @@ import me.iatog.characterdialogue.dialogs.DialogChoice;
 
 public class Choice {
 	
-	private int index;
-	private String message;
-	private Class<? extends DialogChoice> clazz;
-	private String argument;
+	private final int index;
+	private final String message;
+	private final Class<? extends DialogChoice> clazz;
+	private final String argument;
 	
 	public Choice(int index, String message, Class<? extends DialogChoice> clazz, String argument) {
 		this.index = index;
