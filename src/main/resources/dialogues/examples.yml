@@ -2,7 +2,7 @@ dialogue:
   soldier:
     click: RIGHT
     display-name: Soldier
-    permssion:
+    permission:
       value: characterdialogue.permission
       message: '&8Oh, apparently you are unable to talk to the mercenary....'
     dialog:
