@@ -10,9 +10,13 @@ import me.fixeddev.commandflow.bukkit.factory.BukkitModule;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.command.CharacterDialogueCommand;
+import me.iatog.characterdialogue.dialogs.Group;
 import me.iatog.characterdialogue.part.dialogue.DialoguePartFactory;
+import me.iatog.characterdialogue.part.group.GroupPartFactory;
 import me.iatog.characterdialogue.part.method.DialogMethodArgument;
 import me.iatog.characterdialogue.part.method.MethodPartFactory;
+import me.iatog.characterdialogue.part.npc.NPCPartFactory;
+import net.citizensnpcs.api.npc.NPC;
 
 public class CommandLoader implements Loader {
 	
@@ -29,6 +33,9 @@ public class CommandLoader implements Loader {
 
 		injector.bindFactory(Dialogue.class, new DialoguePartFactory(main));
 		injector.bindFactory(DialogMethodArgument.class, new MethodPartFactory(main));
+		injector.bindFactory(Group.class, new GroupPartFactory(main));
+		injector.bindFactory(NPC.class, new NPCPartFactory());
+
 		this.builder = new AnnotatedCommandTreeBuilderImpl(injector);
 	}
 	
