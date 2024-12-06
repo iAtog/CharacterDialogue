@@ -1,5 +1,9 @@
 package me.iatog.characterdialogue.dialogs;
 
+import me.iatog.characterdialogue.placeholders.Placeholders;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -11,15 +15,21 @@ public class MethodConfiguration {
     private final Map<String, Object> objects;
     private final String argument;
 
-    public MethodConfiguration(String argument) {
+    public MethodConfiguration(@NotNull String argument, @NotNull String config) {
         this.objects = new HashMap<>();
-        String regex = "(\\w+)='([^']*)'\\s*,?|\\s*(\\w+)=([^,\\s}]+)";
-        this.pattern = Pattern.compile(regex);
+        //this.pattern = Pattern.compile("(\\w+)='([^']*)'\\s*?|\\s*(\\w+)=([^,\\s}]+)");
+        this.pattern = Pattern.compile("(\\w+)=[\"']([^\"']*)[\"']\\s*,?\\s*|\\s*(\\w+)=([^,\\s}]+)");
         this.argument = argument;
+
+        this.init(config);
     }
 
     public String getArgument() {
         return argument;
+    }
+
+    public void set(@NotNull String key, @NotNull Object value) {
+        this.objects.put(key, value);
     }
 
     public Object get(String key) {
@@ -82,12 +92,12 @@ public class MethodConfiguration {
         }
     }
 
-    public Map<String, Object> getObjects() {
+    public Map<String, Object> map() {
         return objects;
     }
 
     private Object convertValue(String value) {
-        if(value == null) {
+        if(value == null || value.isEmpty()) {
             return null;
         }
         if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
@@ -109,7 +119,7 @@ public class MethodConfiguration {
 
     // Testing regex
     public static void main(String[] a) {
-        String dialog = "TITLE{title='My title, nice title',subtitle='This is a subtitle, yay!', fadeIn=20, stay=60, fadeOut=20, animated=true, deep=2}: he";
+        String dialog = "TITLE{title='My title, nice title' , subtitle='This is a subtitle, yay!', fadeIn=20, stay=60, fadeOut=20, animated=true, deep=2}: he";
         String[] split = dialog.split(":", 2);
         String methodName = split[0].toUpperCase().trim().split("\\{")[0];
         String configPart = split[0].substring(methodName.length()).trim();
@@ -119,11 +129,10 @@ public class MethodConfiguration {
         System.out.println("Configurations: " + configPart);
         System.out.println("Argument: " + arg);
 
-        MethodConfiguration config = new MethodConfiguration(arg);
-        config.init(configPart);
-
+        MethodConfiguration config = new MethodConfiguration(arg, configPart);
+        config.set("test", "String");
         System.out.println("Listing all configurations:");
-        config.getObjects().forEach((key, value) -> {
+        config.map().forEach((key, value) -> {
             System.out.println(key + ": " + value);
         });
 
@@ -142,9 +151,11 @@ public class MethodConfiguration {
             }
             stringBuilder.append(",");
         });
+
         if(stringBuilder.toString().endsWith(",")) {
             stringBuilder.delete(stringBuilder.length()-1, stringBuilder.length());
         }
+
         stringBuilder.append("}");
         return stringBuilder.toString();
     }

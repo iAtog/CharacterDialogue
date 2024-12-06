@@ -65,7 +65,7 @@ public class MethodCommands implements CommandClass {
         Dialogue dialogue = new TestDialogueImpl();
         DialogSession session = new DialogSession(main, sender, dialogue);
         sessions.put(sender.getUniqueId(), session);
-        MethodConfiguration config = new MethodConfiguration(arguments.toString().trim());
+        MethodConfiguration config = new MethodConfiguration(arguments.toString().trim(), "");
 
         method.getMethod().execute(sender, config, session, SingleUseConsumer.create((res) -> {
             sessions.remove(sender.getUniqueId());

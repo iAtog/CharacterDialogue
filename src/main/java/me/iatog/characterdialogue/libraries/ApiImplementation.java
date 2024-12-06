@@ -171,7 +171,6 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		String methodName = split[0].toUpperCase().trim().split("\\{")[0];
 		String configPart = split[0].substring(methodName.length()).trim();
 		String arg = split.length > 1 ? split[1].trim() : "";
-		//String arg = dialog.substring(methodName.length() + 1).trim();
 
 		if (!main.getCache().getMethods().containsKey(methodName)) {
 			main.getLogger().warning("The method \"" + methodName + "\" doesn't exists");
@@ -182,8 +181,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		arg = Placeholders.translate(player, arg);
 		arg = arg.replace("%npc_name%", npcName);
 
-		MethodConfiguration configuration = new MethodConfiguration(arg);
-		configuration.init(configPart);
+		MethodConfiguration configuration = new MethodConfiguration(arg, Placeholders.translate(player, configPart));
 
 		DialogMethod<? extends JavaPlugin> method = main.getCache().getMethods().get(methodName);
 		ExecuteMethodEvent event = new ExecuteMethodEvent(player, method, ClickType.ALL, -999, npcName);
