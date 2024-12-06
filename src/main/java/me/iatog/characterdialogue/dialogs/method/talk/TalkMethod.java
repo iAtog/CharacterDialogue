@@ -29,7 +29,9 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
      * talk: <type>|<message>
      * talk: message|Lorem ipsum
      * talk: full_chat|Lorem ipsum
-     * simple
+     *
+     * NEW
+     * talk{type='action_bar',sound='BLOCK_SCULK_VEIN_BREAK',volume=0.5,pitch=0.5,tickSpeed=2,skip=false}: Hello
      */
     public TalkMethod(CharacterDialoguePlugin main) {
         super("talk", main);
@@ -39,43 +41,6 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
     @Override
     public void execute(Player player, MethodConfiguration configuration, DialogSession session,
                         SingleUseConsumer<CompletedType> completed) {
-        //String[] args = arg.split("\\|", 2);
-
-
-        /*TalkConfiguration configuration = new TalkConfiguration(session);
-        //session.sendDebugMessage("Session paused", "TalkMethod:52");
-
-        try {
-            String[] typeArgs = args[0].split("[(),]");
-            configuration.setType(TalkType.valueOf(typeArgs[0].toUpperCase()));
-
-            if (typeArgs.length > 1) {
-                String[] soundSplit = typeArgs[1].split("/");
-                if(soundSplit.length > 1) {
-                    configuration.setSound(Sound.valueOf(soundSplit[0]));
-                    configuration.setVolume(Float.parseFloat(soundSplit[1]));
-                    configuration.setPitch(Float.parseFloat(soundSplit[2]));
-                } else {
-                    configuration.setSound(Sound.valueOf(typeArgs[1]));
-                }
-            }
-            if (typeArgs.length > 2) {
-                configuration.setTickSpeed(Long.parseLong(typeArgs[2]));
-            }
-            if (typeArgs.length > 3) {
-                configuration.setSkippable(Boolean.parseBoolean(typeArgs[3]));
-            }
-
-            configuration.setMessage(args[1]);
-        } catch(IndexOutOfBoundsException|NullPointerException ex) {
-            getProvider().getLogger().severe("The line L" + session.getCurrentIndex() + " in " + session.getDialogue().getName() + " is not valid. (parse error)");
-            session.sendDebugMessage("Error parsing data: " + ex.getMessage(), "TalkMethod:73");
-            completed.accept(CompletedType.DESTROY);
-            return;
-        }*/
-
-
-
         this.players.add(player.getUniqueId());
 
         animateMessage(player, session, configuration, completed);
