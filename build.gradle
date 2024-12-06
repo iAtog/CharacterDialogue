@@ -51,10 +51,11 @@ dependencies {
 
 	implementation 'me.fixeddev:commandflow-universal:0.6.0'
 	implementation 'me.fixeddev:commandflow-bukkit:0.6.0'
+	//implementation 'net.wesjd:anvilgui:1.10.3-SNAPSHOT'
 
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.sourceCompatibility = JavaVersion.VERSION_11
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
