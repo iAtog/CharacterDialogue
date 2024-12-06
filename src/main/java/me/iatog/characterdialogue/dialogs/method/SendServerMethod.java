@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.util.SingleUseConsumer;
@@ -17,9 +18,9 @@ public class SendServerMethod extends DialogMethod<CharacterDialoguePlugin> {
 	}
 
 	@Override
-	public void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> completed) {
+	public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
-		String[] args = arg.split(",");
+		String[] args = configuration.getArgument().split(",");
 		
 		if(args.length == 0) {
 			completed.accept(CompletedType.DESTROY);

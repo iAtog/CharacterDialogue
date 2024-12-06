@@ -2,6 +2,7 @@ package me.iatog.characterdialogue.dialogs.method;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.util.SingleUseConsumer;
@@ -17,8 +18,8 @@ public class SoundMethod extends DialogMethod<CharacterDialoguePlugin> {
 	}
 
 	@Override
-	public void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> completed) {
-		String[] part = arg.split(",");
+	public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
+		String[] part = configuration.getArgument().split(",");
 		Sound sound = null;
 		
 		try {

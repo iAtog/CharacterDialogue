@@ -23,10 +23,10 @@ public abstract class DialogMethod<T extends JavaPlugin> {
 	/**
 	 * Execute the method action
 	 * @param player the interacting player
-	 * @param arg the arguments with which it works
+	 * @param configuration The config of the method when used
 	 * @param complete var to indicate when its completed, canceled or destroyed.
 	 */
-	public abstract void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> complete);
+	public abstract void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> complete);
 	
 	/**
 	 * Get the id of the method

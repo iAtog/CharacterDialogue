@@ -2,6 +2,7 @@ package me.iatog.characterdialogue.dialogs.method;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.util.SingleUseConsumer;
@@ -17,10 +18,11 @@ public class GiveMethod extends DialogMethod<CharacterDialoguePlugin> {
     }
 
     @Override
-    public void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> completed) {
+    public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
         // DESIGN = GIVE: GOLDEN_APPLE,1
         Material material;
         int amount = 1;
+        String arg = configuration.getArgument();
         try {
             if(arg.contains(",")) {
                 String[] parts = arg.split(",");

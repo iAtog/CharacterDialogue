@@ -2,6 +2,7 @@ package me.iatog.characterdialogue.dialogs.method.talk;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.session.DialogSession;
@@ -36,9 +37,12 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
     }
 
     @Override
-    public void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> completed) {
-        String[] args = arg.split("\\|", 2);
-        TalkConfiguration configuration = new TalkConfiguration(session);
+    public void execute(Player player, MethodConfiguration configuration, DialogSession session,
+                        SingleUseConsumer<CompletedType> completed) {
+        //String[] args = arg.split("\\|", 2);
+
+
+        /*TalkConfiguration configuration = new TalkConfiguration(session);
         //session.sendDebugMessage("Session paused", "TalkMethod:52");
 
         try {
@@ -68,25 +72,49 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
             session.sendDebugMessage("Error parsing data: " + ex.getMessage(), "TalkMethod:73");
             completed.accept(CompletedType.DESTROY);
             return;
+        }*/
+
+
+
+        this.players.add(player.getUniqueId());
+
+        animateMessage(player, session, configuration, completed);
+    }
+
+    public void animateMessage(Player player,
+                               DialogSession session,
+                               MethodConfiguration configuration,
+                               Consumer<CompletedType> completed) {
+        String message = configuration.getArgument();
+        UUID uuid = player.getUniqueId();
+        final String npcName = session.getDialogue().getDisplayName();
+        final String translatedMessage = Placeholders.translate(player, message);
+
+        float volume = configuration.getFloat("volume", 0.5f);
+        float pitch = configuration.getFloat("pitch", 0.5f);
+        boolean skip = configuration.getBoolean("skip", false);
+
+        int ticks = configuration.getInteger("tickSpeed", 2);
+
+        TalkType type;
+        Sound sound;
+
+        try {
+            type = TalkType.valueOf(configuration.getString("type", "ACTION_BAR").toUpperCase());
+            sound = Sound.valueOf(configuration.getString("sound", "BLOCK_STONE_BUTTON_CLICK_OFF").toUpperCase());
+        } catch(EnumConstantNotPresentException ex) {
+            getProvider().getLogger().severe("The line L" + session.getCurrentIndex() + " in " + session.getDialogue().getName() + " is not valid. (parse error)");
+            session.sendDebugMessage("Error parsing data: " + ex.getMessage(), "TalkMethod:60");
+            completed.accept(CompletedType.DESTROY);
+            return;
         }
 
-        if(configuration.getMessage().isEmpty()) {
+        if(message.isEmpty()) {
             getProvider().getLogger().severe("The line L" + session.getCurrentIndex() + " in " + session.getDialogue().getName() + " is not valid. (empty message)");
             session.sendDebugMessage("Error parsing data: message is empty", "TalkMethod:80");
             completed.accept(CompletedType.DESTROY);
             return;
         }
-
-        this.players.add(player.getUniqueId());
-
-        animateMessage(player, configuration, completed);
-    }
-
-    public void animateMessage(Player player, TalkConfiguration configuration, Consumer<CompletedType> completed) {
-        UUID uuid = player.getUniqueId();
-        final DialogSession session = configuration.getSession();
-        final String npcName = session.getDialogue().getDisplayName();
-        final String translatedMessage = Placeholders.translate(player, configuration.getMessage());
 
         new BukkitRunnable() {
             int index = 0;
@@ -95,12 +123,12 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
             @Override
             public void run() {
                 try {
-                    if ((!players.contains(uuid) && configuration.isSkippable() && !isCancelled()) && !finished) {
+                    if ((!players.contains(uuid) && skip && !isCancelled()) && !finished) {
                         stopAnimation();
                         return;
                     }
 
-                    if (index < configuration.getMessage().length()) {
+                    if (index < message.length()) {
                         animateText();
                     } else {
                         cancel();
@@ -117,9 +145,9 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
             private void stopAnimation() {
                 this.cancel();
                 this.finished = true;
-                configuration.getType().execute(player, translatedMessage, npcName);
-                player.playSound(player.getLocation(), configuration.getSound(), 1f, 2f);
-                session.sendDebugMessage("Finished talk because: " + !players.contains(uuid) + " | " + configuration.isSkippable() + " | " + !isCancelled(), "TalkMethod:134");
+                type.execute(player, translatedMessage, npcName);
+                player.playSound(player.getLocation(), sound, volume, pitch);
+                session.sendDebugMessage("Finished talk because: " + !players.contains(uuid) + " | " + skip + " | " + !isCancelled(), "TalkMethod:134");
                 players.remove(uuid);
                 completed.accept(CompletedType.CONTINUE);
                 //session.startNext();
@@ -129,10 +157,10 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
                 String writingMessage = translatedMessage.substring(0, index + 1);
                 index++;
                 player.playSound(player.getLocation(),
-                        configuration.getSound(),
-                        configuration.getVolume(),
-                        configuration.getPitch());
-                configuration.getType().execute(player, writingMessage, npcName);
+                        sound,
+                        volume,
+                        pitch);
+                type.execute(player, writingMessage, npcName);
             }
 
             private void finishAnimation() {
@@ -141,21 +169,21 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
                     session.sendDebugMessage("Starting next... (else) (finishAnimation)", "TalkMethod:149");
                 }
                 this.finished = true;
-                session.sendDebugMessage("Finished because message " + index + " < " + configuration.getMessage().length() +
+                session.sendDebugMessage("Finished because message " + index + " < " + message.length() +
                         " (cancelled: " + isCancelled() + ")", "TalkMethod:152");
                 players.remove(uuid);
                 this.cancel();
             }
 
             private void handleException(Exception ex) {
-                getProvider().getLogger().severe("exception in talkMethod [" + configuration.getMessage() + "]");
+                getProvider().getLogger().severe("exception in talkMethod [" + message + "]");
                 ex.printStackTrace();
                 completed.accept(CompletedType.DESTROY);
                 this.cancel();
                 this.finished = true;
             }
 
-        }.runTaskTimer(getProvider(), 10L, configuration.getTickSpeed());
+        }.runTaskTimer(getProvider(), 10L, ticks);
     }
 
     @EventHandler

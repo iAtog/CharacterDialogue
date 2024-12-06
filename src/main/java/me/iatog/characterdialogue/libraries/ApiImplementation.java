@@ -6,6 +6,7 @@ import me.iatog.characterdialogue.api.CharacterDialogueAPI;
 import me.iatog.characterdialogue.api.dialog.DialogHologram;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.api.events.ExecuteMethodEvent;
+import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.enums.CompletedType;
@@ -24,7 +25,6 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Consumer;
 
 public class ApiImplementation implements CharacterDialogueAPI {
 
@@ -167,9 +167,11 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	
 	@Override
 	public void runDialogueExpression(Player player, String dialog, String npcName, SingleUseConsumer<CompletedType> onComplete, DialogSession session) {
-		String[] split = dialog.split(":");
-		String methodName = split[0].toUpperCase().trim();
-		String arg = dialog.substring(methodName.length() + 1).trim();
+		String[] split = dialog.split(":", 2);
+		String methodName = split[0].toUpperCase().trim().split("\\{")[0];
+		String configPart = split[0].substring(methodName.length()).trim();
+		String arg = split.length > 1 ? split[1].trim() : "";
+		//String arg = dialog.substring(methodName.length() + 1).trim();
 
 		if (!main.getCache().getMethods().containsKey(methodName)) {
 			main.getLogger().warning("The method \"" + methodName + "\" doesn't exists");
@@ -180,12 +182,15 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		arg = Placeholders.translate(player, arg);
 		arg = arg.replace("%npc_name%", npcName);
 
+		MethodConfiguration configuration = new MethodConfiguration(arg);
+		configuration.init(configPart);
+
 		DialogMethod<? extends JavaPlugin> method = main.getCache().getMethods().get(methodName);
 		ExecuteMethodEvent event = new ExecuteMethodEvent(player, method, ClickType.ALL, -999, npcName);
 		Bukkit.getPluginManager().callEvent(event);
 
 		if (!event.isCancelled()) {
-			method.execute(player, arg, session, onComplete);
+			method.execute(player, configuration, session, onComplete);
 		}
 	}
 

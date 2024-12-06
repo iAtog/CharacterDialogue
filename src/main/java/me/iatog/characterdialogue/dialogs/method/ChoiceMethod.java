@@ -6,6 +6,7 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.events.ChoiceSelectEvent;
 import me.iatog.characterdialogue.dialogs.DialogChoice;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.misc.Choice;
 import me.iatog.characterdialogue.placeholders.Placeholders;
@@ -40,10 +41,11 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> completed) {
+	public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
 		Map<UUID, ChoiceSession> sessions = provider.getCache().getChoiceSessions();
 		YamlDocument choicesFile = provider.getFileFactory().getChoicesFile();
 		YamlDocument config = provider.getFileFactory().getConfig();
+		String arg = configuration.getArgument();
 
 		if (sessions.containsKey(player.getUniqueId())) {
 			session.sendDebugMessage("Choice session found, cancelling.", "ChoiceMethod");

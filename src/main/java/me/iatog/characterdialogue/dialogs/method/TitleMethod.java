@@ -2,6 +2,7 @@ package me.iatog.characterdialogue.dialogs.method;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.nms.TitleBuilder;
 import me.iatog.characterdialogue.session.DialogSession;
@@ -15,9 +16,10 @@ public class TitleMethod extends DialogMethod<CharacterDialoguePlugin> {
 	}
 
 	@Override
-	public void execute(Player player, String arg, DialogSession session, SingleUseConsumer<CompletedType> completed) {
+	public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
 		// TITLE: Title || Subtitle || 20 || 60 || 20
-		String[] part = arg.split("||");
+		// NEW TITLE{title=My title,subtitle=This is a subtitle, fadeIn=20, stay=60, fadeOut=20}
+		String[] part = configuration.getArgument().split("||");
 		
 		try {
 			String title = part[0].trim();

@@ -10,6 +10,7 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.TestDialogueImpl;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.part.method.DialogMethodArgument;
 import me.iatog.characterdialogue.session.DialogSession;
@@ -64,8 +65,9 @@ public class MethodCommands implements CommandClass {
         Dialogue dialogue = new TestDialogueImpl();
         DialogSession session = new DialogSession(main, sender, dialogue);
         sessions.put(sender.getUniqueId(), session);
+        MethodConfiguration config = new MethodConfiguration(arguments.toString().trim());
 
-        method.getMethod().execute(sender, arguments.toString().trim(), session, SingleUseConsumer.create((res) -> {
+        method.getMethod().execute(sender, config, session, SingleUseConsumer.create((res) -> {
             sessions.remove(sender.getUniqueId());
             sender.sendMessage(TextUtils.colorize("&8[&eCharacterDialogue&8] &aMethod &8'&7" + method.getName() + "&8' &aexecuted correctly with result: " + res));
         }));
