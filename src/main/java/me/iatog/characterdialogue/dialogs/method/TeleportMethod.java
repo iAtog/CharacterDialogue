@@ -35,6 +35,9 @@ public class TeleportMethod extends DialogMethod<CharacterDialoguePlugin> {
 
 			if (part.length > 4) {
 				yaw = Float.parseFloat(part[4]);
+			}
+
+			if(part.length > 5) {
 				pitch = Float.parseFloat(part[5]);
 			}
 
