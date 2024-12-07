@@ -2,6 +2,7 @@ package me.iatog.characterdialogue.dialogs;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -34,7 +35,7 @@ public class MethodConfiguration {
     }
 
     public Object get(String key, Object def) {
-        return !has(key) ? def : get(key);
+        return !contains(key) ? def : get(key);
     }
 
     public String getString(String key) {
@@ -48,7 +49,7 @@ public class MethodConfiguration {
     }
 
     public String getString(String key, String def) {
-        return !has(key) ? def : getString(key);
+        return !contains(key) ? def : getString(key);
     }
 
     public boolean getBoolean(String key) {
@@ -56,7 +57,7 @@ public class MethodConfiguration {
     }
 
     public boolean getBoolean(String key, boolean def) {
-        return !has(key) ? def : getBoolean(key);
+        return !contains(key) ? def : getBoolean(key);
     }
 
     public int getInteger(String key) {
@@ -72,7 +73,7 @@ public class MethodConfiguration {
     }
 
     public int getInteger(String key, int def) {
-        return !has(key) ? def : getInteger(key);
+        return !contains(key) ? def : getInteger(key);
     }
 
     public float getFloat(String key) {
@@ -88,10 +89,10 @@ public class MethodConfiguration {
     }
 
     public float getFloat(String key, float def) {
-        return !has(key) ? def : getFloat(key);
+        return !contains(key) ? def : getFloat(key);
     }
 
-    public boolean has(String key) {
+    public boolean contains(String key) {
         return objects.containsKey(key);
     }
 
@@ -104,15 +105,15 @@ public class MethodConfiguration {
 
         while (matcher.find()) {
             if (matcher.group(1) != null) {
-                objects.put(matcher.group(1),  matcher.group(2));
+                objects.put(matcher.group(1), matcher.group(2));
             } else {
-                objects.put(matcher.group(3),  this.convertValue(matcher.group(4)));
+                objects.put(matcher.group(3), this.convertValue(matcher.group(4)));
             }
         }
     }
 
     public Map<String, Object> map() {
-        return objects;
+        return Collections.unmodifiableMap(objects);
     }
 
     private Object convertValue(String value) {
@@ -120,7 +121,7 @@ public class MethodConfiguration {
             return null;
         }
         if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
-            return Boolean.parseBoolean(value);
+            return Boolean.parseBoolean(value.toLowerCase());
         } else if (value.matches("-?\\d+(\\.\\d+)?")) {
             try {
                 if (value.contains(".")) {
