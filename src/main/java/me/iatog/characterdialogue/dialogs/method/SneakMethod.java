@@ -35,7 +35,6 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
     public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
         boolean actionBar = getProvider().getFileFactory().getConfig().getBoolean("use-actionbar", true);
         waitingPlayers.put(player.getUniqueId(), completed);
-        //completed.accept(CompletedType.PAUSE);
 
         if (!actionBar) {
             player.sendMessage(TextUtils.colorize("&7"));
@@ -50,10 +49,8 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
         UUID uid = event.getPlayer().getUniqueId();
 
         if (sessions.containsKey(uid) && waitingPlayers.containsKey(uid)) {
-            //DialogSession session = sessions.get(uid);
             waitingPlayers.get(uid).accept(CompletedType.CONTINUE);
 
-            //session.start(current + 1);
             waitingPlayers.remove(uid);
         }
     }
