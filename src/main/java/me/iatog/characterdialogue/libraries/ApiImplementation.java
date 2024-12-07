@@ -25,8 +25,12 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ApiImplementation implements CharacterDialogueAPI {
+
+    private final Pattern lineRegex;
 
 	private final CharacterDialoguePlugin main;
 	private final HologramLibrary hologramLibrary;
@@ -34,6 +38,8 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	public ApiImplementation(CharacterDialoguePlugin main) {
 		this.main = main;
 		hologramLibrary = new HologramLibrary(main);
+        String regex = "^(\\w+)(?:\\{([^}]*)})?(?::\\s*(.*))?$";
+        this.lineRegex = Pattern.compile(regex);
 	}
 
 	@Override
@@ -167,10 +173,18 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	
 	@Override
 	public void runDialogueExpression(Player player, String dialog, String npcName, SingleUseConsumer<CompletedType> onComplete, DialogSession session) {
-		String[] split = dialog.split(":", 2);
-		String methodName = split[0].toUpperCase().trim().split("\\{")[0];
-		String configPart = split[0].substring(methodName.length()).trim();
-		String arg = split.length > 1 ? split[1].trim() : "";
+		Matcher matcher = lineRegex.matcher(dialog);
+
+		if(!matcher.find()) {
+			session.sendDebugMessage("Line '" + dialog + "' don't match.", "runExpression");
+			main.getLogger().warning("Line '" + dialog + "' don't match in " + session.getDialogue().getName());
+			session.destroy();
+			return;
+		}
+
+		String methodName = matcher.group(1).toUpperCase().trim();
+		String configPart = matcher.group(2) != null ? matcher.group(2).trim() : "";
+		String arg = matcher.group(3) != null ? matcher.group(3).trim() : "";
 
 		if (!main.getCache().getMethods().containsKey(methodName)) {
 			main.getLogger().warning("The method \"" + methodName + "\" doesn't exists");
