@@ -1,7 +1,5 @@
 package me.iatog.characterdialogue.dialogs;
 
-import me.iatog.characterdialogue.placeholders.Placeholders;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -17,7 +15,6 @@ public class MethodConfiguration {
 
     public MethodConfiguration(@NotNull String argument, @NotNull String config) {
         this.objects = new HashMap<>();
-        //this.pattern = Pattern.compile("(\\w+)='([^']*)'\\s*?|\\s*(\\w+)=([^,\\s}]+)");
         this.pattern = Pattern.compile("(\\w+)=[\"']([^\"']*)[\"']\\s*,?\\s*|\\s*(\\w+)=([^,\\s}]+)");
         this.argument = argument;
 
@@ -41,11 +38,17 @@ public class MethodConfiguration {
     }
 
     public String getString(String key) {
-        return (String) objects.get(key);
+        Object value = get(key);
+
+        if(value instanceof String) {
+            return (String) value;
+        } else {
+            return value.toString();
+        }
     }
 
     public String getString(String key, String def) {
-        return !has(key) ? def : (String) get(key);
+        return !has(key) ? def : getString(key);
     }
 
     public boolean getBoolean(String key) {
@@ -53,30 +56,46 @@ public class MethodConfiguration {
     }
 
     public boolean getBoolean(String key, boolean def) {
-        return !has(key) ? def : (boolean) get(key);
+        return !has(key) ? def : getBoolean(key);
     }
 
     public int getInteger(String key) {
-        return (Integer) get(key);
+        Object value = get(key);
+
+        if(value instanceof Float) {
+            return ((Float) value).intValue();
+        } else if(value instanceof String) {
+            return Integer.parseInt((String) value);
+        } else {
+            return (int) value;
+        }
     }
 
     public int getInteger(String key, int def) {
-        return !has(key) ? def : (int) get(key);
+        return !has(key) ? def : getInteger(key);
     }
 
     public float getFloat(String key) {
-        return (float) get(key);
+        Object value = get(key);
+
+        if(value instanceof Integer) {
+            return ((Integer)value).floatValue();
+        } else if(value instanceof String) {
+            return Float.parseFloat((String) value);
+        } else {
+            return (float) value;
+        }
     }
 
     public float getFloat(String key, float def) {
-        return !has(key) ? def : (float) get(key);
+        return !has(key) ? def : getFloat(key);
     }
 
     public boolean has(String key) {
         return objects.containsKey(key);
     }
 
-    public void init(String input) {
+    private void init(String input) {
         if(input.isEmpty()) {
             return;
         }
