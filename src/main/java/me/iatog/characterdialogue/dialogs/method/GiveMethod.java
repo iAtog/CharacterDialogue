@@ -20,9 +20,18 @@ public class GiveMethod extends DialogMethod<CharacterDialoguePlugin> {
     @Override
     public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
         // DESIGN = GIVE: GOLDEN_APPLE,1
+        // NEW DESIGN = give{material="GOLDEN_APPLE", amount=1}
         Material material;
-        int amount = 1;
-        String arg = configuration.getArgument();
+        int amount = configuration.getInteger("amount", 1);
+
+        try {
+            material = Material.valueOf(configuration.getString("material"));
+        } catch(Exception exception) {
+            player.sendMessage(TextUtils.colorize("&c&lFatal error ocurred."));
+            completed.accept(CompletedType.DESTROY);
+            return;
+        }
+        /*String arg = configuration.getArgument();
         try {
             if(arg.contains(",")) {
                 String[] parts = arg.split(",");
@@ -36,7 +45,7 @@ public class GiveMethod extends DialogMethod<CharacterDialoguePlugin> {
             completed.accept(CompletedType.DESTROY);
             return;
         }
-
+*/
         player.getInventory().addItem(new ItemStack(material, amount));
         completed.accept(CompletedType.CONTINUE);
     }

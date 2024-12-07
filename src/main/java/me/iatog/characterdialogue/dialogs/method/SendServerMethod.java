@@ -20,17 +20,16 @@ public class SendServerMethod extends DialogMethod<CharacterDialoguePlugin> {
 	@Override
 	public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
-		String[] args = configuration.getArgument().split(",");
 		
-		if(args.length == 0) {
+		String server = configuration.getArgument();
+		String channel = configuration.getString("channel", "BungeeCord");
+
+		if(server.isEmpty()) {
 			completed.accept(CompletedType.DESTROY);
-			player.sendMessage(TextUtils.colorize("No server found"));
+			player.sendMessage(TextUtils.colorize("&cNo server found"));
 			return;
 		}
-		
-		String server = args[0];
-		String channel = args.length > 1 ? args[1] : "BungeeCord";
-		
+
 		out.writeUTF("Connect");
 		out.writeUTF(server);
 		

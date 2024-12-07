@@ -19,39 +19,21 @@ public class SoundMethod extends DialogMethod<CharacterDialoguePlugin> {
 
 	@Override
 	public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
-		String[] part = configuration.getArgument().split(",");
 		Sound sound = null;
 		
 		try {
-			sound = Sound.valueOf(part[0]);
+			sound = Sound.valueOf(configuration.getString("sound"));
 		} catch(Exception exception) {
-			getProvider().getLogger().log(Level.SEVERE, "Unknown sound \"" + part[0] + "\", stopping dialogue.", exception);
+			getProvider().getLogger().log(Level.SEVERE, "Unknown sound \"" + configuration.getString("sound") + "\", stopping dialogue.", exception);
 			completed.accept(CompletedType.DESTROY);
 			return;
 		}
 		
-		float volume = def(part, 1);
-		float pitch = def(part, 2);
+		float volume = configuration.getFloat("volume", 1f);
+		float pitch = configuration.getFloat("pitch", 1f);
 		
 		player.playSound(player.getLocation(), sound, volume, pitch);
 		completed.accept(CompletedType.CONTINUE);
 	}
-	
-	private float def(String[] value, int index) {
-		if(index >= value.length) {
-			return (float) 1;
-		} else {
-			return isInt(value[index]) ? Float.parseFloat(value[index]) : (float) 1;
-		}
-	}
-	
-	private boolean isInt(String number) {
-		try {
-			Integer.parseInt(number);
-			return true;
-		} catch(NumberFormatException ex) {
-			return false;
-		}
-	}
-	
+
 }

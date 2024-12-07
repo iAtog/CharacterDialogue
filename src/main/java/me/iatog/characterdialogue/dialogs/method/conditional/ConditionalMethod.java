@@ -25,19 +25,33 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 		 * lines:
 		 * - send: hello
 		 * - conditional:        CONDITIONAL    |               CONDITIONAL = TRUE                           |  CONDITIONAL = FALSE
-		 * - conditional: %playername% == aatog | (RUN_DIALOGUE/STOP_AND_SEND_MESSAGE/STOP/RUN_METHOD): %arg% | (METHODS)
+		 * - conditional: %player_name% == aatog | (RUN_DIALOGUE/STOP_AND_SEND_MESSAGE/STOP/RUN_METHOD): %arg% | (METHODS)
 		 * - conditional: %time% > 5000 | STOP_AND_SEND_MESSAGE: %npc_name%: It would be better to talk about it later
-		 * - conditional: %kills% == 20 |
+		 * <p>
+		 * NEW
+		 * conditional{condition="%player_name% == aatog", ifTrue="RUN_DIALOGUE: dialogue", ifFalse="STOP_SEND_MSG: &c[NPC] &b%npc_name%&f: Who are you?"}
 		 */
 	}
 
 	@Override
 	public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
 		try {
-			String[] arguments = configuration.getArgument().split("\\|");
-			String condition = arguments[0].trim();
-			String ifTrue = arguments[1].trim();
-			String ifFalse = arguments[2].trim();
+			String condition = configuration.getString("condition", "");
+			String ifTrue = configuration.getString("ifTrue", "");
+			String ifFalse = configuration.getString("ifFalse", "");
+			session.sendDebugMessage("Condition: " + condition, "ConditionalMethod");
+			session.sendDebugMessage("ifTrue: " + ifTrue, "ConditionalMethod");
+			session.sendDebugMessage("ifFalse: " + ifFalse, "ConditionalMethod");
+
+			if(condition.isEmpty() || ifTrue.isEmpty() || ifFalse.isEmpty()) {
+				getProvider().getLogger().severe("The dialogue '" + session.getDialogue().getName() + "' has an invalid configuration in L" + session.getCurrentIndex());
+				getProvider().getLogger().severe("Condition: " + found(!condition.isEmpty()));
+				getProvider().getLogger().severe("ifTrue: " + found(!ifTrue.isEmpty()));
+				getProvider().getLogger().severe("ifFalse: " + found(!ifFalse.isEmpty()));
+				completed.accept(CompletedType.DESTROY);
+				session.sendDebugMessage("Error obtaining configuration", "ConditionalMethod");
+				return;
+			}
 
 			boolean conditionResult;
 
@@ -65,13 +79,16 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 
 			ConditionalExpression expression = ConditionalExpression.valueOf(method);
 			expression.execute(new ConditionData(session, getProvider(), argument), completed);
-			// pero estas chill de cojones
 		} catch(IndexOutOfBoundsException|IllegalArgumentException e) {
 			player.sendMessage(TextUtils.colorize("&c&lFatal error occurred."));
 			getProvider().getLogger().warning("The dialogue '" + session.getDialogue().getName() + "' has an invalid format in L" + session.getCurrentIndex());
 			e.printStackTrace();
 			completed.accept(CompletedType.DESTROY);
 		}
+	}
+
+	private String found(boolean bool) {
+		return bool ? "Found" : "Not found";
 	}
 
 	public boolean evaluateCondition(Player player, String condition) {

@@ -18,22 +18,22 @@ public class TitleMethod extends DialogMethod<CharacterDialoguePlugin> {
 	@Override
 	public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
 		// TITLE: Title || Subtitle || 20 || 60 || 20
-		// NEW TITLE{title=My title,subtitle=This is a subtitle, fadeIn=20, stay=60, fadeOut=20}
-		String[] part = configuration.getArgument().split("||");
+		// NEW TITLE{title="My title",subtitle="This is a subtitle, yay!", fadeIn=20, stay=60, fadeOut=20}
+		//String[] part = configuration.getArgument().split("||");
 		
 		try {
-			String title = part[0].trim();
-			String subtitle = part[1].trim();
-			int fadeIn = Integer.parseInt(part[2].trim());
-			int stay = Integer.parseInt(part[3].trim());
-			int fadeOut = Integer.parseInt(part[4].trim());
+			String title = configuration.getString("title");
+			String subtitle = configuration.getString("subtitle", "");
+			int fadeIn = configuration.getInteger("fadeIn", 20);
+			int stay = configuration.getInteger("stay", 60);
+			int fadeOut = configuration.getInteger("fadeOut", 20);
 
 			new TitleBuilder(player)
 					.setText(title, subtitle)
 					.setTimings(fadeIn, stay, fadeOut)
 					.send();
 			completed.accept(CompletedType.CONTINUE);
-		}catch(EnumConstantNotPresentException ex) {
+		}catch(Exception ex) {
 			player.sendMessage("Invalid title data");
 			completed.accept(CompletedType.DESTROY);
 		}

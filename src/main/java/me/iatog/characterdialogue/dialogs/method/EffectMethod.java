@@ -24,6 +24,7 @@ public class EffectMethod extends DialogMethod<CharacterDialoguePlugin> {
 	public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
 		String arg = configuration.getArgument();
 		String[] split = arg.split(",");
+		// effect: clear EFFECT_TYPE
 		if(arg.toLowerCase().startsWith("clear")) {
 			String[] separator = arg.split(" ");
 			if(separator.length < 2) {
