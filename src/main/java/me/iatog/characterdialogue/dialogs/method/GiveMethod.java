@@ -3,50 +3,44 @@ package me.iatog.characterdialogue.dialogs.method;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
-import me.iatog.characterdialogue.enums.CompletedType;
+import me.iatog.characterdialogue.dialogs.MethodContext;
 import me.iatog.characterdialogue.session.DialogSession;
-import me.iatog.characterdialogue.util.SingleUseConsumer;
-import me.iatog.characterdialogue.util.TextUtils;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class GiveMethod extends DialogMethod<CharacterDialoguePlugin> {
-
+    // give{material=flint, amount=32, name="Super flint"}
     public GiveMethod() {
         super("give");
     }
 
     @Override
-    public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
-        // DESIGN = GIVE: GOLDEN_APPLE,1
-        // NEW DESIGN = give{material="GOLDEN_APPLE", amount=1}
+    public void execute(MethodContext context) {
+        MethodConfiguration configuration = context.getConfiguration();
+        DialogSession session = context.getSession();
+
         Material material;
         int amount = configuration.getInteger("amount", 1);
 
         try {
-            material = Material.valueOf(configuration.getString("material"));
+            material = Material.valueOf(configuration.getString("material").toUpperCase());
         } catch(Exception exception) {
-            player.sendMessage(TextUtils.colorize("&c&lFatal error ocurred."));
-            completed.accept(CompletedType.DESTROY);
+            String msg = "The item material '" + configuration.getString("material") + "' is not valid.";
+            session.sendDebugMessage(msg, "GiveMethod");
+            getProvider().getLogger().warning(msg);
+            this.destroy(context);
             return;
         }
-        /*String arg = configuration.getArgument();
-        try {
-            if(arg.contains(",")) {
-                String[] parts = arg.split(",");
-                material = Material.valueOf(parts[0].toUpperCase());
-                amount = Integer.parseInt(parts[1]);
-            } else {
-                material = Material.valueOf(arg.toUpperCase());
-            }
-        } catch(NumberFormatException|EnumConstantNotPresentException|IndexOutOfBoundsException e) {
-            player.sendMessage(TextUtils.colorize("&c&lFatal error ocurred."));
-            completed.accept(CompletedType.DESTROY);
-            return;
+        ItemStack itemStack = new ItemStack(material, amount);
+        String name = configuration.getString("name", "");
+        if(!name.isEmpty()) {
+            ItemMeta meta = itemStack.getItemMeta();
+            meta.setDisplayName(name);
+            itemStack.setItemMeta(meta);
         }
-*/
-        player.getInventory().addItem(new ItemStack(material, amount));
-        completed.accept(CompletedType.CONTINUE);
+
+        context.getPlayer().getInventory().addItem(itemStack);
+        this.next(context);
     }
 }
