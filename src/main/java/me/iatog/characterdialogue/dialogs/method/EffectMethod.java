@@ -3,15 +3,13 @@ package me.iatog.characterdialogue.dialogs.method;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
-import me.iatog.characterdialogue.enums.CompletedType;
+import me.iatog.characterdialogue.dialogs.MethodContext;
 import me.iatog.characterdialogue.session.DialogSession;
-import me.iatog.characterdialogue.util.SingleUseConsumer;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Optional;
-import java.util.logging.Level;
 
 public class EffectMethod extends DialogMethod<CharacterDialoguePlugin> {
 	
@@ -21,47 +19,47 @@ public class EffectMethod extends DialogMethod<CharacterDialoguePlugin> {
 	}
 
 	@Override
-	public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
-		String arg = configuration.getArgument();
-		String[] split = arg.split(",");
-		// effect: clear EFFECT_TYPE
-		if(arg.toLowerCase().startsWith("clear")) {
-			String[] separator = arg.split(" ");
-			if(separator.length < 2) {
-				player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-			} else {
-				String effectName = separator[1];
-				Optional<PotionEffectType> effect = Optional.ofNullable(PotionEffectType.getByName(effectName));
-				if(effect.isEmpty()) {
-					getProvider().getLogger().log(Level.WARNING, "The name of the \""+effectName+"\" effect has not been found.");
-				} else if(player.hasPotionEffect(effect.get())) {
-					player.removePotionEffect(effect.get());
-				}				
-			}
-			completed.accept(CompletedType.CONTINUE);
-			return;
-		}
-		// EFFECT: effect_name,seconds,amplifier
-		String name = split[0];
-		int seconds = Integer.parseInt(split[1]);
-		int amplifier = Integer.parseInt(split[2]);
-		Optional<PotionEffectType> effectType = Optional.ofNullable(PotionEffectType.getByName(name));
-		
-		if(amplifier < 1) {
-			amplifier = 1;
-		} else if(amplifier > 255) {
-			amplifier = 255;
-		}
-		
-		if(effectType.isEmpty()) {
-			getProvider().getLogger().log(Level.WARNING, "The name of the \""+name+"\" effect has not been found.");
-			completed.accept(CompletedType.DESTROY);
-			return;
-		}
-		
-		PotionEffect potionEffect = new PotionEffect(effectType.get(), seconds * 20, amplifier, true);
-		player.addPotionEffect(potionEffect);
-		completed.accept(CompletedType.CONTINUE);
-	}
+	public void execute(MethodContext context) {
+		MethodConfiguration configuration = context.getConfiguration();
+		Player player = context.getPlayer();
+		DialogSession session = context.getSession();
 
+		if(configuration.getArgument().equalsIgnoreCase("clear")) {
+			player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
+			this.next(context);
+			return;
+		}
+
+		if(configuration.getArgument().isEmpty()) {
+			String msg = "No potion effects have been specified in L" + session.getCurrentIndex() + ", skipping...";
+			getProvider().getLogger().warning(msg);
+			session.sendDebugMessage(msg, "EffectMethod");
+			this.next(context);
+			return;
+		}
+
+		String[] effects = configuration.getArgument().split(",");
+
+		int duration = configuration.getInteger("seconds", 10) * 20;
+		int amplifier = configuration.getInteger("amplifier", 1);
+		boolean clear = configuration.getBoolean("clear", false);
+
+		for(String effectName : effects) {
+			Optional<PotionEffectType> effect = Optional.ofNullable(PotionEffectType.getByName(effectName.trim().toUpperCase()));
+			if(effect.isEmpty()) {
+				String msg = "The name of the \""+effectName+"\" effect has not been found.";
+				getProvider().getLogger().warning(msg);
+				session.sendDebugMessage(msg, "EffectMethod");
+				continue;
+			}
+
+			if(clear) {
+				player.removePotionEffect(effect.get());
+			} else {
+				player.addPotionEffect(new PotionEffect(effect.get(), duration, amplifier));
+			}
+		}
+
+		this.next(context);
+	}
 }
