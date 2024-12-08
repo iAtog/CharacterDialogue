@@ -3,6 +3,7 @@ package me.iatog.characterdialogue.dialogs.method.talk;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
+import me.iatog.characterdialogue.dialogs.MethodContext;
 import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.session.DialogSession;
@@ -13,12 +14,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements Listener {
 
@@ -29,7 +28,7 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
      * talk: <type>|<message>
      * talk: message|Lorem ipsum
      * talk: full_chat|Lorem ipsum
-     *
+     * <p>
      * NEW
      * talk{type='action_bar',sound='BLOCK_SCULK_VEIN_BREAK',volume=0.5,pitch=0.5,tickSpeed=2,skip=false}: Hello
      */
@@ -39,17 +38,17 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
     }
 
     @Override
-    public void execute(Player player, MethodConfiguration configuration, DialogSession session,
-                        SingleUseConsumer<CompletedType> completed) {
+    public void execute(MethodContext context) {
+        Player player = context.getPlayer();
         this.players.add(player.getUniqueId());
 
-        animateMessage(player, session, configuration, completed);
+        animateMessage(player, context.getSession(), context.getConfiguration(), context.getConsumer());
     }
 
     public void animateMessage(Player player,
                                DialogSession session,
                                MethodConfiguration configuration,
-                               Consumer<CompletedType> completed) {
+                               SingleUseConsumer<CompletedType> completed) {
         String message = configuration.getArgument();
         UUID uuid = player.getUniqueId();
         final String npcName = session.getDialogue().getDisplayName();
@@ -65,7 +64,7 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
         Sound sound;
 
         try {
-            type = TalkType.valueOf(configuration.getString("type", "ACTION_BAR").toUpperCase());
+            type = TalkType.valueOf(configuration.getString("type", "action_bar").toUpperCase());
             sound = Sound.valueOf(configuration.getString("sound", "BLOCK_STONE_BUTTON_CLICK_OFF").toUpperCase());
         } catch(EnumConstantNotPresentException ex) {
             getProvider().getLogger().severe("The line L" + session.getCurrentIndex() + " in " + session.getDialogue().getName() + " is not valid. (parse error)");
@@ -81,74 +80,12 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
             return;
         }
 
-        new BukkitRunnable() {
-            int index = 0;
-            boolean finished = false;
-
-            @Override
-            public void run() {
-                try {
-                    if ((!players.contains(uuid) && skip && !isCancelled()) && !finished) {
-                        stopAnimation();
-                        return;
-                    }
-
-                    if (index < message.length()) {
-                        animateText();
-                    } else {
-                        cancel();
-
-                        if(!finished) {
-                            finishAnimation();
-                        }
-                    }
-                } catch (NullPointerException ex) {
-                    handleException(ex);
-                }
-            }
-
-            private void stopAnimation() {
-                this.cancel();
-                this.finished = true;
-                type.execute(player, translatedMessage, npcName);
-                player.playSound(player.getLocation(), sound, volume, pitch);
-                session.sendDebugMessage("Finished talk because: " + !players.contains(uuid) + " | " + skip + " | " + !isCancelled(), "TalkMethod:134");
-                players.remove(uuid);
-                completed.accept(CompletedType.CONTINUE);
-                //session.startNext();
-            }
-
-            private void animateText() {
-                String writingMessage = translatedMessage.substring(0, index + 1);
-                index++;
-                player.playSound(player.getLocation(),
-                        sound,
-                        volume,
-                        pitch);
-                type.execute(player, writingMessage, npcName);
-            }
-
-            private void finishAnimation() {
-                if (!this.finished) {
-                    completed.accept(CompletedType.CONTINUE);
-                    session.sendDebugMessage("Starting next... (else) (finishAnimation)", "TalkMethod:149");
-                }
-                this.finished = true;
-                session.sendDebugMessage("Finished because message " + index + " < " + message.length() +
-                        " (cancelled: " + isCancelled() + ")", "TalkMethod:152");
-                players.remove(uuid);
-                this.cancel();
-            }
-
-            private void handleException(Exception ex) {
-                getProvider().getLogger().severe("exception in talkMethod [" + message + "]");
-                ex.printStackTrace();
-                completed.accept(CompletedType.DESTROY);
-                this.cancel();
-                this.finished = true;
-            }
-
-        }.runTaskTimer(getProvider(), 10L, ticks);
+        new TalkRunnable(
+                players, uuid, message, skip,
+                type, player, sound, translatedMessage,
+                volume, pitch, session,
+                completed, npcName, getProvider()
+        ).runTaskTimer(getProvider(), 20L, ticks);
     }
 
     @EventHandler
