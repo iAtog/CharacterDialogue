@@ -25,8 +25,8 @@ public class CacheLoader implements Loader {
 				new SoundMethod(main),
 				new BroadcastMethod(),
 				new WaitMethod(main),
-				new DispatchCommandMethod(),
-				new CommandMethod(),
+				//new DispatchCommandMethod(),
+				new CommandMethod(main),
 				new TeleportMethod(),
 				new EffectMethod(main),
 				new SendServerMethod(main),
@@ -35,7 +35,8 @@ public class CacheLoader implements Loader {
 				new ConditionalMethod(main),
 				new GiveMethod(),
 				new TalkMethod(main),
-				new TitleMethod()
+				new TitleMethod(),
+				new StartDialogueMethod(main)
 				);
 		
 		main.registerChoices(
