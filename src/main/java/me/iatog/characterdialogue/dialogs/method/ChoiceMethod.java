@@ -7,12 +7,11 @@ import me.iatog.characterdialogue.api.events.ChoiceSelectEvent;
 import me.iatog.characterdialogue.dialogs.DialogChoice;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
-import me.iatog.characterdialogue.enums.CompletedType;
+import me.iatog.characterdialogue.dialogs.MethodContext;
 import me.iatog.characterdialogue.misc.Choice;
 import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
-import me.iatog.characterdialogue.util.SingleUseConsumer;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.Bukkit;
@@ -41,7 +40,11 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
+	public void execute(MethodContext context) {
+		MethodConfiguration configuration = context.getConfiguration();
+		DialogSession session = context.getSession();
+		Player player = context.getPlayer();
+
 		Map<UUID, ChoiceSession> sessions = provider.getCache().getChoiceSessions();
 		YamlDocument choicesFile = provider.getFileFactory().getChoicesFile();
 		YamlDocument config = provider.getFileFactory().getConfig();
@@ -49,17 +52,21 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implemen
 
 		if (sessions.containsKey(player.getUniqueId())) {
 			session.sendDebugMessage("Choice session found, cancelling.", "ChoiceMethod");
+			this.next(context);
 			return;
 		}
 
 		ChoiceSession choiceSession = new ChoiceSession(provider, player);
 
 		if (!choicesFile.contains("choices." + arg)) {
-			provider.getLogger().warning("The choice \"" + arg + "\" doesn't exists.");
+			String msg = "The choice \"" + arg + "\" doesn't exists.";
+			provider.getLogger().warning(msg);
+			session.sendDebugMessage(msg, "ChoiceMethod");
+			this.next(context);
 			return;
 		}
 
-		completed.accept(CompletedType.PAUSE);
+		this.pause(context);
 
 		for (String choice : choicesFile.getSection("choices." + arg).getRoutesAsStrings(false)) {
 			Section section = choicesFile.getSection("choices." + arg + "." + choice);

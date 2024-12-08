@@ -3,11 +3,8 @@ package me.iatog.characterdialogue.dialogs.method;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
-import me.iatog.characterdialogue.enums.CompletedType;
+import me.iatog.characterdialogue.dialogs.MethodContext;
 import me.iatog.characterdialogue.nms.TitleBuilder;
-import me.iatog.characterdialogue.session.DialogSession;
-import me.iatog.characterdialogue.util.SingleUseConsumer;
-import org.bukkit.entity.Player;
 
 public class TitleMethod extends DialogMethod<CharacterDialoguePlugin> {
 
@@ -16,10 +13,9 @@ public class TitleMethod extends DialogMethod<CharacterDialoguePlugin> {
 	}
 
 	@Override
-	public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
-		// TITLE: Title || Subtitle || 20 || 60 || 20
+	public void execute(MethodContext context) {
+		MethodConfiguration configuration = context.getConfiguration();
 		// NEW TITLE{title="My title",subtitle="This is a subtitle, yay!", fadeIn=20, stay=60, fadeOut=20}
-		//String[] part = configuration.getArgument().split("||");
 		
 		try {
 			String title = configuration.getString("title");
@@ -28,14 +24,14 @@ public class TitleMethod extends DialogMethod<CharacterDialoguePlugin> {
 			int stay = configuration.getInteger("stay", 60);
 			int fadeOut = configuration.getInteger("fadeOut", 20);
 
-			new TitleBuilder(player)
+			new TitleBuilder(context.getPlayer())
 					.setText(title, subtitle)
 					.setTimings(fadeIn, stay, fadeOut)
 					.send();
-			completed.accept(CompletedType.CONTINUE);
+			this.next(context);
 		}catch(Exception ex) {
-			player.sendMessage("Invalid title data");
-			completed.accept(CompletedType.DESTROY);
+			context.getPlayer().sendMessage("Invalid title data");
+			this.destroy(context);
 		}
 	}
 }

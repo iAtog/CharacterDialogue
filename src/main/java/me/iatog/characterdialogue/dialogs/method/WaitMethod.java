@@ -2,10 +2,8 @@ package me.iatog.characterdialogue.dialogs.method;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
-import me.iatog.characterdialogue.dialogs.MethodConfiguration;
-import me.iatog.characterdialogue.enums.CompletedType;
+import me.iatog.characterdialogue.dialogs.MethodContext;
 import me.iatog.characterdialogue.session.DialogSession;
-import me.iatog.characterdialogue.util.SingleUseConsumer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -16,14 +14,17 @@ public class WaitMethod extends DialogMethod<CharacterDialoguePlugin> {
 	}
 
 	@Override
-	public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
+	public void execute(MethodContext context) {
+		Player player = context.getPlayer();
+		DialogSession session = context.getSession();
+
 		double seconds;
-		String arg = configuration.getArgument();
+		String arg = context.getConfiguration().getArgument();
 		try {
 			seconds = Double.parseDouble(arg);
 		} catch(NumberFormatException e) {
 			getProvider().getLogger().warning("The argument '" + arg + "' in " + session.getDisplayName() + " isn't valid. Line: " + session.getCurrentIndex());
-			completed.accept(CompletedType.DESTROY);
+			this.destroy(context);
 			return;
 		}
 
@@ -36,9 +37,9 @@ public class WaitMethod extends DialogMethod<CharacterDialoguePlugin> {
 
 		Bukkit.getScheduler().runTaskLater(getProvider(), () -> {
             if(next < session.getLines().size() && (player != null && player.isOnline())) {
-				completed.accept(CompletedType.CONTINUE);
+				this.next(context);
             } else {
-				completed.accept(CompletedType.DESTROY);
+				this.destroy(context);
             }
         }, (long)(20 * seconds));
 	}

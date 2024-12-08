@@ -41,7 +41,7 @@ public class MethodConfiguration {
     public String getString(String key) {
         Object value = get(key);
 
-        if(value instanceof String) {
+        if (value instanceof String) {
             return (String) value;
         } else {
             return value.toString();
@@ -63,9 +63,9 @@ public class MethodConfiguration {
     public int getInteger(String key) {
         Object value = get(key);
 
-        if(value instanceof Float) {
+        if (value instanceof Float) {
             return ((Float) value).intValue();
-        } else if(value instanceof String) {
+        } else if (value instanceof String) {
             return Integer.parseInt((String) value);
         } else {
             return (int) value;
@@ -79,9 +79,9 @@ public class MethodConfiguration {
     public float getFloat(String key) {
         Object value = get(key);
 
-        if(value instanceof Integer) {
-            return ((Integer)value).floatValue();
-        } else if(value instanceof String) {
+        if (value instanceof Integer) {
+            return ((Integer) value).floatValue();
+        } else if (value instanceof String) {
             return Float.parseFloat((String) value);
         } else {
             return (float) value;
@@ -97,7 +97,7 @@ public class MethodConfiguration {
     }
 
     private void init(String input) {
-        if(input.isEmpty()) {
+        if (input.isEmpty()) {
             return;
         }
 
@@ -117,7 +117,7 @@ public class MethodConfiguration {
     }
 
     private Object convertValue(String value) {
-        if(value == null || value.isEmpty()) {
+        if (value == null || value.isEmpty()) {
             return null;
         }
         if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
@@ -138,7 +138,7 @@ public class MethodConfiguration {
     }
 
     // Testing regex
-    public static void main(String[] a) {
+    public static void maine(String[] a) {
         String dialog = "TITLE{title='My title, nice title' , subtitle='This is a subtitle, yay!', fadeIn=20, stay=60, fadeOut=20, animated=true, deep=2}: he";
         String[] split = dialog.split(":", 2);
         String methodName = split[0].toUpperCase().trim().split("\\{")[0];
@@ -164,7 +164,7 @@ public class MethodConfiguration {
         StringBuilder stringBuilder = new StringBuilder("{");
 
         objects.forEach((key, value) -> {
-            if(value instanceof String) {
+            if (value instanceof String) {
                 stringBuilder.append(key).append("='").append(value).append("'");
             } else {
                 stringBuilder.append(key).append("=").append(value);
@@ -172,8 +172,8 @@ public class MethodConfiguration {
             stringBuilder.append(",");
         });
 
-        if(stringBuilder.toString().endsWith(",")) {
-            stringBuilder.delete(stringBuilder.length()-1, stringBuilder.length());
+        if (stringBuilder.toString().endsWith(",")) {
+            stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
         }
 
         stringBuilder.append("}");

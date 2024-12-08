@@ -8,6 +8,7 @@ import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.api.events.ExecuteMethodEvent;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.dialogs.MethodContext;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.placeholders.Placeholders;
@@ -66,14 +67,10 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		if (hologram != null && hologram.isEnabled()) {
 			Location location = citizensNpc.getStoredLocation();
 			location.add(0, 2 + hologram.getY(), 0);
-			//Hologram holo = HologramsAPI.createHologram(main, location);
 			String npcName = dialogue.getDisplayName();
 			List<String> lines = hologram.getLines();
 
 			hologramLibrary.addHologram(lines, location, npcName);
-			//for (String line : lines) {
-			//	holo.appendTextLine(ChatColor.translateAlternateColorCodes('&', line.replace("%npc_name%", npcName)));
-			//}
 
 			citizensNpc.setAlwaysUseNameHologram(false);
 		}
@@ -183,7 +180,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		}
 
 		String methodName = matcher.group(1).toUpperCase().trim();
-		String configPart = matcher.group(2) != null ? matcher.group(2).trim() : "";
+		String configPart = (matcher.group(2) != null ? matcher.group(2).trim() : "").replace("%npc_name%", npcName);
 		String arg = matcher.group(3) != null ? matcher.group(3).trim() : "";
 
 		if (!main.getCache().getMethods().containsKey(methodName)) {
@@ -191,6 +188,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 			session.destroy();
 			return;
 		}
+		session.sendDebugMessage("Running method '" + methodName + "'", "API:194");
 
 		arg = Placeholders.translate(player, arg);
 		arg = arg.replace("%npc_name%", npcName);
@@ -202,7 +200,11 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		Bukkit.getPluginManager().callEvent(event);
 
 		if (!event.isCancelled()) {
-			method.execute(player, configuration, session, onComplete);
+			MethodContext context = new MethodContext(player, session, configuration, onComplete);
+			method.execute(context);
+		} else {
+			session.sendDebugMessage("Method execution cancelled by external plugin", "API:208");
+			onComplete.accept(CompletedType.CONTINUE);
 		}
 	}
 

@@ -22,12 +22,10 @@ public abstract class DialogMethod<T extends JavaPlugin> {
 	
 	/**
 	 * Execute the method action
-	 * @param player the interacting player
-	 * @param configuration The config of the method when used
-	 * @param complete var to indicate when its completed, canceled or destroyed.
+	 * @param context The context including player, configuration, session and consumer
 	 */
-	public abstract void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> complete);
-	
+	public abstract void execute(MethodContext context);
+	// Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> complete
 	/**
 	 * Get the id of the method
 	 * @return the id
@@ -42,5 +40,17 @@ public abstract class DialogMethod<T extends JavaPlugin> {
 	 */
 	public final T getProvider() {
 		return provider;
+	}
+
+	public void next(MethodContext context) {
+		context.getConsumer().accept(CompletedType.CONTINUE);
+	}
+
+	public void pause(MethodContext context) {
+		context.getConsumer().accept(CompletedType.PAUSE);
+	}
+
+	public void destroy(MethodContext context) {
+		context.getConsumer().accept(CompletedType.DESTROY);
 	}
 }

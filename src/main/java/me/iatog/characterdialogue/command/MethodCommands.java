@@ -3,24 +3,20 @@ package me.iatog.characterdialogue.command;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.ConsumeAll;
-import me.fixeddev.commandflow.annotated.annotation.Named;
 import me.fixeddev.commandflow.annotated.annotation.Usage;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.TestDialogueImpl;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
-import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
-import me.iatog.characterdialogue.enums.ClickType;
+import me.iatog.characterdialogue.dialogs.MethodContext;
 import me.iatog.characterdialogue.part.method.DialogMethodArgument;
 import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.util.SingleUseConsumer;
 import me.iatog.characterdialogue.util.TextUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -67,10 +63,12 @@ public class MethodCommands implements CommandClass {
         sessions.put(sender.getUniqueId(), session);
         MethodConfiguration config = new MethodConfiguration(arguments.toString().trim(), "");
 
-        method.getMethod().execute(sender, config, session, SingleUseConsumer.create((res) -> {
+        MethodContext context = new MethodContext(sender, session, config, SingleUseConsumer.create((res) -> {
             sessions.remove(sender.getUniqueId());
             sender.sendMessage(TextUtils.colorize("&8[&eCharacterDialogue&8] &aMethod &8'&7" + method.getName() + "&8' &aexecuted correctly with result: " + res));
         }));
+
+        method.getMethod().execute(context);
     }
 
 }

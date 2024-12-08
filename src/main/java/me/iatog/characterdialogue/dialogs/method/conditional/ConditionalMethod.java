@@ -3,17 +3,12 @@ package me.iatog.characterdialogue.dialogs.method.conditional;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
-import me.iatog.characterdialogue.enums.CompletedType;
+import me.iatog.characterdialogue.dialogs.MethodContext;
 import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.session.DialogSession;
-import me.iatog.characterdialogue.session.EmptyDialogSession;
-import me.iatog.characterdialogue.util.SingleUseConsumer;
 import me.iatog.characterdialogue.util.TextUtils;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
@@ -34,7 +29,9 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 	}
 
 	@Override
-	public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
+	public void execute(MethodContext context) {
+		MethodConfiguration configuration = context.getConfiguration();
+		DialogSession session = context.getSession();
 		try {
 			String condition = configuration.getString("condition", "");
 			String ifTrue = configuration.getString("ifTrue", "");
@@ -48,7 +45,7 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 				getProvider().getLogger().severe("Condition: " + found(!condition.isEmpty()));
 				getProvider().getLogger().severe("ifTrue: " + found(!ifTrue.isEmpty()));
 				getProvider().getLogger().severe("ifFalse: " + found(!ifFalse.isEmpty()));
-				completed.accept(CompletedType.DESTROY);
+				this.destroy(context);
 				session.sendDebugMessage("Error obtaining configuration", "ConditionalMethod");
 				return;
 			}
@@ -56,34 +53,34 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
 			boolean conditionResult;
 
 			try {
-				conditionResult = evaluateCondition(player, condition);
+				conditionResult = evaluateCondition(context.getPlayer(), condition);
 			} catch(IllegalArgumentException e) {
-				player.sendMessage(TextUtils.colorize("&c&lFatal error occurred."));
+				context.getPlayer().sendMessage(TextUtils.colorize("&c&lFatal error occurred."));
 				getProvider().getLogger().warning("The dialogue '" + session.getDialogue().getName() + "' has an invalid condition in L" + session.getCurrentIndex());
 
-				completed.accept(CompletedType.DESTROY);
+				this.destroy(context);
 				return;
 			}
 
-			String actualExpression = conditionResult ? ifTrue : ifFalse;
-			String method = actualExpression.trim().toUpperCase();
+			String expression = (conditionResult ? ifTrue : ifFalse).replace("%apostrophe%", "'");
+			String method = expression.trim().toUpperCase();
 			String argument = "";
 
 			session.sendDebugMessage("&a" + condition + "&7: &c" + conditionResult, "ConditionalMethod");
 
-			if(actualExpression.contains(":")) {
-				String[] parts = actualExpression.split(":", 2);
+			if(expression.contains(":")) {
+				String[] parts = expression.split(":", 2);
 				method = parts[0].trim().toUpperCase();
 				argument = parts.length > 1 ? parts[1].trim() : "";
 			}
 
-			ConditionalExpression expression = ConditionalExpression.valueOf(method);
-			expression.execute(new ConditionData(session, getProvider(), argument), completed);
+			ConditionalExpression conditionalExpression = ConditionalExpression.valueOf(method);
+			conditionalExpression.execute(new ConditionData(session, getProvider(), argument), context.getConsumer());
 		} catch(IndexOutOfBoundsException|IllegalArgumentException e) {
-			player.sendMessage(TextUtils.colorize("&c&lFatal error occurred."));
+			context.getPlayer().sendMessage(TextUtils.colorize("&c&lFatal error occurred."));
 			getProvider().getLogger().warning("The dialogue '" + session.getDialogue().getName() + "' has an invalid format in L" + session.getCurrentIndex());
 			e.printStackTrace();
-			completed.accept(CompletedType.DESTROY);
+			this.destroy(context);
 		}
 	}
 

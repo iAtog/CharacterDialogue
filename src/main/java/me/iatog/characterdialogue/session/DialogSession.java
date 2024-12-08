@@ -57,16 +57,14 @@ public class DialogSession implements Session {
 		}
 
 		setCurrentIndex(index);
-		sendDebugMessage("Started in: " + index + " &7[&c"+ this.stop + "&7]",
+		sendDebugMessage("Started in: " + index,
 				"DialogSession:63");
 		getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE,
 				4, true,
 				false, false));
 
-		sendDebugMessage("Running expression", "DialogSession:68");
-
 		SingleUseConsumer<CompletedType> consumer = SingleUseConsumer.create((result) -> {
-			sendDebugMessage("Starting consumer", "SingleUseConsumer");
+			//sendDebugMessage("Starting consumer", "SingleUseConsumer");
 			
 			if (index >= lines.size()) {
 				this.sendDebugMessage("Dialogue reached the end", "SingleUseConsumer");
@@ -78,7 +76,7 @@ public class DialogSession implements Session {
 			}
 			sendDebugMessage("Consumer passed", "SingleUseConsumer");
 			if(result == CompletedType.DESTROY) {
-				sendDebugMessage("Dialogue destroyed", "SingleUseConsumer");
+				//sendDebugMessage("Dialogue destroyed", "SingleUseConsumer");
 				this.destroy();
 				return;
 			} else if (result == CompletedType.PAUSE) {
@@ -87,8 +85,7 @@ public class DialogSession implements Session {
 				sendDebugMessage("Dialogue paused", "SingleUseConsumer");
 				return;
 			}
-			// CONTINUE
-			sendDebugMessage("Dialogue continue", "DialogSession:86");
+
 			this.startNext();
 		});
 
@@ -174,7 +171,7 @@ public class DialogSession implements Session {
 
 	public void sendDebugMessage(String message, String codeReference) {
 		if(getPlayer() != null && debug) {
-			getPlayer().sendMessage(TextUtils.colorize("&7[&cCharacterDialogue&7] &7" + message + " &8(&7" + codeReference + "&8)"));
+			getPlayer().sendMessage(TextUtils.colorize("&7[&cCD-DEBUG&7] &7" + message + " &8(&7" + codeReference + "&8)"));
 		}
 	}
 }

@@ -3,7 +3,7 @@ package me.iatog.characterdialogue.dialogs.method;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.events.DialogueFinishEvent;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
-import me.iatog.characterdialogue.dialogs.MethodConfiguration;
+import me.iatog.characterdialogue.dialogs.MethodContext;
 import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.util.SingleUseConsumer;
@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import java.util.HashMap;
@@ -32,9 +33,10 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
     }
 
     @Override
-    public void execute(Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> completed) {
+    public void execute(MethodContext context) {
+        Player player = context.getPlayer();
         boolean actionBar = getProvider().getFileFactory().getConfig().getBoolean("use-actionbar", true);
-        waitingPlayers.put(player.getUniqueId(), completed);
+        waitingPlayers.put(player.getUniqueId(), context.getConsumer());
 
         if (!actionBar) {
             player.sendMessage(TextUtils.colorize("&7"));
@@ -62,6 +64,11 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
         waitingPlayers.remove(event.getPlayer().getUniqueId());
     }
 
+    @EventHandler
+    public void onLeave(PlayerQuitEvent event) {
+        waitingPlayers.remove(event.getPlayer().getUniqueId());
+    }
+
     private void setupRunnable() {
         Bukkit.getScheduler().runTaskTimer(getProvider(), new Runnable() {
             private String colorCode = "c";
@@ -72,16 +79,16 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
                     Player player = Bukkit.getPlayer(uuid);
                     if (player == null || !player.isOnline()) {
                         waitingPlayers.remove(uuid);
-                        return;
+                        continue;
                     }
 
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(TextUtils.colorize("&" + colorCode + "[ Sneak to continue ]")));
+                }
 
-                    if (colorCode.equals("f")) {
-                        colorCode = "c";
-                    } else {
-                        colorCode = "f";
-                    }
+                if (colorCode.equals("f")) {
+                    colorCode = "c";
+                } else {
+                    colorCode = "f";
                 }
             }
         }, 20, 20);
