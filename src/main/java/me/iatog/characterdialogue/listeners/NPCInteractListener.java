@@ -55,7 +55,7 @@ public class NPCInteractListener implements Listener {
 			}
 		}
 
-		long cooldownTime = 1 * 1000;
+		long cooldownTime = 2000;
 		player.setMetadata("dialogueCooldown", new FixedMetadataValue(main, currentTime + cooldownTime));
 
 		ClickType clickType = dialogue.getClickType();
