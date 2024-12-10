@@ -1,0 +1,14 @@
+plugins {
+    id 'java'
+}
+
+group = 'me.iatog'
+version = '0.9'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+}
