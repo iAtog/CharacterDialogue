@@ -17,15 +17,19 @@ public class ReflectionUtil {
 	}
 
 	public static Class<?> getNMSClass(String name) {
-		String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+		String version = Bukkit.getBukkitVersion().split("-")[0].replace(".", "_");
 		try {
 			return Class.forName("net.minecraft.server." + version + "." + name);
-		}
-
-		catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			return null;
 		}
 
+	}
+	
+	public static String getNMSVersion() {
+		String version = Bukkit.getBukkitVersion();
+
+		return null;
 	}
 }
