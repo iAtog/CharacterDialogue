@@ -23,7 +23,7 @@ public class StartDialogChoice extends DialogChoice {
 		session.destroy();
 		
 		if (dialogue != null) {
-			api.runDialogue(session.getPlayer(), dialogue, session.isOnDebugMode());
+			api.runDialogue(session.getPlayer(), dialogue, session.isOnDebugMode(), session.getNPC());
 		} else {
 			main.getLogger().severe("The dialogue name in \"start_dialogue\" choice doesn't exists");
 		}

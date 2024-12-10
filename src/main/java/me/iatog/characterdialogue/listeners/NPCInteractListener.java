@@ -10,6 +10,7 @@ import me.iatog.characterdialogue.util.TextUtils;
 import net.citizensnpcs.api.event.NPCClickEvent;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,8 +38,8 @@ public class NPCInteractListener implements Listener {
 		CharacterDialogueAPI api = main.getApi();
 		Player player = event.getClicker();
 
-		int npcId = event.getNPC().getId();
-		Dialogue dialogue = api.getNPCDialogue(npcId);
+		NPC npc = event.getNPC();
+		Dialogue dialogue = api.getNPCDialogue(npc.getId());
 
 		if (dialogue == null || main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
 			return;
@@ -60,11 +61,12 @@ public class NPCInteractListener implements Listener {
 
 		ClickType clickType = dialogue.getClickType();
 
-		if (((event instanceof NPCRightClickEvent && clickType != ClickType.RIGHT)
-				|| (event instanceof NPCLeftClickEvent && clickType != ClickType.LEFT)) && clickType != ClickType.ALL) {
+		if ((clickType != ClickType.ALL) &&
+				((event instanceof NPCRightClickEvent && clickType != ClickType.RIGHT) ||
+						(event instanceof NPCLeftClickEvent && clickType != ClickType.LEFT))) {
 			return;
 		}
-		
+
 		DialoguePermission permissions = dialogue.getPermissions();
 		
 		if(permissions != null && permissions.getPermission() != null) {
@@ -78,12 +80,12 @@ public class NPCInteractListener implements Listener {
 				return;
 			}
 		}
-		
+		player.sendMessage(dialogue.isFirstInteractionEnabled() + " && " + !api.wasReadedBy(player, dialogue));
 		if (dialogue.isFirstInteractionEnabled() && !api.wasReadedBy(player, dialogue)) {
-			dialogue.startFirstInteraction(player, true);
+			dialogue.startFirstInteraction(player, true, npc);
 			return;
 		}
 
-		dialogue.start(player);
+		dialogue.start(player, npc);
 	}
 }

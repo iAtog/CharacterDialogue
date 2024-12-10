@@ -38,7 +38,7 @@ public class DialogueCommands implements CommandClass {
         }
 
         sender.sendMessage(TextUtils.colorize("&aStarted '&c" + dialogue.getName() + "&a' dialogue for &c" + target.getName() + "&a."));
-        dialogue.start(target, debug);
+        dialogue.start(target, debug, null);
     }
 
 }

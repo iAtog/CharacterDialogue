@@ -26,9 +26,9 @@ public class StartDialogueMethod extends DialogMethod<CharacterDialoguePlugin> {
 
 
         if (dialogue.isFirstInteractionEnabled() && !getProvider().getApi().wasReadedBy(context.getPlayer(), dialogue)) {
-            dialogue.startFirstInteraction(context.getPlayer(), true);
+            dialogue.startFirstInteraction(context.getPlayer(), true, context.getNPC());
         } else {
-            dialogue.start(context.getPlayer());
+            dialogue.start(context.getPlayer(), context.getNPC());
         }
 
 

@@ -3,6 +3,7 @@ package me.iatog.characterdialogue.api;
 import me.iatog.characterdialogue.api.dialog.DialogHologram;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.enums.ClickType;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
@@ -45,12 +46,12 @@ public class TestDialogueImpl implements Dialogue {
     }
 
     @Override
-    public boolean start(Player player, boolean debug) {
+    public boolean start(Player player, boolean debug, NPC npc) {
         return false;
     }
 
     @Override
-    public boolean startFirstInteraction(Player player, boolean log) {
+    public boolean startFirstInteraction(Player player, boolean log, NPC npc) {
         return false;
     }
 

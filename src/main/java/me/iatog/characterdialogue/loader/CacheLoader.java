@@ -36,8 +36,11 @@ public class CacheLoader implements Loader {
 				new GiveMethod(),
 				new TalkMethod(main),
 				new TitleMethod(),
-				new StartDialogueMethod(main)
-				);
+
+				new StartDialogueMethod(main),
+				new FollowMethod(main)
+
+		);
 		
 		main.registerChoices(
 				new ContinueChoice(),
@@ -46,7 +49,7 @@ public class CacheLoader implements Loader {
 				new DialogueChoice(),
 				new MessageChoice(),
 				new StartDialogChoice(main)
-				);
+		);
 		main.getLogger().info(TextUtils.colorize("Correctly loaded " + cache.getChoices().size() + " choices."));
 		main.getLogger().info(TextUtils.colorize("Correctly loaded " + cache.getMethods().size() + " methods."));
 	}

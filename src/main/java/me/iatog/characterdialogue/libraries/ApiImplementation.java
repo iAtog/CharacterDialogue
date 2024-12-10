@@ -137,26 +137,24 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	}
 
 	@Override
-	public void runDialogue(Player player, Dialogue dialogue, boolean debugMode) {
+	public void runDialogue(Player player, Dialogue dialogue, boolean debugMode, NPC npc) {
 		if (main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
-			//player.sendMessage(TextUtils.colorize("&c["+dialogue.getName()+"] Session rejected"));
 			return;
 		}
 
-		DialogSession session = new DialogSession(main, player, dialogue);
+		DialogSession session = new DialogSession(main, player, dialogue, npc);
 		session.setDebugMode(debugMode);
 		if (!dialogue.isMovementAllowed()) {
 			disableMovement(player);
 		}
 
 		main.getCache().getDialogSessions().put(player.getUniqueId(), session);
-		//player.sendMessage(TextUtils.colorize("&c["+dialogue.getName()+"] Session started"));
 		session.start(0);
 	}
 
 	@Override
-	public void runDialogue(Player player, String dialogueName, boolean debugMode) {
-		runDialogue(player, getDialogue(dialogueName), debugMode);
+	public void runDialogue(Player player, String dialogueName, boolean debugMode, NPC npc) {
+		runDialogue(player, getDialogue(dialogueName), debugMode, npc);
 	}
 
 	@Override
@@ -165,11 +163,14 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	}
 	
 	public void runDialogueExpression(Player player, String dialog, String npcName) {
-		runDialogueExpression(player, dialog, npcName, SingleUseConsumer.create((x) -> {}), new EmptyDialogSession(main, player, Collections.singletonList(dialog), npcName));
+		runDialogueExpression(player, dialog, npcName, SingleUseConsumer.create((x) -> {}),
+				new EmptyDialogSession(main, player, Collections.singletonList(dialog), npcName, null),
+				null);
 	}
 	
 	@Override
-	public void runDialogueExpression(Player player, String dialog, String npcName, SingleUseConsumer<CompletedType> onComplete, DialogSession session) {
+	public void runDialogueExpression(Player player, String dialog, String npcName,
+									  SingleUseConsumer<CompletedType> onComplete, DialogSession session, NPC npc) {
 		Matcher matcher = lineRegex.matcher(dialog);
 
 		if(!matcher.find()) {
@@ -196,11 +197,19 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		MethodConfiguration configuration = new MethodConfiguration(arg, Placeholders.translate(player, configPart));
 
 		DialogMethod<? extends JavaPlugin> method = main.getCache().getMethods().get(methodName);
+
+		if(method.isDisabled()) {
+			String msg = "Tried to run a disabled method: " + method.getID();
+			session.sendDebugMessage(msg, "runDialogueExpression");
+			main.getLogger().warning(msg);
+			return;
+		}
+
 		ExecuteMethodEvent event = new ExecuteMethodEvent(player, method, ClickType.ALL, -999, npcName);
 		Bukkit.getPluginManager().callEvent(event);
 
 		if (!event.isCancelled()) {
-			MethodContext context = new MethodContext(player, session, configuration, onComplete);
+			MethodContext context = new MethodContext(player, session, configuration, onComplete, npc);
 			method.execute(context);
 		} else {
 			session.sendDebugMessage("Method execution cancelled by external plugin", "API:208");
@@ -209,13 +218,13 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	}
 
 	@Override
-	public void runDialogueExpressions(Player player, List<String> lines, ClickType clickType, int npcId,
+	public void runDialogueExpressions(Player player, List<String> lines, ClickType clickType, NPC npc,
 			String displayName, String dialogueName) {
 		if (main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
 			return;
 		}
 
-		DialogSession session = new DialogSession(main, player, lines, clickType, npcId,
+		DialogSession session = new DialogSession(main, player, lines, clickType, npc,
 				displayName == null ? "Dummy" : displayName, dialogueName);
 
 		main.getCache().getDialogSessions().put(player.getUniqueId(), session);
@@ -224,7 +233,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 
 	@Override
 	public void runDialogueExpressions(Player player, List<String> lines, String displayName, String dialogueName) {
-		runDialogueExpressions(player, lines, ClickType.ALL, -999, displayName, dialogueName);
+		runDialogueExpressions(player, lines, ClickType.ALL, null, displayName, dialogueName);
 	}
 
 	@Override

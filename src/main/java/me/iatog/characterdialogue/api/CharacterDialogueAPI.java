@@ -7,6 +7,7 @@ import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.libraries.ApiImplementation;
 import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.util.SingleUseConsumer;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
@@ -27,12 +28,12 @@ public interface CharacterDialogueAPI {
 	boolean readDialogBy(Player player, Dialogue dialog);
 	boolean wasReadedBy(Player player, Dialogue dialog);
 	
-	void runDialogue(Player player, Dialogue dialogue, boolean debugMode);
-	void runDialogue(Player player, String dialogueName, boolean debugMode);
+	void runDialogue(Player player, Dialogue dialogue, boolean debugMode, NPC npc);
+	void runDialogue(Player player, String dialogueName, boolean debugMode, NPC npc);
 	void runDialogueExpression(Player player, String dialog);
 	void runDialogueExpression(Player player, String dialog, String npcName);
-	void runDialogueExpression(Player player, String dialog, String npcName, SingleUseConsumer<CompletedType> onComplete, DialogSession session);
-	void runDialogueExpressions(Player player, List<String> lines, ClickType type, int npcId, String displayName, String dialogueName);
+	void runDialogueExpression(Player player, String dialog, String npcName, SingleUseConsumer<CompletedType> onComplete, DialogSession session, NPC npc);
+	void runDialogueExpressions(Player player, List<String> lines, ClickType type, NPC npc, String displayName, String dialogueName);
 	void runDialogueExpressions(Player player, List<String> lines, String displayName, String dialogueName) ;
 	
 	Dialogue getNPCDialogue(int id);

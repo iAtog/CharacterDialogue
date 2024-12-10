@@ -66,7 +66,7 @@ public class MethodCommands implements CommandClass {
         MethodContext context = new MethodContext(sender, session, config, SingleUseConsumer.create((res) -> {
             sessions.remove(sender.getUniqueId());
             sender.sendMessage(TextUtils.colorize("&8[&eCharacterDialogue&8] &aMethod &8'&7" + method.getName() + "&8' &aexecuted correctly with result: " + res));
-        }));
+        }), null);
 
         method.getMethod().execute(context);
     }

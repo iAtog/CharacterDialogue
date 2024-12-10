@@ -8,6 +8,7 @@ import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.interfaces.Session;
 import me.iatog.characterdialogue.util.SingleUseConsumer;
 import me.iatog.characterdialogue.util.TextUtils;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -26,28 +27,29 @@ public class DialogSession implements Session {
 	private final List<String> lines;
 	private final String displayName;
 	private int index = 0;
-	private int npcId;
+	private final NPC npc;
 	private boolean stop;
 	private boolean debug = false;
 	private boolean isDestroyed = false;
 
 	public DialogSession(CharacterDialoguePlugin main, Player player, List<String> lines, ClickType clickType,
-			int npcId, String displayName, String dialogueName) {
+						 NPC npc, String displayName, String dialogueName) {
 		this.main = main;
 		this.uuid = player.getUniqueId();
 		this.clickType = clickType;
 		this.lines = lines;
 		this.displayName = displayName;
 		this.dialogue = main.getCache().getDialogues().get(dialogueName);
+		this.npc = npc;
 	}
 
-	public DialogSession(CharacterDialoguePlugin main, Player player, Dialogue dialogue, int npcId) {
-		this(main, player, dialogue.getLines(), dialogue.getClickType(), npcId, dialogue.getDisplayName(), dialogue.getName());
+	public DialogSession(CharacterDialoguePlugin main, Player player, Dialogue dialogue, NPC npc) {
+		this(main, player, dialogue.getLines(), dialogue.getClickType(), npc, dialogue.getDisplayName(), dialogue.getName());
 		this.dialogue = dialogue;
 	}
 
 	public DialogSession(CharacterDialoguePlugin main, Player player, Dialogue dialogue) {
-		this(main, player, dialogue, -999);
+		this(main, player, dialogue, null);
 	}
 
 	public void start(int index) {
@@ -64,8 +66,6 @@ public class DialogSession implements Session {
 				false, false));
 
 		SingleUseConsumer<CompletedType> consumer = SingleUseConsumer.create((result) -> {
-			//sendDebugMessage("Starting consumer", "SingleUseConsumer");
-			
 			if (index >= lines.size()) {
 				this.sendDebugMessage("Dialogue reached the end", "SingleUseConsumer");
 				destroy();
@@ -76,7 +76,6 @@ public class DialogSession implements Session {
 			}
 			sendDebugMessage("Consumer passed", "SingleUseConsumer");
 			if(result == CompletedType.DESTROY) {
-				//sendDebugMessage("Dialogue destroyed", "SingleUseConsumer");
 				this.destroy();
 				return;
 			} else if (result == CompletedType.PAUSE) {
@@ -90,7 +89,7 @@ public class DialogSession implements Session {
 		});
 
 		main.getApi().runDialogueExpression(getPlayer(), lines.get(getCurrentIndex()), displayName,
-				consumer, this);
+				consumer, this, this.npc);
 	}
 
 	public boolean hasNext() {
@@ -149,8 +148,8 @@ public class DialogSession implements Session {
 		return clickType;
 	}
 
-	public int getNPCId() {
-		return npcId;
+	public NPC getNPC() {
+		return npc;
 	}
 
 	public String getDisplayName() {

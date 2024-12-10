@@ -27,7 +27,7 @@ public enum ConditionalExpression {
             return;
         }
 
-        data.getMain().getApi().runDialogue(player, expression, false);
+        data.getMain().getApi().runDialogue(player, expression, false, data.getSession().getNPC());
     }),
     STOP_SEND_MSG((data, completed) -> {
         Player player = data.getSession().getPlayer();
@@ -50,9 +50,11 @@ public enum ConditionalExpression {
             return;
         }
 
-        data.getMain().getApi().runDialogueExpression(player, expression, session.getDisplayName(), SingleUseConsumer.create(completedRes -> {
+        data.getMain().getApi().runDialogueExpression(player, expression, session.getDisplayName(),
+                SingleUseConsumer.create(completedRes -> {
             completed.accept(CompletedType.CONTINUE);
-        }), new EmptyDialogSession(data.getMain(), player, Collections.singletonList(expression), session.getDisplayName()));
+        }), new EmptyDialogSession(data.getMain(), player, Collections.singletonList(expression), session.getDisplayName(),
+                        data.getSession().getNPC()), data.getSession().getNPC());
 
     }),
     CONTINUE((data, completed) -> {
