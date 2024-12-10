@@ -6,6 +6,7 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.dialog.DialogHologram;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.enums.ClickType;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
@@ -95,16 +96,20 @@ public class DialogueImpl implements Dialogue {
 
 	@Override
 	public boolean isFirstInteractionEnabled() {
-		return firstInteraction != null;
+		if (firstInteraction != null) {
+            return !firstInteraction.isEmpty();
+        }
+
+		return false;
 	}
 
 	@Override
-	public boolean start(Player player, boolean debug) {
-		return runDialogue(player, debug);
+	public boolean start(Player player, boolean debug, NPC npc) {
+		return runDialogue(player, debug, npc);
 	}
 
 	@Override
-	public boolean startFirstInteraction(Player player, boolean log) {
+	public boolean startFirstInteraction(Player player, boolean log, NPC npc) {
 		if(log) {
 			YamlDocument playerCache = main.getFileFactory().getPlayerCache();
 			List<String> readedDialogues = playerCache.getStringList("players." + player.getUniqueId() + ".readed-dialogues");
@@ -130,8 +135,8 @@ public class DialogueImpl implements Dialogue {
 		return true;
 	}
 	
-	private boolean runDialogue(Player player, boolean debug) {
-		main.getApi().runDialogue(player, this, debug);
+	private boolean runDialogue(Player player, boolean debug, NPC npc) {
+		main.getApi().runDialogue(player, this, debug, npc);
 		return true;
 	}
 
