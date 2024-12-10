@@ -77,13 +77,12 @@ public class TalkRunnable extends BukkitRunnable {
         session.sendDebugMessage("Finished talk because: " + !players.contains(uuid) + " | " + skip + " | " + !isCancelled(), "TalkMethod:134");
         players.remove(uuid);
         completed.accept(CompletedType.CONTINUE);
-        //session.startNext();
     }
 
     private void animateText() {
         String writingMessage = translatedMessage.substring(0, index + 1);
-        index++;
         char currentChar = translatedMessage.charAt(index);
+        index++;
 
         if(currentChar != ' ' && currentChar != ',' && currentChar != '.') {
             player.playSound(player.getLocation(), sound, volume, pitch);
