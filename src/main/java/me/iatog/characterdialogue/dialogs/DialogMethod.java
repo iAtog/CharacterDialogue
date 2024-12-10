@@ -1,8 +1,6 @@
 package me.iatog.characterdialogue.dialogs;
 
 import me.iatog.characterdialogue.enums.CompletedType;
-import me.iatog.characterdialogue.session.DialogSession;
-import me.iatog.characterdialogue.util.SingleUseConsumer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -10,10 +8,12 @@ public abstract class DialogMethod<T extends JavaPlugin> {
 	
 	private final String id;
 	protected T provider;
+	private boolean disabled;
 	
 	public DialogMethod(String id, T provider) {
 		this.id = id;
 		this.provider = provider;
+		this.disabled = false;
 	}
 	
 	public DialogMethod(String id) {
@@ -25,7 +25,7 @@ public abstract class DialogMethod<T extends JavaPlugin> {
 	 * @param context The context including player, configuration, session and consumer
 	 */
 	public abstract void execute(MethodContext context);
-	// Player player, MethodConfiguration configuration, DialogSession session, SingleUseConsumer<CompletedType> complete
+
 	/**
 	 * Get the id of the method
 	 * @return the id
@@ -52,5 +52,13 @@ public abstract class DialogMethod<T extends JavaPlugin> {
 
 	public void destroy(MethodContext context) {
 		context.getConsumer().accept(CompletedType.DESTROY);
+	}
+
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	protected void setDisabled(boolean disabled) {
+		this.disabled = disabled;
 	}
 }
