@@ -1,9 +1,6 @@
 package me.iatog.characterdialogue.libraries;
 
-import dev.dejvokep.boostedyaml.dvs.Pattern;
-import dev.dejvokep.boostedyaml.dvs.segment.Segment;
 import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
-import dev.dejvokep.boostedyaml.route.Route;
 import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 

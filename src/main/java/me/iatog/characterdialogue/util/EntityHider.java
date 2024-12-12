@@ -1,11 +1,14 @@
 package me.iatog.characterdialogue.util;
 
-import static com.comphenix.protocol.PacketType.Play.Server.*;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.Map;
-
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,15 +19,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.plugin.Plugin;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
+import java.util.Arrays;
+import java.util.Map;
+
+import static com.comphenix.protocol.PacketType.Play.Server.*;
 
 public class EntityHider implements Listener {
     protected Table<Integer, Integer, Boolean> observerEntityMap = HashBasedTable.create();

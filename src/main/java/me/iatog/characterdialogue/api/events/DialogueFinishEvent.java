@@ -4,7 +4,6 @@ import me.iatog.characterdialogue.session.DialogSession;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.PlayerEvent;
 
 public class DialogueFinishEvent extends Event {
 

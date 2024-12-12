@@ -6,8 +6,8 @@ import me.iatog.characterdialogue.api.CharacterDialogueAPI;
 import me.iatog.characterdialogue.api.dialog.DialogHologram;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.api.events.ExecuteMethodEvent;
-import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
+import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.dialogs.MethodContext;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.enums.CompletedType;
@@ -25,7 +25,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

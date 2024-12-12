@@ -1,7 +1,6 @@
 package me.iatog.characterdialogue.dialogs;
 
 import me.iatog.characterdialogue.enums.CompletedType;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class DialogMethod<T extends JavaPlugin> {
