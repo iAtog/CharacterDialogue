@@ -1,6 +1,6 @@
 package me.iatog.characterdialogue.filter;
 
-import me.iatog.characterdialogue.dialogs.method.ChoiceMethod;
+import me.iatog.characterdialogue.dialogs.method.LegacyChoiceMethod;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.core.Filter;
@@ -12,7 +12,7 @@ import org.apache.logging.log4j.message.Message;
 public class ConsoleFilter implements Filter {
 
 	public Filter.Result checkMessage(String message) {
-		if (message.contains(ChoiceMethod.COMMAND_NAME)) {
+		if (message.contains(LegacyChoiceMethod.COMMAND_NAME)) {
 			return Filter.Result.DENY;
 		} else {
 			return Filter.Result.NEUTRAL;

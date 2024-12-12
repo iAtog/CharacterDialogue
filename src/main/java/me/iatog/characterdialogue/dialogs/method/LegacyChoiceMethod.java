@@ -28,14 +28,15 @@ import java.util.UUID;
 
 import static me.iatog.characterdialogue.util.TextUtils.colorize;
 
-public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implements Listener {
+public class LegacyChoiceMethod extends DialogMethod<CharacterDialoguePlugin> implements Listener {
 
 	public static String COMMAND_NAME = "/;;$/5-choice";
 	private final Map<UUID, BukkitTask> taskList;
 
-	public ChoiceMethod(CharacterDialoguePlugin main) {
-		super("choice", main);
+	public LegacyChoiceMethod(CharacterDialoguePlugin main) {
+		super("legacy_choice", main);
 		taskList = new HashMap<>();
+		setDisabled(true);
 	}
 
 	@SuppressWarnings("deprecation")
