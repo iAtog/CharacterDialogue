@@ -1,7 +1,2 @@
 rootProject.name='CharacterDialogue'
-include 'api'
 include 'v1_20_6'
-include 'untitled'
-include 'v1_20_6'
-include 'v1_20_6'
-
