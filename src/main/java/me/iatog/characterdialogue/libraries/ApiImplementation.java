@@ -202,8 +202,8 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		DialogMethod<? extends JavaPlugin> method = main.getCache().getMethods().get(methodName);
 
 		if(method.isDisabled()) {
-			String msg = "Tried to run a disabled method: " + method.getID();
-			session.sendDebugMessage(msg, "runDialogueExpression");
+			String msg = "Tried to run a disabled method: " + methodName;
+			session.sendDebugMessage(msg, "runExpression");
 			main.getLogger().warning(msg);
 			return;
 		}
@@ -213,7 +213,16 @@ public class ApiImplementation implements CharacterDialogueAPI {
 
 		if (!event.isCancelled()) {
 			MethodContext context = new MethodContext(player, session, configuration, onComplete, npc);
-			method.execute(context);
+
+			try {
+				method.execute(context);
+			} catch (Exception exception) {
+				session.sendDebugMessage("Exception during &8\"&c" + methodName + "&8\"&7 method execution.",
+						"runExpression");
+				main.getLogger().severe("Exception while executing " + methodName + " method.");
+				exception.printStackTrace();
+				session.destroy();
+			}
 		} else {
 			session.sendDebugMessage("Method execution cancelled by external plugin", "API:208");
 			onComplete.accept(CompletedType.CONTINUE);
