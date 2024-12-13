@@ -1,6 +1,6 @@
-package me.iatog.characterdialogue.dialogs.method.conditional;
+package me.iatog.characterdialogue.enums;
 
-import me.iatog.characterdialogue.enums.CompletedType;
+import me.iatog.characterdialogue.dialogs.method.conditional.ConditionData;
 import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.session.EmptyDialogSession;

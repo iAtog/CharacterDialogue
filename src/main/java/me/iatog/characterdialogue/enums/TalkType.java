@@ -1,4 +1,4 @@
-package me.iatog.characterdialogue.dialogs.method.talk;
+package me.iatog.characterdialogue.enums;
 
 import me.iatog.characterdialogue.util.TextUtils;
 import net.md_5.bungee.api.ChatMessageType;

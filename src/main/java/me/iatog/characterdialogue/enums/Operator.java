@@ -1,4 +1,4 @@
-package me.iatog.characterdialogue.dialogs.method.conditional;
+package me.iatog.characterdialogue.enums;
 
 public enum Operator {
     LESS_THAN_EQUAL("<="),
