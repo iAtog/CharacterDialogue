@@ -6,6 +6,7 @@ import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.session.EmptyDialogSession;
 import me.iatog.characterdialogue.util.SingleUseConsumer;
 import me.iatog.characterdialogue.util.TextUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
@@ -32,7 +33,8 @@ public enum ConditionalExpression {
     STOP_SEND_MSG((data, completed) -> {
         Player player = data.getSession().getPlayer();
         completed.accept(CompletedType.DESTROY);
-        player.sendMessage(Placeholders.translate(player, data.getExpression()));
+        player.sendMessage(Placeholders.translate(player, data.getExpression()
+                .replace(data.getSession().getDisplayName(), ChatColor.stripColor(data.getSession().getDisplayName()))));
     }),
     STOP((data, completed) -> {
         completed.accept(CompletedType.DESTROY);
