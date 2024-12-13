@@ -60,48 +60,13 @@ public class ChoiceChatTypeListener implements Listener {
             return;
         }
 
-        runChoice(player, choice);
+        ChoiceUtil.runChoice(player, choice);
     }
 
     @EventHandler
     public void onHeld(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
 
-        runChoice(player, (event.getNewSlot() + 1));
-    }
-
-    public final void runChoice(Player player, int choice) {
-        Map<UUID, ChoiceSession> sessions = main.getCache().getChoiceSessions();
-        UUID uuid = player.getUniqueId();
-
-        if(!sessions.containsKey(uuid)) {
-            return;
-        }
-
-        ChoiceSession session = sessions.get(uuid);
-        Choice choiceObject = session.getChoice(choice);
-
-        if(choiceObject == null) {
-            return;
-        }
-
-        ChoiceSelectEvent choiceEvent = new ChoiceSelectEvent(player, uuid, choiceObject, session);
-        Bukkit.getPluginManager().callEvent(choiceEvent);
-
-        if (choiceEvent.isCancelled()) {
-            return;
-        }
-
-        DialogChoice choiceTarget = ChoiceUtil.getByClassName(choiceObject.getChoiceClass());
-        DialogSession dialogSession = main.getCache().getDialogSessions().get(uuid);
-
-        if (dialogSession == null || choiceTarget == null) {
-            sessions.remove(uuid);
-            return;
-        }
-
-        choiceTarget.onSelect(choiceObject.getArgument(), dialogSession, session);
-        sessions.remove(uuid);
-        ChoiceMethod.taskList.remove(uuid).cancel();
+        ChoiceUtil.runChoice(player, (event.getNewSlot() + 1));
     }
 }
