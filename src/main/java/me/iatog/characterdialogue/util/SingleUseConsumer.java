@@ -22,6 +22,10 @@ public class SingleUseConsumer<T> implements Consumer<T> {
         }
     }
 
+    public boolean executed() {
+        return executed.get();
+    }
+
     public static <T> SingleUseConsumer<T> create(Consumer<T> consumer) {
         return new SingleUseConsumer<>(consumer);
     }
