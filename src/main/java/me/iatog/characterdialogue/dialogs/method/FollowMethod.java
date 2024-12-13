@@ -96,7 +96,7 @@ public class FollowMethod extends DialogMethod<CharacterDialoguePlugin> {
 
         this.next(context);
     }
-
+/*
     public void execute_ProtocolLib(MethodContext context) {
         NPC npc = context.getNPC();
         Player player = context.getPlayer();
@@ -153,7 +153,7 @@ public class FollowMethod extends DialogMethod<CharacterDialoguePlugin> {
 
         this.next(context);
     }
-
+*/
     public void executeOld(MethodContext context) {
         NPC npc = context.getNPC();
         Player player = context.getPlayer();

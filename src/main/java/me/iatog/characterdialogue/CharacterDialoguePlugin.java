@@ -34,7 +34,6 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 	private Hooks hooks;
 	private String defaultChannel;
 	private long startup;
-	private EntityHider entityHider;
 	private Metrics metrics;
 
 	private List<YamlDocument> dialogues;
@@ -71,9 +70,6 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 		
 		loader.load();
 
-		if(Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-			this.entityHider = new EntityHider(this, EntityHider.Policy.BLACKLIST);
-		}
 		getLogger().info(TextUtils.colorize("&aLoaded in " + (System.currentTimeMillis() - startup) + "ms"));
 	}
 	
@@ -173,10 +169,6 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 
 	public void clearAllDialogues() {
 		dialogues.clear();
-	}
-
-	public EntityHider getEntityHider() {
-		return entityHider;
 	}
 
 	public Metrics getMetrics() {
