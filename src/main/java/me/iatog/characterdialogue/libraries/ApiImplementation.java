@@ -15,6 +15,7 @@ import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.session.EmptyDialogSession;
 import me.iatog.characterdialogue.util.SingleUseConsumer;
+import me.iatog.characterdialogue.util.TextUtils;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
@@ -172,9 +173,14 @@ public class ApiImplementation implements CharacterDialogueAPI {
 	}
 	
 	@Override
-	public void runDialogueExpression(Player player, String dialog, String npcName,
+	public void runDialogueExpression(Player player, String dialog, String rawNpcName,
 									  SingleUseConsumer<CompletedType> onComplete, DialogSession session, NPC npc) {
 		Matcher matcher = lineRegex.matcher(dialog);
+		String npcName = TextUtils.colorize(rawNpcName);
+		if(dialog.startsWith("#")) { // To leave notes, if necessary
+			onComplete.accept(CompletedType.CONTINUE);
+			return;
+		}
 
 		if(!matcher.find()) {
 			session.sendDebugMessage("Line '" + dialog + "' don't match.", "runExpression");
@@ -184,7 +190,8 @@ public class ApiImplementation implements CharacterDialogueAPI {
 		}
 
 		String methodName = matcher.group(1).toUpperCase().trim();
-		String configPart = (matcher.group(2) != null ? matcher.group(2).trim() : "").replace("%npc_name%", npcName);
+		String configPart = (matcher.group(2) != null ? matcher.group(2).trim() : "")
+				.replace("%npc_name%", npcName);
 		String arg = matcher.group(3) != null ? matcher.group(3).trim() : "";
 
 		if (!main.getCache().getMethods().containsKey(methodName)) {
@@ -192,10 +199,9 @@ public class ApiImplementation implements CharacterDialogueAPI {
 			session.destroy();
 			return;
 		}
-		session.sendDebugMessage("Running method '" + methodName + "'", "API:194");
-
-		arg = Placeholders.translate(player, arg);
+		session.sendDebugMessage("Running method '" + methodName + "'", "API:197");
 		arg = arg.replace("%npc_name%", npcName);
+		arg = Placeholders.translate(player, arg);
 
 		MethodConfiguration configuration = new MethodConfiguration(arg, Placeholders.translate(player, configPart));
 
@@ -215,7 +221,26 @@ public class ApiImplementation implements CharacterDialogueAPI {
 			MethodContext context = new MethodContext(player, session, configuration, onComplete, npc);
 
 			try {
-				method.execute(context);
+				// Dependency check
+				List<String> dependencies = method.getDependencies();
+				boolean correct = true;
+				if(!dependencies.isEmpty()) {
+					for(String depend : dependencies) {
+						if(!Bukkit.getPluginManager().isPluginEnabled(depend)) {
+							correct = false;
+							break;
+						}
+					}
+				}
+
+				if(correct) {
+					method.execute(context);
+				} else {
+					String msg = "The method '" + methodName +
+							"' requires [" + String.join(", ", dependencies) + "]";
+					session.sendDebugMessage(msg, "runExpression");
+					main.getLogger().severe(msg);
+				}
 			} catch (Exception exception) {
 				session.sendDebugMessage("Exception during &8\"&c" + methodName + "&8\"&7 method execution.",
 						"runExpression");
