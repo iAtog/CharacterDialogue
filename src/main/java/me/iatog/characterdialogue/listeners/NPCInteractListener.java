@@ -14,6 +14,7 @@ import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
 public class NPCInteractListener implements Listener {
@@ -75,17 +76,29 @@ public class NPCInteractListener implements Listener {
 			
 			if(!player.hasPermission(permission)) {
 				if(message != null) {
-					player.sendMessage(Placeholders.translate(player, message).replace("%npc_name%", dialogue.getDisplayName()));
+					player.sendMessage(
+							Placeholders.translate(player, message.replace("%npc_name%", dialogue.getDisplayName()))
+					);
 				}
+
 				return;
 			}
 		}
-		player.sendMessage(dialogue.isFirstInteractionEnabled() + " && " + !api.wasReadedBy(player, dialogue));
+
 		if (dialogue.isFirstInteractionEnabled() && !api.wasReadedBy(player, dialogue)) {
 			dialogue.startFirstInteraction(player, true, npc);
 			return;
 		}
 
+		event.setCancelled(true);
 		dialogue.start(player, npc);
+	}
+
+	@EventHandler
+	private void interactAtNPC(PlayerInteractEntityEvent event) {
+		if(event.getRightClicked().hasMetadata("characterdialogue-npc")) {
+			//event.setCancelled(true);
+
+		}
 	}
 }

@@ -6,6 +6,7 @@ import net.citizensnpcs.api.event.NPCSpawnEvent;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.metadata.FixedMetadataValue;
 
 public class NPCSpawnListener implements Listener {
 	
@@ -21,6 +22,13 @@ public class NPCSpawnListener implements Listener {
 		int id = npc.getId();
 		CharacterDialogueAPI api = main.getApi();
 		
+
+
+		if(api.getNPCDialogue(id) == null) {
+			return;
+		}
+
 		api.loadHologram(id);
+		npc.getEntity().setMetadata("characterdialogue-npc", new FixedMetadataValue(main, true));
 	}
 }
