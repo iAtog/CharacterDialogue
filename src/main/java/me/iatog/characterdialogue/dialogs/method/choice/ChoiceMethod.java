@@ -27,7 +27,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> {
      * cooldown = 10
      * <p>
      * choice: choice_sample | TYPE = chat & COOLDOWN = 10
-     * choice{type=bedrock}: choice_sample
+     * choice{type=bedrock_gui}: choice_sample
      */
 
     private final Map<UUID, ChoiceSession> sessions;
@@ -43,10 +43,6 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> {
         super("choice", provider);
         this.sessions = provider.getCache().getChoiceSessions();
         this.floodgateEnabled = Bukkit.getPluginManager().isPluginEnabled("floodgate");
-
-        if(floodgateEnabled) {
-            provider.getLogger().info("[ChoiceMethod] Floodgate found!");
-        }
 
         Bukkit.getPluginManager().registerEvents(new ChoiceChatTypeListener(provider), provider);
     }
@@ -81,11 +77,11 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> {
         }
 
         if(choiceType == ChoiceType.BEDROCK_GUI && !floodgateEnabled) {
-            String msg = "\"BEDROCK\" choice cannot be used, geyser and floodgate plugin is not present on the server.";
+            String msg = "\"BEDROCK_GUI\" choice type cannot be used, geyser " +
+                    "and floodgate plugin is not present on the plugins folder.";
             dialogSession.sendDebugMessage(msg, "ChoiceMethod");
             provider.getLogger().warning(msg);
-            this.next(context);
-            return;
+            choiceType = ChoiceType.CHAT;
         }
 
         ChoiceSession choiceSession = new ChoiceSession(provider, player);
@@ -102,7 +98,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> {
                 configFile
         );
 
-        choiceType.loadChoices(data);
+        choiceType.generateQuestions(data);
 
         if(cooldown > 0) {
             ChoiceUtil.manageCooldown(data, cooldown, choiceType.getCloseAction());

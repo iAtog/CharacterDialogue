@@ -12,36 +12,30 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PlayerQuitListener implements Listener {
-	
-	private final CharacterDialoguePlugin main;
-	
+
+	private final Map<UUID, ChoiceSession> choiceSessions;
+	private final Map<UUID, DialogSession> dialogSessions;
+
 	public PlayerQuitListener(CharacterDialoguePlugin main) {
-		this.main = main;
+		this.dialogSessions = main.getCache().getDialogSessions();
+		this.choiceSessions = main.getCache().getChoiceSessions();
 	}
 	
 	@EventHandler
 	public void cancelDialogue(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		Map<UUID, DialogSession> cache = main.getCache().getDialogSessions();
+		UUID uuid = event.getPlayer().getUniqueId();
 		
-		if(!cache.containsKey(player.getUniqueId())) {
+		if(!dialogSessions.containsKey(uuid)) {
 			return;
 		}
 		
-		DialogSession session = cache.remove(player.getUniqueId());
+		DialogSession session = dialogSessions.remove(uuid);
 		session.destroy();
 	}
 	
 	@EventHandler
 	public void cancelChoice(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		Map<UUID, ChoiceSession> sessions = main.getCache().getChoiceSessions();
-		
-		if(!sessions.containsKey(player.getUniqueId())) {
-			return;
-		}
-		
-		sessions.remove(player.getUniqueId());
+		choiceSessions.remove(event.getPlayer().getUniqueId());
 	}
 	
 }
