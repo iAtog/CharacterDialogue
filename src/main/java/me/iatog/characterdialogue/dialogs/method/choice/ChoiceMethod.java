@@ -52,10 +52,10 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> {
         MethodConfiguration configuration = context.getConfiguration();
         DialogSession dialogSession = context.getSession();
         Player player = context.getPlayer();
-        YamlDocument configFile = provider.getFileFactory().getConfig();
+        YamlDocument configFile = getProvider().getFileFactory().getConfig();
 
         String selectedChoice = configuration.getArgument();
-        int cooldown = configuration.getInteger("cooldown", 30);
+        int cooldown = configuration.getInteger("timeout", 30);
 
         if(!ChoiceUtil.isContextValid(context)) {
             this.next(context);
@@ -70,7 +70,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> {
         } catch(Exception exception) {
             String msg = "Invalid choice type provided \"" + type + "\" in \"" +
                     dialogSession.getDialogue().getName() + "\" dialogue.";
-            provider.getLogger().warning(msg);
+            getProvider().getLogger().warning(msg);
             dialogSession.sendDebugMessage(msg, "ChoiceMethod");
             this.next(context);
             return;
@@ -78,13 +78,13 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> {
 
         if(choiceType == ChoiceType.BEDROCK_GUI && !floodgateEnabled) {
             String msg = "\"BEDROCK_GUI\" choice type cannot be used, geyser " +
-                    "and floodgate plugin is not present on the plugins folder.";
+                    "and floodgate are not present on the plugins folder.";
             dialogSession.sendDebugMessage(msg, "ChoiceMethod");
-            provider.getLogger().warning(msg);
+            getProvider().getLogger().warning(msg);
             choiceType = ChoiceType.CHAT;
         }
 
-        ChoiceSession choiceSession = new ChoiceSession(provider, player);
+        ChoiceSession choiceSession = new ChoiceSession(getProvider(), player);
 
         this.pause(context);
 

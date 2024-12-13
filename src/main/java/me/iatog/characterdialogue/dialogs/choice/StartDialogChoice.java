@@ -25,7 +25,7 @@ public class StartDialogChoice extends DialogChoice {
 		if (dialogue != null) {
 			api.runDialogue(session.getPlayer(), dialogue, session.isOnDebugMode(), session.getNPC());
 		} else {
-			main.getLogger().severe("The dialogue name in \"start_dialogue\" choice doesn't exists");
+			main.getLogger().severe("The dialogue \"" + argument + "\" doesn't exists");
 		}
 	}
 

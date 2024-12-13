@@ -1,18 +1,26 @@
 package me.iatog.characterdialogue.dialogs;
 
 import me.iatog.characterdialogue.enums.CompletedType;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class DialogMethod<T extends JavaPlugin> {
 	
 	private final String id;
-	protected T provider;
+	private final T provider;
 	private boolean disabled;
+
+	private final List<String> dependencies;
 	
 	public DialogMethod(String id, T provider) {
 		this.id = id;
 		this.provider = provider;
 		this.disabled = false;
+		this.dependencies = new ArrayList<>();
 	}
 	
 	public DialogMethod(String id) {
@@ -32,7 +40,11 @@ public abstract class DialogMethod<T extends JavaPlugin> {
 	public final String getID() {
 		return id.toUpperCase();
 	}
-	
+
+	public final List<String> getDependencies() {
+		return Collections.unmodifiableList(dependencies);
+	}
+
 	/**
 	 * The method provider (in this case the plugin that creates it)
 	 * @return the provider
@@ -41,15 +53,15 @@ public abstract class DialogMethod<T extends JavaPlugin> {
 		return provider;
 	}
 
-	public void next(MethodContext context) {
+	protected void next(MethodContext context) {
 		context.getConsumer().accept(CompletedType.CONTINUE);
 	}
 
-	public void pause(MethodContext context) {
+	protected void pause(MethodContext context) {
 		context.getConsumer().accept(CompletedType.PAUSE);
 	}
 
-	public void destroy(MethodContext context) {
+	protected void destroy(MethodContext context) {
 		context.getConsumer().accept(CompletedType.DESTROY);
 	}
 
@@ -59,5 +71,12 @@ public abstract class DialogMethod<T extends JavaPlugin> {
 
 	protected void setDisabled(boolean disabled) {
 		this.disabled = disabled;
+	}
+
+	protected void addPluginDependency(String name, Runnable runnable) {
+		this.dependencies.add(name);
+		if(Bukkit.getPluginManager().isPluginEnabled(name)) {
+			runnable.run();
+		}
 	}
 }

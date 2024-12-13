@@ -47,9 +47,9 @@ public class LegacyChoiceMethod extends DialogMethod<CharacterDialoguePlugin> im
 		DialogSession session = context.getSession();
 		Player player = context.getPlayer();
 
-		Map<UUID, ChoiceSession> sessions = provider.getCache().getChoiceSessions();
-		YamlDocument choicesFile = provider.getFileFactory().getChoicesFile();
-		YamlDocument config = provider.getFileFactory().getConfig();
+		Map<UUID, ChoiceSession> sessions = getProvider().getCache().getChoiceSessions();
+		YamlDocument choicesFile = getProvider().getFileFactory().getChoicesFile();
+		YamlDocument config = getProvider().getFileFactory().getConfig();
 		String arg = configuration.getArgument();
 
 		if (sessions.containsKey(player.getUniqueId())) {
@@ -58,11 +58,11 @@ public class LegacyChoiceMethod extends DialogMethod<CharacterDialoguePlugin> im
 			return;
 		}
 
-		ChoiceSession choiceSession = new ChoiceSession(provider, player);
+		ChoiceSession choiceSession = new ChoiceSession(getProvider(), player);
 
 		if (!choicesFile.contains("choices." + arg)) {
 			String msg = "The choice \"" + arg + "\" doesn't exists.";
-			provider.getLogger().warning(msg);
+			getProvider().getLogger().warning(msg);
 			session.sendDebugMessage(msg, "ChoiceMethod");
 			this.next(context);
 			return;
@@ -76,15 +76,15 @@ public class LegacyChoiceMethod extends DialogMethod<CharacterDialoguePlugin> im
 			String message = section.getString("message", "no message specified");
 			String argument = section.getString("argument", "");
 
-			if (type == null || !provider.getCache().getChoices().containsKey(type)) {
-				provider.getLogger().warning("The type of choice '" + choice + "' in " + arg + " isn't valid");
+			if (type == null || !getProvider().getCache().getChoices().containsKey(type)) {
+				getProvider().getLogger().warning("The type of choice '" + choice + "' in " + arg + " isn't valid");
 				continue;
 			}
 
-			DialogChoice choiceObject = provider.getCache().getChoices().get(type);
+			DialogChoice choiceObject = getProvider().getCache().getChoices().get(type);
 
 			if (message.isEmpty() && choiceObject.isArgumentRequired()) {
-				provider.getLogger().severe("The argument in the choice \"" + choice + "\" is missing");
+				getProvider().getLogger().severe("The argument in the choice \"" + choice + "\" is missing");
 				continue;
 			}
 
@@ -126,7 +126,7 @@ public class LegacyChoiceMethod extends DialogMethod<CharacterDialoguePlugin> im
 	}
 
 	private BaseComponent[] getSelectText(int index) {
-		YamlDocument file = provider.getFileFactory().getLanguage();
+		YamlDocument file = getProvider().getFileFactory().getLanguage();
 		String text = file.getString("select-choice", "&aClick here to select #%str%").replace("%str%", index + "");
 		return new BaseComponent[] { new TextComponent(colorize(text)) };
 	}
@@ -136,8 +136,8 @@ public class LegacyChoiceMethod extends DialogMethod<CharacterDialoguePlugin> im
 		String command = event.getMessage();
 		Player player = event.getPlayer();
 		UUID playerId = player.getUniqueId();
-		Map<UUID, ChoiceSession> sessions = provider.getCache().getChoiceSessions();
-		Map<UUID, DialogSession> dialogSessionMap = provider.getCache().getDialogSessions();
+		Map<UUID, ChoiceSession> sessions = getProvider().getCache().getChoiceSessions();
+		Map<UUID, DialogSession> dialogSessionMap = getProvider().getCache().getDialogSessions();
 
 		// Command: /;/select 4a8d7587-38f3-35e7-b29c-88c715aa6ba8 1
 
@@ -172,7 +172,7 @@ public class LegacyChoiceMethod extends DialogMethod<CharacterDialoguePlugin> im
 	}
 
 	public final void runChoice(Player player, int choice) {
-		Map<UUID, ChoiceSession> sessions = provider.getCache().getChoiceSessions();
+		Map<UUID, ChoiceSession> sessions = getProvider().getCache().getChoiceSessions();
 		UUID uuid = player.getUniqueId();
 
 		if(!sessions.containsKey(uuid) || player == null) {
@@ -194,7 +194,7 @@ public class LegacyChoiceMethod extends DialogMethod<CharacterDialoguePlugin> im
 		}
 
 		DialogChoice choiceTarget = getByClassName(choiceObject.getChoiceClass());
-		DialogSession dialogSession = provider.getCache().getDialogSessions().get(uuid);
+		DialogSession dialogSession = getProvider().getCache().getDialogSessions().get(uuid);
 
 		if (dialogSession == null || choiceTarget == null) {
 			sessions.remove(uuid);
@@ -207,7 +207,7 @@ public class LegacyChoiceMethod extends DialogMethod<CharacterDialoguePlugin> im
 	}
 
 	private DialogChoice getByClassName(Class<? extends DialogChoice> clazz) {
-		for (DialogChoice target : provider.getCache().getChoices().values()) {
+		for (DialogChoice target : getProvider().getCache().getChoices().values()) {
 			if (target.getClass() == clazz) {
 				return target;
 			}

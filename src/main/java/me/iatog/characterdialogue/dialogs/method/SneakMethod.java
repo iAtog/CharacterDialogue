@@ -47,7 +47,7 @@ public class SneakMethod extends DialogMethod<CharacterDialoguePlugin> implement
 
     @EventHandler
     public void onSneak(PlayerToggleSneakEvent event) {
-        Map<UUID, DialogSession> sessions = provider.getCache().getDialogSessions();
+        Map<UUID, DialogSession> sessions = getProvider().getCache().getDialogSessions();
         UUID uid = event.getPlayer().getUniqueId();
 
         if (sessions.containsKey(uid) && waitingPlayers.containsKey(uid)) {
