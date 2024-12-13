@@ -31,7 +31,8 @@ public class TitleBuilder {
 		this.fadeOut = fadeOut;
 		return this;
 	}
-	
+
+	@Deprecated
 	public TitleBuilder send() {
 		Object enumTitle;
 		try {
