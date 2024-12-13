@@ -9,7 +9,7 @@ import me.iatog.characterdialogue.util.TextUtils;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
-import org.geysermc.cumulus.form.Form;
+import org.bukkit.entity.Player;
 import org.geysermc.floodgate.api.FloodgateApi;
 
 import java.util.function.Consumer;
@@ -41,15 +41,15 @@ public enum ChoiceType {
         data.getPlayer().closeInventory();
     }),
     BEDROCK_GUI(data -> {
-        if(!FloodgateApi.getInstance().isFloodgatePlayer(data.getPlayer().getUniqueId())) {
-            data.getPlayer().sendMessage("Player not in bedrock");
-            ChoiceType.GUI.loadChoices(data);
+        Player player = data.getPlayer();
+        if(!FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
+            player.sendMessage("Player not in bedrock");
+            ChoiceType.GUI.generateQuestions(data);
             return;
         }
 
         ChoiceForm choiceForm = new ChoiceForm();
-        Form form = choiceForm.load(data);
-        FloodgateApi.getInstance().sendForm(data.getPlayer().getUniqueId(), form);
+        FloodgateApi.getInstance().sendForm(player.getUniqueId(), choiceForm.load(data));
     }, data -> {
         data.getPlayer().closeInventory();
     });
@@ -62,7 +62,7 @@ public enum ChoiceType {
         this.close = close;
     }
 
-    public void loadChoices(ChoiceData data) {
+    public void generateQuestions(ChoiceData data) {
         consumer.accept(data);
     }
 

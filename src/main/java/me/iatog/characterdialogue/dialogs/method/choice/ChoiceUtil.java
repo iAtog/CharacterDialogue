@@ -126,7 +126,7 @@ public class ChoiceUtil {
         ChoiceSession session = sessions.get(uuid);
         Choice choiceObject = session.getChoice(choice);
 
-        if(choiceObject == null) {
+        if(choiceObject == null || session.isDestroyed()) {
             return;
         }
 
@@ -147,10 +147,13 @@ public class ChoiceUtil {
 
         choiceTarget.onSelect(choiceObject.getArgument(), dialogSession, session);
         sessions.remove(uuid);
-        ChoiceMethod.taskList.remove(uuid).cancel();
+        removeTaskIfPresent(uuid);
     }
 
-    public static String getHeadNumber(int number) {
-        return "https://david.is-braindead.lol/166t0i2p.webp";
+    public static void removeTaskIfPresent(UUID uuid) {
+        if(ChoiceMethod.taskList.get(uuid) != null) {
+            ChoiceMethod.taskList.remove(uuid).cancel();
+        }
     }
+
 }

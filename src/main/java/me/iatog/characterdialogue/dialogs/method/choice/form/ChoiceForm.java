@@ -27,9 +27,9 @@ public class ChoiceForm {
         form.content("Select below");
 
         data.getChoiceSession().getChoices().forEach((index, choice) -> {
-            String parsedModel = TextUtils.colorize(model).replace("{I}",
+            String parsedModel = TextUtils.colorize(model.replace("{I}",
                     String.valueOf(index)).replace("{S}",
-                    choice.getMessage());
+                    choice.getMessage()));
             player.sendMessage("Current index: " + index);
             //form.button(parsedModel, FormImage.Type.URL, ChoiceUtil.getHeadNumber(index));
             form.button(parsedModel);
@@ -41,6 +41,7 @@ public class ChoiceForm {
             if(data.getChoiceSession().isDestroyed()) {
                 return;
             }
+
             if(buttonValues.containsKey(buttonText)) {
                 int selectedChoice = buttonValues.get(buttonText);
                 ChoiceUtil.runChoice(player, selectedChoice);
@@ -49,9 +50,12 @@ public class ChoiceForm {
             }
         });
 
-        form.closedOrInvalidResultHandler(r -> buttonValues.clear());
+        form.closedOrInvalidResultHandler(r -> {
+            buttonValues.clear();
+            ChoiceUtil.removeTaskIfPresent(player.getUniqueId());
+            player.sendMessage("Cancelled");
+        });
 
         return form.build();
     }
-
 }
