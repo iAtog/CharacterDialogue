@@ -2,8 +2,8 @@ main: me.iatog.characterdialogue.CharacterDialoguePlugin
 version: 0.9
 name: CharacterDialogue
 author: iAtog
-depend: [Citizens]
-softdepend: [PlaceHolderAPI, HolographicDisplays, DecentHolograms]
+depend: [ Citizens ]
+softdepend: [ PlaceHolderAPI, HolographicDisplays, DecentHolograms, floodgate ]
 api-version: 1.16
 
 commands:
