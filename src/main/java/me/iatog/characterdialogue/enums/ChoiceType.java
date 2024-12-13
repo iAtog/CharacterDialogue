@@ -32,7 +32,7 @@ public enum ChoiceType {
                     .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, ChoiceUtil.getSelectText(index)));
         });
 
-        data.getPlayer().getInventory().setHeldItemSlot(10);
+        data.getPlayer().getInventory().setHeldItemSlot(8);
         data.getPlayer().spigot().sendMessage(questions.create());
     }, (data -> {})),
     GUI(data -> {
