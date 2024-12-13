@@ -3,7 +3,7 @@ version: 0.9
 name: CharacterDialogue
 author: iAtog
 depend: [ Citizens ]
-softdepend: [ PlaceHolderAPI, HolographicDisplays, DecentHolograms, floodgate ]
+softdepend: [ PlaceHolderAPI, HolographicDisplays, DecentHolograms, floodgate, ConditionalEvents ]
 api-version: 1.16
 
 commands:

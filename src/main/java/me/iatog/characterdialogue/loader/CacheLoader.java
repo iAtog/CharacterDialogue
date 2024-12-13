@@ -5,6 +5,7 @@ import me.iatog.characterdialogue.dialogs.choice.*;
 import me.iatog.characterdialogue.dialogs.method.*;
 import me.iatog.characterdialogue.dialogs.method.choice.ChoiceMethod;
 import me.iatog.characterdialogue.dialogs.method.conditional.ConditionalMethod;
+import me.iatog.characterdialogue.dialogs.method.conditionalevents.ConditionalEventsMethod;
 import me.iatog.characterdialogue.dialogs.method.talk.TalkMethod;
 import me.iatog.characterdialogue.libraries.Cache;
 import me.iatog.characterdialogue.util.TextUtils;
@@ -31,7 +32,7 @@ public class CacheLoader implements Loader {
 				new TeleportMethod(),
 				new EffectMethod(main),
 				new SendServerMethod(main),
-				new LegacyChoiceMethod(main),
+				//new LegacyChoiceMethod(main),
 				new SneakMethod(main),
 				new ConditionalMethod(main),
 				new GiveMethod(),
@@ -40,8 +41,8 @@ public class CacheLoader implements Loader {
 
 				new StartDialogueMethod(main),
 				new FollowMethod(main),
-				new ChoiceMethod(main)
-
+				new ChoiceMethod(main),
+				new ConditionalEventsMethod(main)
 		);
 		
 		main.registerChoices(
