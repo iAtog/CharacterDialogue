@@ -33,6 +33,7 @@ public class LegacyChoiceMethod extends DialogMethod<CharacterDialoguePlugin> im
 	public static String COMMAND_NAME = "/;;$/5-choice";
 	private final Map<UUID, BukkitTask> taskList;
 
+	@Deprecated
 	public LegacyChoiceMethod(CharacterDialoguePlugin main) {
 		super("legacy_choice", main);
 		taskList = new HashMap<>();
