@@ -17,9 +17,7 @@ public class ContinueChoice extends DialogChoice {
 			dialogSession.getPlayer().sendMessage(Placeholders.translate(dialogSession.getPlayer(), argument)
 					.replace("%npc_name%", dialogSession.getDisplayName()));
 		}
-		
-		if(dialogSession.hasNext()) {
-			dialogSession.startNext();
-		}
+
+		dialogSession.startNext();
 	}
 }
