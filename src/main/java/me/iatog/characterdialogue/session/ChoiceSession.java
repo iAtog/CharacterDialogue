@@ -16,6 +16,7 @@ public class ChoiceSession implements Session {
 	private final Player player;
 	private final UUID uuid;
 	private final Map<Integer, Choice> choices;
+	private boolean destroyed;
 
 	public ChoiceSession(CharacterDialoguePlugin main, Player player) {
 		this.main = main;
@@ -29,9 +30,7 @@ public class ChoiceSession implements Session {
 	}
 	
 	public boolean addChoice(int index, String message, Class<? extends DialogChoice> clazz, String argument) {
-		//Map<String, DialogChoice> cache = main.getCache().getChoices();
-		
-		if (choices.containsKey(index)) {
+		if (choices.containsKey(index) || destroyed) {
 			return false;
 		}
 		
@@ -66,5 +65,10 @@ public class ChoiceSession implements Session {
 	@Override
 	public void destroy() {
 		main.getCache().getChoiceSessions().remove(player.getUniqueId());
+		this.destroyed = true;
+	}
+
+	public boolean isDestroyed() {
+		return destroyed;
 	}
 }
