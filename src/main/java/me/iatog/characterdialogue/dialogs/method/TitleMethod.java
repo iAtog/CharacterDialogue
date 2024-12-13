@@ -4,7 +4,6 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.dialogs.MethodContext;
-import me.iatog.characterdialogue.nms.TitleBuilder;
 
 public class TitleMethod extends DialogMethod<CharacterDialoguePlugin> {
 
