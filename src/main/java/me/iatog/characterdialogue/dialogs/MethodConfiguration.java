@@ -16,7 +16,7 @@ public class MethodConfiguration {
 
     public MethodConfiguration(@NotNull String argument, @NotNull String config) {
         this.objects = new HashMap<>();
-        this.pattern = Pattern.compile("(\\w+)=[\"']([^\"']*)[\"']\\s*,?\\s*|\\s*(\\w+)=([^,\\s}]+)");
+        this.pattern = Pattern.compile("(\\w+)=[\"']([^\"']*)[\"']\\s*,?\\s*|(\\w+)=([^,\\s}]+)");
         this.argument = argument;
 
         this.init(config);
