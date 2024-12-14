@@ -40,7 +40,6 @@ public class LegacyChoiceMethod extends DialogMethod<CharacterDialoguePlugin> im
 		setDisabled(true);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void execute(MethodContext context) {
 		MethodConfiguration configuration = context.getConfiguration();

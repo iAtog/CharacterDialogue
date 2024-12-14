@@ -24,13 +24,13 @@ public class ChoiceForm {
         String model = data.getConfigFile().getString("choice.text-model", "&a{I})&e {S}");
 
         form.title("Select an option");
-        form.content("Select below");
+        //form.content("Select below");
 
         data.getChoiceSession().getChoices().forEach((index, choice) -> {
             String parsedModel = TextUtils.colorize(model.replace("{I}",
                     String.valueOf(index)).replace("{S}",
                     choice.getMessage()));
-            player.sendMessage("Current index: " + index);
+            //player.sendMessage("Current index: " + index);
             //form.button(parsedModel, FormImage.Type.URL, ChoiceUtil.getHeadNumber(index));
             form.button(parsedModel);
             buttonValues.put(parsedModel, index);
@@ -53,7 +53,9 @@ public class ChoiceForm {
         form.closedOrInvalidResultHandler(r -> {
             buttonValues.clear();
             ChoiceUtil.removeTaskIfPresent(player.getUniqueId());
-            player.sendMessage("Cancelled");
+            data.getChoiceSession().destroy();
+            data.getDialogSession().destroy();
+            //player.sendMessage("Cancelled");
         });
 
         return form.build();

@@ -1,6 +1,7 @@
 package me.iatog.characterdialogue.enums;
 
 import me.iatog.characterdialogue.dialogs.method.choice.ChoiceData;
+import me.iatog.characterdialogue.dialogs.method.choice.ChoiceGUI;
 import me.iatog.characterdialogue.dialogs.method.choice.ChoiceUtil;
 import me.iatog.characterdialogue.dialogs.method.choice.form.ChoiceForm;
 import me.iatog.characterdialogue.placeholders.Placeholders;
@@ -36,20 +37,19 @@ public enum ChoiceType {
         data.getPlayer().spigot().sendMessage(questions.create());
     }, (data -> {})),
     GUI(data -> {
-        data.getPlayer().sendMessage("Not implemented");
+        ChoiceGUI choiceGUI = new ChoiceGUI();
+        choiceGUI.buildGUI(data);
     }, data -> {
         data.getPlayer().closeInventory();
     }),
     BEDROCK_GUI(data -> {
         Player player = data.getPlayer();
         if(!FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
-            player.sendMessage("Player not in bedrock");
             ChoiceType.GUI.generateQuestions(data);
-            return;
+        } else {
+            ChoiceForm choiceForm = new ChoiceForm();
+            FloodgateApi.getInstance().sendForm(player.getUniqueId(), choiceForm.load(data));
         }
-
-        ChoiceForm choiceForm = new ChoiceForm();
-        FloodgateApi.getInstance().sendForm(player.getUniqueId(), choiceForm.load(data));
     }, data -> {
         data.getPlayer().closeInventory();
     });
