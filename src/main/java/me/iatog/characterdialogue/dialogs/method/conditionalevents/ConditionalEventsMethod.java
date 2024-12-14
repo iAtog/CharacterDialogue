@@ -1,12 +1,13 @@
 package me.iatog.characterdialogue.dialogs.method.conditionalevents;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.dialogs.MethodContext;
-import me.iatog.characterdialogue.enums.CaptureMode;
 import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.session.DialogSession;
+import me.iatog.characterdialogue.util.SingleUseConsumer;
 import org.bukkit.Bukkit;
 
 import java.util.HashMap;
@@ -20,13 +21,14 @@ public class ConditionalEventsMethod extends DialogMethod<CharacterDialoguePlugi
     // It will wait for a ConditionalEvents event to be fulfilled
     // if not fulfilled the dialog ends, and if fulfilled the dialog continues
 
-    // conditional_events{timeout=200, capture=action}: action_name
-    // conditional_events{timeout=200, capture=event}: event_name
-    // conditional_events{timeout=200, capture=both}: action_name|event_name
+    // conditional_events{timeout=<seconds>, action=<action_name>}: <event_name>
+    // conditional_events: event_name (ACTION = default - TIMEOUT = 60)
+    // conditional_events{pause=false}: <event_name> (PAUSE THE DIALOGUE BUT KEEPING THE SLOW EFFECT)
+
     public ConditionalEventsMethod(CharacterDialoguePlugin provider) {
         super("conditional_events", provider);
         addPluginDependency("ConditionalEvents", () -> {
-            Bukkit.getPluginManager().registerEvents(new ConditionalEventListener(provider), provider);
+            Bukkit.getPluginManager().registerEvents(new ConditionalEventListener(), provider);
             handleTimeouts();
         });
     }
@@ -35,20 +37,10 @@ public class ConditionalEventsMethod extends DialogMethod<CharacterDialoguePlugi
     public void execute(MethodContext context) {
         MethodConfiguration configuration = context.getConfiguration();
         DialogSession session = context.getSession();
-        String capture = configuration.getString("capture", "event");
         int timeoutInMillis = (configuration.getInteger("timeout", 60) * 1000);
         String argument = configuration.getArgument();
-        CaptureMode mode;
-
-        try {
-            mode = CaptureMode.valueOf(capture.toUpperCase());
-        } catch(Exception exception) {
-            String msg = "Invalid capture mode provided '" +capture + "' in conditional events method";
-            context.getSession().sendDebugMessage(msg, "ConditionalEventMethod");
-            getProvider().getLogger().severe(msg);
-            this.next(context);
-            return;
-        }
+        String action = configuration.getString("action", "default");
+        String onTimeout = configuration.getString("onTimeout", "send: &cYou took a long time");
 
         if(argument.isEmpty()) {
             getProvider().getLogger().warning("No ConditionalEvents event provided.");
@@ -56,34 +48,32 @@ public class ConditionalEventsMethod extends DialogMethod<CharacterDialoguePlugi
             return;
         }
 
-        if(mode == CaptureMode.BOTH && !argument.contains("|")) {
-            String msg = "When using capture=both you need to specify a valid argument: <eventName>|<action>";
-            session.sendDebugMessage(msg, "ConditionalEventsMethod");
-            getProvider().getLogger().severe(msg);
-            this.destroy(context);
-            return;
-        }
-
-
         long exp = (System.currentTimeMillis() + timeoutInMillis);
         boolean pause = configuration.getBoolean("pause", true);
 
-        EventData data = new EventData(mode, argument, session, exp, context.getConsumer(), pause);
+        EventData data = new EventData(argument, session, exp, context.getConsumer(), pause, action, onTimeout);
         cache.put(context.getPlayer().getUniqueId(), data);
         if(pause) {
             this.pause(context);
         }
-        session.sendDebugMessage("Waiting for conditional_events event...", "ConditionalEventsMethod");
+
+        session.sendDebugMessage("Waiting for ConditionalEvents response...", "ConditionalEventsMethod");
     }
 
     private void handleTimeouts() {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(getProvider(), () -> {
-
             for(EventData data : cache.values()) {
                 long expiration = data.expTime();
+                String line = data.onTimeout();
 
                 if(System.currentTimeMillis() >= expiration) {
-                    data.getSession().getPlayer().sendMessage("Timeout completed");
+                    if(!line.isEmpty()) {
+                        Dialogue dialogue = data.getSession().getDialogue();
+                        getProvider().getApi().runDialogueExpression(data.getSession().getPlayer(), line,
+                                dialogue.getDisplayName(), SingleUseConsumer.create(t -> { }),
+                                data.getSession(), data.getSession().getNPC());
+                    }
+
                     if(!data.consumer().executed()) {
                         data.consumer().accept(CompletedType.DESTROY);
                     } else {
@@ -92,10 +82,7 @@ public class ConditionalEventsMethod extends DialogMethod<CharacterDialoguePlugi
 
                     cache.remove(data.getSession().getPlayer().getUniqueId());
                 }
-            }/*
-            cache.forEach((uuid, data) -> {
-
-            });*/
+            }
         }, 10, 20);
     }
 }
