@@ -1,2 +1,2 @@
-rootProject.name='CharacterDialogue'
+rootProject.name = 'CharacterDialogue'
 include 'v1_20_6'
