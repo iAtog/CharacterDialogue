@@ -12,43 +12,44 @@ import java.util.List;
 
 /**
  * class made for cleaner handling of chat components
+ *
  * @author iAtog
  */
 public class ComponentBuilder {
-	
-	List<BaseComponent> components;
-	
-	public ComponentBuilder() {
-		this.components = new ArrayList<>();
-	}
-	
-	public ComponentBuilder addComponent(BaseComponent component) {
-		this.components.add(component);
-		return this;
-	}
-	
-	public ComponentBuilder addTextComponent(String message) {
-		return addComponent(new TextComponent(message));
-	}
-	
-	public ComponentBuilder addTextComponent(String message, ChatColor color, HoverEvent hover, ClickEvent click) {
-		TextComponent component = new TextComponent(message);
-		component.setHoverEvent(hover);
-		component.setClickEvent(click);
-		
-		if(color != null) {
-			component.setColor(color);
-		}
-		
-		return addComponent(component);
-	}
-	
-	public BaseComponent[] build() {
-		return components.toArray(new BaseComponent[0]);
-	}
-	
-	public List<BaseComponent> getComponents() {
-		return Collections.unmodifiableList(components);
-	}
-		
+
+    List<BaseComponent> components;
+
+    public ComponentBuilder() {
+        this.components = new ArrayList<>();
+    }
+
+    public ComponentBuilder addComponent(BaseComponent component) {
+        this.components.add(component);
+        return this;
+    }
+
+    public ComponentBuilder addTextComponent(String message) {
+        return addComponent(new TextComponent(message));
+    }
+
+    public ComponentBuilder addTextComponent(String message, ChatColor color, HoverEvent hover, ClickEvent click) {
+        TextComponent component = new TextComponent(message);
+        component.setHoverEvent(hover);
+        component.setClickEvent(click);
+
+        if (color != null) {
+            component.setColor(color);
+        }
+
+        return addComponent(component);
+    }
+
+    public BaseComponent[] build() {
+        return components.toArray(new BaseComponent[0]);
+    }
+
+    public List<BaseComponent> getComponents() {
+        return Collections.unmodifiableList(components);
+    }
+
 }

@@ -11,8 +11,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @Command(names = "dialogue",
-        desc = "Blah",
-        permission = "characterdialogue.command.dialogue")
+      desc = "Blah",
+      permission = "characterdialogue.command.dialogue")
 public class DialogueCommands implements CommandClass {
 
     @Command(names = "start", desc = "Run a dialogue")
@@ -21,13 +21,13 @@ public class DialogueCommands implements CommandClass {
                                  @OptArg Player playerOpt,
                                  @Switch("debug") boolean debug) {
         Player target;
-        if(dialogue == null) {
+        if (dialogue == null) {
             sender.sendMessage(TextUtils.colorize("&cDialogue with that name was not found."));
             return;
         }
 
-        if(playerOpt == null) {
-            if(!(sender instanceof Player)) {
+        if (playerOpt == null) {
+            if (! (sender instanceof Player)) {
                 sender.sendMessage(TextUtils.colorize("&cYou need to specify the target player."));
                 return;
             }
