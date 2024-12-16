@@ -137,28 +137,6 @@ public class MethodConfiguration {
         }
     }
 
-    // Testing regex
-    public static void maine(String[] a) {
-        String dialog = "TITLE{title='My title, nice title' , subtitle='This is a subtitle, yay!', fadeIn=20, stay=60, fadeOut=20, animated=true, deep=2}: he";
-        String[] split = dialog.split(":", 2);
-        String methodName = split[0].toUpperCase().trim().split("\\{")[0];
-        String configPart = split[0].substring(methodName.length()).trim();
-        String arg = split.length > 1 ? split[1].trim() : "";
-
-        System.out.println("Method: " + methodName);
-        System.out.println("Configurations: " + configPart);
-        System.out.println("Argument: " + arg);
-
-        MethodConfiguration config = new MethodConfiguration(arg, configPart);
-        config.set("test", "String");
-        System.out.println("Listing all configurations:");
-        config.map().forEach((key, value) -> {
-            System.out.println(key + ": " + value);
-        });
-
-        System.out.println("toString configuration: " + config);
-    }
-
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("{");
