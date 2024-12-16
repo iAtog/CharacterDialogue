@@ -2,6 +2,7 @@ package me.iatog.characterdialogue.dialogs.method.choice;
 
 import dev.dejvokep.boostedyaml.YamlDocument;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.api.dialog.ConfigurationType;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.dialogs.MethodContext;
@@ -18,9 +19,15 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> {
-    // 'choice{type=chat, cooldown=15}: choice_sample'
-    // 'choice{type=bedrock, cooldown=20}: choice_sample'
-    // 'choice{type=gui, cooldown=0}: no_cooldown_choice'
+    // 'choice{type=chat, timeout=15}: choice_sample'
+    // 'choice{type=bedrock, timeout=20}: choice_sample'
+    // 'choice{type=gui, timeout=0}: no_cooldown_choice'
+    public static final Map<UUID, BukkitTask> taskList;
+
+    static {
+        taskList = new HashMap<>();
+    }
+
     /**
      * defaults:
      * type = chat
@@ -33,17 +40,12 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> {
     private final Map<UUID, ChoiceSession> sessions;
     private final boolean floodgateEnabled;
 
-    public static final Map<UUID, BukkitTask> taskList;
-
-    static {
-        taskList = new HashMap<>();
-    }
-
     public ChoiceMethod(CharacterDialoguePlugin provider) {
         super("choice", provider);
         this.sessions = provider.getCache().getChoiceSessions();
         this.floodgateEnabled = Bukkit.getPluginManager().isPluginEnabled("floodgate");
-
+        addConfigurationType("type", ConfigurationType.TEXT);
+        addConfigurationType("timeout", ConfigurationType.INTEGER);
         Bukkit.getPluginManager().registerEvents(new ChoiceChatTypeListener(provider), provider);
     }
 
@@ -57,7 +59,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> {
         String selectedChoice = configuration.getArgument();
         int cooldown = configuration.getInteger("timeout", 30);
 
-        if(!ChoiceUtil.isContextValid(context)) {
+        if (! ChoiceUtil.isContextValid(context)) {
             this.next(context);
             return;
         }
@@ -67,18 +69,18 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> {
 
         try {
             choiceType = ChoiceType.valueOf(type);
-        } catch(Exception exception) {
+        } catch (Exception exception) {
             String msg = "Invalid choice type provided \"" + type + "\" in \"" +
-                    dialogSession.getDialogue().getName() + "\" dialogue.";
+                  dialogSession.getDialogue().getName() + "\" dialogue.";
             getProvider().getLogger().warning(msg);
             dialogSession.sendDebugMessage(msg, "ChoiceMethod");
             this.next(context);
             return;
         }
 
-        if(choiceType == ChoiceType.BEDROCK_GUI && !floodgateEnabled) {
+        if (choiceType == ChoiceType.BEDROCK_GUI && ! floodgateEnabled) {
             String msg = "\"BEDROCK_GUI\" choice type cannot be used, geyser " +
-                    "and floodgate are not present on the plugins folder.";
+                  "and floodgate are not present on the plugins folder.";
             dialogSession.sendDebugMessage(msg, "ChoiceMethod");
             getProvider().getLogger().warning(msg);
             choiceType = ChoiceType.CHAT;
@@ -92,15 +94,15 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> {
         sessions.put(player.getUniqueId(), choiceSession);
 
         ChoiceData data = new ChoiceData(
-                choiceSession,
-                dialogSession,
-                player,
-                configFile
+              choiceSession,
+              dialogSession,
+              player,
+              configFile
         );
 
         choiceType.generateQuestions(data);
 
-        if(cooldown > 0) {
+        if (cooldown > 0) {
             ChoiceUtil.manageCooldown(data, cooldown, choiceType.getCloseAction());
         }
     }

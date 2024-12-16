@@ -6,14 +6,14 @@ import me.iatog.characterdialogue.dialogs.MethodContext;
 
 public class SendMethod extends DialogMethod<CharacterDialoguePlugin> {
 
-	public SendMethod() {
-		super("send");
-	}
+    public SendMethod() {
+        super("send");
+    }
 
-	@Override
-	public void execute(MethodContext context) {
-		context.getPlayer().sendMessage(context.getConfiguration().getArgument());
-		this.next(context);
-	}
+    @Override
+    public void execute(MethodContext context) {
+        context.getPlayer().sendMessage(context.getConfiguration().getArgument());
+        this.next(context);
+    }
 
 }

@@ -1,6 +1,7 @@
 package me.iatog.characterdialogue.dialogs.method.conditionalevents;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.api.dialog.ConfigurationType;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
@@ -31,6 +32,9 @@ public class ConditionalEventsMethod extends DialogMethod<CharacterDialoguePlugi
             Bukkit.getPluginManager().registerEvents(new ConditionalEventListener(), provider);
             handleTimeouts();
         });
+        addConfigurationType("action", ConfigurationType.TEXT);
+        addConfigurationType("timeout", ConfigurationType.INTEGER);
+        addConfigurationType("pause", ConfigurationType.BOOLEAN);
     }
 
     @Override
@@ -42,7 +46,7 @@ public class ConditionalEventsMethod extends DialogMethod<CharacterDialoguePlugi
         String action = configuration.getString("action", "default");
         String onTimeout = configuration.getString("onTimeout", "send: &cYou took a long time");
 
-        if(argument.isEmpty()) {
+        if (argument.isEmpty()) {
             getProvider().getLogger().warning("No ConditionalEvents event provided.");
             this.next(context);
             return;
@@ -53,7 +57,7 @@ public class ConditionalEventsMethod extends DialogMethod<CharacterDialoguePlugi
 
         EventData data = new EventData(argument, session, exp, context.getConsumer(), pause, action, onTimeout);
         cache.put(context.getPlayer().getUniqueId(), data);
-        if(pause) {
+        if (pause) {
             this.pause(context);
         }
 
@@ -62,19 +66,20 @@ public class ConditionalEventsMethod extends DialogMethod<CharacterDialoguePlugi
 
     private void handleTimeouts() {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(getProvider(), () -> {
-            for(EventData data : cache.values()) {
+            for (EventData data : cache.values()) {
                 long expiration = data.expTime();
                 String line = data.onTimeout();
 
-                if(System.currentTimeMillis() >= expiration) {
-                    if(!line.isEmpty()) {
+                if (System.currentTimeMillis() >= expiration) {
+                    if (! line.isEmpty()) {
                         Dialogue dialogue = data.getSession().getDialogue();
                         getProvider().getApi().runDialogueExpression(data.getSession().getPlayer(), line,
-                                dialogue.getDisplayName(), SingleUseConsumer.create(t -> { }),
-                                data.getSession(), data.getSession().getNPC());
+                              dialogue.getDisplayName(), SingleUseConsumer.create(t -> {
+                              }),
+                              data.getSession(), data.getSession().getNPC());
                     }
 
-                    if(!data.consumer().executed()) {
+                    if (! data.consumer().executed()) {
                         data.consumer().accept(CompletedType.DESTROY);
                     } else {
                         data.getSession().destroy();

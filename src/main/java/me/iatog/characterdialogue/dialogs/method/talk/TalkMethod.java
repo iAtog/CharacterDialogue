@@ -1,6 +1,7 @@
 package me.iatog.characterdialogue.dialogs.method.talk;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.api.dialog.ConfigurationType;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.dialogs.MethodContext;
@@ -24,6 +25,7 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
 
     // List of players to wait sneak
     private final List<UUID> players;
+
     /**
      * DESIGN:
      * talk: <type>|<message>
@@ -36,6 +38,12 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
     public TalkMethod(CharacterDialoguePlugin main) {
         super("talk", main);
         this.players = new ArrayList<>();
+        addConfigurationType("type", ConfigurationType.TEXT);
+        addConfigurationType("sound", ConfigurationType.TEXT);
+        addConfigurationType("volume", ConfigurationType.FLOAT);
+        addConfigurationType("pitch", ConfigurationType.FLOAT);
+        addConfigurationType("tickSpeed", ConfigurationType.INTEGER);
+        addConfigurationType("skip", ConfigurationType.BOOLEAN);
     }
 
     @Override
@@ -67,14 +75,14 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
         try {
             type = TalkType.valueOf(configuration.getString("type", "action_bar").toUpperCase());
             sound = Sound.valueOf(configuration.getString("sound", "BLOCK_STONE_BUTTON_CLICK_OFF").toUpperCase());
-        } catch(EnumConstantNotPresentException ex) {
+        } catch (EnumConstantNotPresentException ex) {
             getProvider().getLogger().severe("The line L" + session.getCurrentIndex() + " in " + session.getDialogue().getName() + " is not valid. (parse error)");
             session.sendDebugMessage("Error parsing data: " + ex.getMessage(), "TalkMethod:60");
             completed.accept(CompletedType.DESTROY);
             return;
         }
 
-        if(message.isEmpty()) {
+        if (message.isEmpty()) {
             getProvider().getLogger().severe("The line L" + session.getCurrentIndex() + " in " + session.getDialogue().getName() + " is not valid. (empty message)");
             session.sendDebugMessage("Error parsing data: message is empty", "TalkMethod:80");
             completed.accept(CompletedType.DESTROY);
@@ -82,10 +90,10 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
         }
 
         new TalkRunnable(
-                players, uuid, message, skip,
-                type, player, sound, translatedMessage,
-                volume, pitch, session,
-                completed, npcName, getProvider()
+              players, uuid, message, skip,
+              type, player, sound, translatedMessage,
+              volume, pitch, session,
+              completed, npcName, getProvider()
         ).runTaskTimer(getProvider(), 20L, ticks);
     }
 
@@ -98,7 +106,7 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
     public void onSneak(PlayerToggleSneakEvent event) {
         Player player = event.getPlayer();
 
-        if(!players.contains(player.getUniqueId())) {
+        if (! players.contains(player.getUniqueId())) {
             return;
         }
 
