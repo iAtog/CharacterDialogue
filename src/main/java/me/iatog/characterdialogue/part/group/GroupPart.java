@@ -27,15 +27,15 @@ public class GroupPart implements ArgumentPart {
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
         String next = stack.hasNext() ? stack.next() : null;
 
-        if(next == null) {
+        if (next == null) {
             return Collections.emptyList();
         }
 
         List<String> suggest = new ArrayList<>();
 
-        for(YamlDocument document : main.getAllDialogues()) {
+        for (YamlDocument document : main.getAllDialogues()) {
             String name = Objects.requireNonNull(document.getFile()).getName().split("\\.")[0].toLowerCase();
-            if(next.isEmpty() || name.toLowerCase().startsWith(next.toLowerCase())) {
+            if (next.isEmpty() || name.toLowerCase().startsWith(next.toLowerCase())) {
                 suggest.add(name.toLowerCase());
             }
         }
@@ -49,15 +49,15 @@ public class GroupPart implements ArgumentPart {
 
         YamlDocument doc = null;
 
-        for(YamlDocument document : main.getAllDialogues()) {
+        for (YamlDocument document : main.getAllDialogues()) {
             String name = Objects.requireNonNull(document.getFile()).getName().split("\\.")[0].toLowerCase();
-            if(name.toLowerCase().startsWith(group.toLowerCase())) {
+            if (name.toLowerCase().startsWith(group.toLowerCase())) {
                 doc = document;
                 break;
             }
         }
 
-        if(doc == null) {
+        if (doc == null) {
             return Collections.emptyList();
         }
 

@@ -52,7 +52,7 @@ public class TalkRunnable extends BukkitRunnable {
     @Override
     public void run() {
         try {
-            if ((!players.contains(uuid) && skip && !isCancelled()) && !finished) {
+            if ((! players.contains(uuid) && skip && ! isCancelled()) && ! finished) {
                 stopAnimation();
                 return;
             }
@@ -61,7 +61,7 @@ public class TalkRunnable extends BukkitRunnable {
                 animateText();
             } else {
                 cancel();
-                if(!finished) {
+                if (! finished) {
                     finishAnimation();
                 }
             }
@@ -75,7 +75,7 @@ public class TalkRunnable extends BukkitRunnable {
         this.finished = true;
         type.execute(player, translatedMessage, npcName);
         player.playSound(player.getLocation(), sound, volume, pitch);
-        session.sendDebugMessage("Finished talk because: " + !players.contains(uuid) + " | " + skip + " | " + !isCancelled(), "TalkMethod:134");
+        session.sendDebugMessage("Finished talk because: " + ! players.contains(uuid) + " | " + skip + " | " + ! isCancelled(), "TalkMethod:134");
         players.remove(uuid);
         completed.accept(CompletedType.CONTINUE);
     }
@@ -85,7 +85,7 @@ public class TalkRunnable extends BukkitRunnable {
         char currentChar = translatedMessage.charAt(index);
         index++;
 
-        if(currentChar != ' ' && currentChar != ',' && currentChar != '.') {
+        if (currentChar != ' ' && currentChar != ',' && currentChar != '.') {
             player.playSound(player.getLocation(), sound, volume, pitch);
         }
 
@@ -93,13 +93,13 @@ public class TalkRunnable extends BukkitRunnable {
     }
 
     private void finishAnimation() {
-        if (!this.finished) {
+        if (! this.finished) {
             completed.accept(CompletedType.CONTINUE);
             session.sendDebugMessage("Starting next... (else) (finishAnimation)", "TalkMethod:149");
         }
         this.finished = true;
         session.sendDebugMessage("Finished because message " + index + " < " + message.length() +
-                " (cancelled: " + isCancelled() + ")", "TalkMethod:152");
+              " (cancelled: " + isCancelled() + ")", "TalkMethod:152");
         players.remove(uuid);
         this.cancel();
     }

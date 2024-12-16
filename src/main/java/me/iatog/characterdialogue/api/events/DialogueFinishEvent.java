@@ -17,6 +17,10 @@ public class DialogueFinishEvent extends Event {
         this.session = session;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public DialogSession getSession() {
         return session;
     }
@@ -25,10 +29,7 @@ public class DialogueFinishEvent extends Event {
         return player;
     }
 
-    public static HandlerList getHandlerList(){
-        return handlers;
-    }
-    public final HandlerList getHandlers(){
+    public final HandlerList getHandlers() {
         return handlers;
     }
 }

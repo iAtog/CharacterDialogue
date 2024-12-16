@@ -28,8 +28,8 @@ public class ChoiceForm {
 
         data.getChoiceSession().getChoices().forEach((index, choice) -> {
             String parsedModel = TextUtils.colorize(model.replace("{I}",
-                    String.valueOf(index)).replace("{S}",
-                    choice.getMessage()));
+                  String.valueOf(index)).replace("{S}",
+                  choice.getMessage()));
             //player.sendMessage("Current index: " + index);
             //form.button(parsedModel, FormImage.Type.URL, ChoiceUtil.getHeadNumber(index));
             form.button(parsedModel);
@@ -38,11 +38,11 @@ public class ChoiceForm {
 
         form.validResultHandler(response -> {
             String buttonText = response.clickedButton().text();
-            if(data.getChoiceSession().isDestroyed()) {
+            if (data.getChoiceSession().isDestroyed()) {
                 return;
             }
 
-            if(buttonValues.containsKey(buttonText)) {
+            if (buttonValues.containsKey(buttonText)) {
                 int selectedChoice = buttonValues.get(buttonText);
                 ChoiceUtil.runChoice(player, selectedChoice);
             } else {

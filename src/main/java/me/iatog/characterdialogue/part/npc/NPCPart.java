@@ -30,12 +30,12 @@ public class NPCPart implements ArgumentPart {
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
         String next = stack.hasNext() ? stack.next() : null;
 
-        if(next == null) {
+        if (next == null) {
             return Collections.emptyList();
         }
 
         List<String> suggest = new ArrayList<>();
-        for(NPCRegistry registries : CitizensAPI.getNPCRegistries()) {
+        for (NPCRegistry registries : CitizensAPI.getNPCRegistries()) {
             registries.forEach(npc -> {
                 suggest.add(npc.getName());
             });
@@ -49,13 +49,13 @@ public class NPCPart implements ArgumentPart {
     public List<NPC> parseValue(CommandContext context, ArgumentStack stack, CommandPart caller) throws ArgumentParseException {
         String possibleNpc = stack.next();
 
-        if(!isNum(possibleNpc)) {
+        if (! isNum(possibleNpc)) {
             return Collections.emptyList();
         }
 
         NPC npc = CitizensAPI.getNPCRegistry().getById(Integer.parseInt(possibleNpc));
 
-        if(npc == null) {
+        if (npc == null) {
             return Collections.emptyList();
         }
 

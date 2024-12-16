@@ -1,82 +1,94 @@
 package me.iatog.characterdialogue.dialogs;
 
+import me.iatog.characterdialogue.api.dialog.ConfigurationType;
 import me.iatog.characterdialogue.enums.CompletedType;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public abstract class DialogMethod<T extends JavaPlugin> {
-	
-	private final String id;
-	private final T provider;
-	private boolean disabled;
 
-	private final List<String> dependencies;
-	
-	public DialogMethod(String id, T provider) {
-		this.id = id;
-		this.provider = provider;
-		this.disabled = false;
-		this.dependencies = new ArrayList<>();
-	}
-	
-	public DialogMethod(String id) {
-		this(id, null);
-	}
-	
-	/**
-	 * Execute the method action
-	 * @param context The context including player, configuration, session and consumer
-	 */
-	public abstract void execute(MethodContext context);
+    private final String id;
+    private final T provider;
+    private final List<String> dependencies;
+    private boolean disabled;
 
-	/**
-	 * Get the id of the method
-	 * @return the id
-	 */
-	public final String getID() {
-		return id.toUpperCase();
-	}
+    private final Map<String, ConfigurationType> configurationTypes;
 
-	public final List<String> getDependencies() {
-		return Collections.unmodifiableList(dependencies);
-	}
+    public DialogMethod(String id, T provider) {
+        this.id = id;
+        this.provider = provider;
+        this.disabled = false;
+        this.dependencies = new ArrayList<>();
+        this.configurationTypes = new HashMap<>();
+    }
 
-	/**
-	 * The method provider (in this case the plugin that creates it)
-	 * @return the provider
-	 */
-	public final T getProvider() {
-		return provider;
-	}
+    public DialogMethod(String id) {
+        this(id, null);
+    }
 
-	protected void next(MethodContext context) {
-		context.getConsumer().accept(CompletedType.CONTINUE);
-	}
+    /**
+     * Execute the method action
+     *
+     * @param context The context including player, configuration, session and consumer
+     */
+    public abstract void execute(MethodContext context);
 
-	protected void pause(MethodContext context) {
-		context.getConsumer().accept(CompletedType.PAUSE);
-	}
+    /**
+     * Get the id of the method
+     *
+     * @return the id
+     */
+    public final String getID() {
+        return id.toLowerCase();
+    }
 
-	protected void destroy(MethodContext context) {
-		context.getConsumer().accept(CompletedType.DESTROY);
-	}
+    public final List<String> getDependencies() {
+        return Collections.unmodifiableList(dependencies);
+    }
 
-	public boolean isDisabled() {
-		return disabled;
-	}
+    /**
+     * The method provider (in this case the plugin that creates it)
+     *
+     * @return the provider
+     */
+    public final T getProvider() {
+        return provider;
+    }
 
-	protected void setDisabled(boolean disabled) {
-		this.disabled = disabled;
-	}
+    protected void next(MethodContext context) {
+        context.getConsumer().accept(CompletedType.CONTINUE);
+    }
 
-	protected void addPluginDependency(String name, Runnable runnable) {
-		this.dependencies.add(name);
-		if(Bukkit.getPluginManager().isPluginEnabled(name)) {
-			runnable.run();
-		}
-	}
+    protected void pause(MethodContext context) {
+        context.getConsumer().accept(CompletedType.PAUSE);
+    }
+
+    protected void destroy(MethodContext context) {
+        context.getConsumer().accept(CompletedType.DESTROY);
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    protected void addConfigurationType(String key, ConfigurationType valueType) {
+        configurationTypes.put(key, valueType);
+    }
+
+    public Map<String, ConfigurationType> getConfigurationTypes() {
+        return Collections.unmodifiableMap(configurationTypes);
+    }
+
+    protected void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    protected void addPluginDependency(String name, Runnable runnable) {
+        this.dependencies.add(name);
+        if (Bukkit.getPluginManager().isPluginEnabled(name)) {
+            runnable.run();
+        }
+    }
 }

@@ -8,28 +8,28 @@ import me.iatog.characterdialogue.libraries.Cache;
 import me.iatog.characterdialogue.util.TextUtils;
 
 public class DialogLoader implements Loader {
-	
-	private final CharacterDialoguePlugin main;
-	
-	public DialogLoader(CharacterDialoguePlugin main) {
-		this.main = main;
-	}
-	
-	@Override
-	public void load() {
-		Cache cache = main.getCache();
 
-		for(YamlDocument dialogueFile : main.getAllDialogues()) {
-			Section section = dialogueFile.getSection("dialogue");
+    private final CharacterDialoguePlugin main;
 
-			if(section != null) {
-				section.getRoutesAsStrings(false).forEach(name -> {
-					cache.getDialogues().put(name, new DialogueImpl(main, name, dialogueFile));
-				});
-			}
-		}
+    public DialogLoader(CharacterDialoguePlugin main) {
+        this.main = main;
+    }
 
-		main.getLogger().info(TextUtils.colorize("Successfully loaded " + cache.getDialogues().size() + " dialogues."));
-	}
+    @Override
+    public void load() {
+        Cache cache = main.getCache();
+
+        for (YamlDocument dialogueFile : main.getAllDialogues()) {
+            Section section = dialogueFile.getSection("dialogue");
+
+            if (section != null) {
+                section.getRoutesAsStrings(false).forEach(name -> {
+                    cache.getDialogues().put(name, new DialogueImpl(main, name, dialogueFile));
+                });
+            }
+        }
+
+        main.getLogger().info(TextUtils.colorize("Successfully loaded " + cache.getDialogues().size() + " dialogues."));
+    }
 
 }

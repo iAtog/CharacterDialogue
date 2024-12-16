@@ -12,9 +12,13 @@ public class SingleUseConsumer<T> implements Consumer<T> {
         this.executed = new AtomicBoolean(false);
     }
 
+    public static <T> SingleUseConsumer<T> create(Consumer<T> consumer) {
+        return new SingleUseConsumer<>(consumer);
+    }
+
     @Override
     public void accept(T t) {
-        if (!executed.get()) {
+        if (! executed.get()) {
             consumer.accept(t);
             executed.set(true);
         } else {
@@ -24,9 +28,5 @@ public class SingleUseConsumer<T> implements Consumer<T> {
 
     public boolean executed() {
         return executed.get();
-    }
-
-    public static <T> SingleUseConsumer<T> create(Consumer<T> consumer) {
-        return new SingleUseConsumer<>(consumer);
     }
 }

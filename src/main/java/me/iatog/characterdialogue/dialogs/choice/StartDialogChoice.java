@@ -9,24 +9,24 @@ import me.iatog.characterdialogue.session.DialogSession;
 
 public class StartDialogChoice extends DialogChoice {
 
-	private final CharacterDialoguePlugin main;
+    private final CharacterDialoguePlugin main;
 
-	public StartDialogChoice(CharacterDialoguePlugin main) {
-		super("start_dialogue", true);
-		this.main = main;
-	}
+    public StartDialogChoice(CharacterDialoguePlugin main) {
+        super("start_dialogue", true);
+        this.main = main;
+    }
 
-	@Override
-	public void onSelect(String argument, DialogSession session, ChoiceSession choiceSession) {
-		CharacterDialogueAPI api = CharacterDialogueAPI.get();
-		Dialogue dialogue = api.getDialogue(argument);
-		session.destroy();
-		
-		if (dialogue != null) {
-			api.runDialogue(session.getPlayer(), dialogue, session.isOnDebugMode(), session.getNPC());
-		} else {
-			main.getLogger().severe("The dialogue \"" + argument + "\" doesn't exists");
-		}
-	}
+    @Override
+    public void onSelect(String argument, DialogSession session, ChoiceSession choiceSession) {
+        CharacterDialogueAPI api = CharacterDialogueAPI.get();
+        Dialogue dialogue = api.getDialogue(argument);
+        session.destroy();
+
+        if (dialogue != null) {
+            api.runDialogue(session.getPlayer(), dialogue, session.isOnDebugMode(), session.getNPC());
+        } else {
+            main.getLogger().severe("The dialogue \"" + argument + "\" doesn't exists");
+        }
+    }
 
 }

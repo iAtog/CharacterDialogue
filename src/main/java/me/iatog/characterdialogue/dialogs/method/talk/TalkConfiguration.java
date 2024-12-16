@@ -5,9 +5,9 @@ import me.iatog.characterdialogue.session.DialogSession;
 import org.bukkit.Sound;
 
 public class TalkConfiguration {
+    private final DialogSession session;
     private String message;
     private TalkType type;
-    private final DialogSession session;
     private long tickSpeed = 2;
     private Sound sound = Sound.BLOCK_STONE_BUTTON_CLICK_OFF;
     private float volume = 0.5f;
@@ -22,8 +22,16 @@ public class TalkConfiguration {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public TalkType getType() {
         return type;
+    }
+
+    public void setType(TalkType type) {
+        this.type = type;
     }
 
     public DialogSession getSession() {
@@ -68,13 +76,5 @@ public class TalkConfiguration {
 
     public void setSkippable(boolean skippable) {
         this.skippable = skippable;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public void setType(TalkType type) {
-        this.type = type;
     }
 }

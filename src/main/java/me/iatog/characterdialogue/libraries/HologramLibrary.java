@@ -33,16 +33,16 @@ public class HologramLibrary {
 
     public void addHologram(List<String> lines, Location location, String npcName) {
         //main.getLogger().info("Trying to add hologram");
-        if(holographicDisplays) {
+        if (holographicDisplays) {
             Hologram holo = HologramsAPI.createHologram(main, location);
             for (String line : lines) {
                 holo.appendTextLine(TextUtils.colorize(line.replace("%npc_name%", npcName)));
             }
-        } else if(decentHolograms) {
+        } else if (decentHolograms) {
             //main.getLogger().info("DecentHolograms found");
             List<String> formattedLines = new ArrayList<>();
 
-            for(String line : lines) {
+            for (String line : lines) {
                 formattedLines.add(TextUtils.colorize(line.replace("%npc_name%", npcName)));
             }
             String uuid = UUID.randomUUID().toString();
@@ -54,7 +54,7 @@ public class HologramLibrary {
 
     public void reloadHolograms() {
         YamlDocument config = main.getFileFactory().getConfig();
-        if(holographicDisplays) {
+        if (holographicDisplays) {
             for (Hologram hologram : HologramsAPI.getHolograms(main)) {
                 hologram.delete();
             }
@@ -62,11 +62,11 @@ public class HologramLibrary {
             config.getSection("npc").getRoutesAsStrings(false).forEach((id) -> {
                 main.getApi().loadHologram(Integer.parseInt(id));
             });
-        } else if(decentHolograms) {
-            for(String name : decentHologramsList) {
+        } else if (decentHolograms) {
+            for (String name : decentHologramsList) {
                 eu.decentsoftware.holograms.api.holograms.Hologram hologram = DHAPI.getHologram(name);
 
-                if(hologram == null) {
+                if (hologram == null) {
                     continue;
                 }
 

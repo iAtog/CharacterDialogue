@@ -27,7 +27,7 @@ public class ChoiceUtil {
     public static BaseComponent[] getSelectText(int index) {
         YamlDocument file = CharacterDialoguePlugin.getInstance().getFileFactory().getLanguage();
         String text = file.getString("select-choice", "&aClick here to select #%str%").replace("%str%", index + "");
-        return new BaseComponent[] { new TextComponent(colorize(text)) };
+        return new BaseComponent[]{ new TextComponent(colorize(text)) };
     }
 
     public static DialogChoice getByClassName(Class<? extends DialogChoice> clazz) {
@@ -51,12 +51,12 @@ public class ChoiceUtil {
             return false;
         }
 
-        if(choice.isEmpty()) {
+        if (choice.isEmpty()) {
             context.getSession().sendDebugMessage("No choice specified, cancelling.", "ChoiceMethod");
             return false;
         }
 
-        if (!choicesFile.contains("choices." + choice)) {
+        if (! choicesFile.contains("choices." + choice)) {
             String msg = "The choice \"" + choice + "\" doesn't exists.";
             main.getLogger().warning(msg);
             context.getSession().sendDebugMessage(msg, "ChoiceMethod");
@@ -104,10 +104,10 @@ public class ChoiceUtil {
             session.destroy();
             ChoiceMethod.taskList.remove(uuid);
 
-            if(player != null && player.isOnline()) {
+            if (player != null && player.isOnline()) {
                 onClose.accept(data);
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                        TextComponent.fromLegacyText(colorize("&cYou took a long time to answer")));
+                      TextComponent.fromLegacyText(colorize("&cYou took a long time to answer")));
 
             }
         }, 20L * secondsCooldown);
@@ -119,14 +119,14 @@ public class ChoiceUtil {
         Map<UUID, ChoiceSession> sessions = CharacterDialoguePlugin.getInstance().getCache().getChoiceSessions();
         UUID uuid = player.getUniqueId();
 
-        if(!sessions.containsKey(uuid)) {
+        if (! sessions.containsKey(uuid)) {
             return;
         }
 
         ChoiceSession session = sessions.get(uuid);
         Choice choiceObject = session.getChoice(choice);
 
-        if(choiceObject == null || session.isDestroyed()) {
+        if (choiceObject == null || session.isDestroyed()) {
             return;
         }
 
@@ -151,7 +151,7 @@ public class ChoiceUtil {
     }
 
     public static void removeTaskIfPresent(UUID uuid) {
-        if(ChoiceMethod.taskList.get(uuid) != null) {
+        if (ChoiceMethod.taskList.get(uuid) != null) {
             ChoiceMethod.taskList.remove(uuid).cancel();
         }
     }

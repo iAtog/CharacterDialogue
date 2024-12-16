@@ -1,7 +1,6 @@
 package me.iatog.characterdialogue.dialogs.method.choice;
 
 import dev.dejvokep.boostedyaml.YamlDocument;
-import me.iatog.characterdialogue.misc.Choice;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
 import org.bukkit.entity.Player;

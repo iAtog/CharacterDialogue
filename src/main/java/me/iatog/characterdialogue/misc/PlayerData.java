@@ -34,20 +34,20 @@ public class PlayerData {
         return removeEffect;
     }
 
-    public double getLastSpeed() {
-        return lastSpeed;
-    }
-
-    public List<String> getReadedDialogs() {
-        return readedDialogs;
-    }
-
     public void setRemoveEffect(boolean remove) {
         this.removeEffect = remove;
     }
 
+    public double getLastSpeed() {
+        return lastSpeed;
+    }
+
     public void setLastSpeed(double speed) {
         this.lastSpeed = speed;
+    }
+
+    public List<String> getReadedDialogs() {
+        return readedDialogs;
     }
 
     public void addDialog(String dialog) {

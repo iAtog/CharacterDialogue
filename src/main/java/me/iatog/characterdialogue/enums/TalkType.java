@@ -30,7 +30,7 @@ public enum TalkType {
         player.sendMessage(TextUtils.colorize(line));
         player.sendMessage(TextUtils.colorize("&7"));
 
-        for(String wrap : wrapped) {
+        for (String wrap : wrapped) {
             TextUtils.sendCenteredMessage(player, "&7" + wrap);
         }
 
@@ -45,17 +45,17 @@ public enum TalkType {
 
     }
 
-    public void execute(Player target, String message, String npcName) {
-        consumer.accept(target, message, npcName);
-    }
-
     public static String[] getEmptyList() {
         List<String> list = new ArrayList<>();
 
-        for(int i = 0; i < 40;i++) {
+        for (int i = 0; i < 40; i++) {
             list.add(ChatColor.translateAlternateColorCodes('&', "&7"));
         }
 
         return list.stream().toArray(String[]::new);
+    }
+
+    public void execute(Player target, String message, String npcName) {
+        consumer.accept(target, message, npcName);
     }
 }

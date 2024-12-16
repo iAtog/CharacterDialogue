@@ -1,14 +1,9 @@
 package me.iatog.characterdialogue.dialogs.method.choice.listener;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
-import me.iatog.characterdialogue.api.events.ChoiceSelectEvent;
-import me.iatog.characterdialogue.dialogs.DialogChoice;
-import me.iatog.characterdialogue.dialogs.method.choice.ChoiceMethod;
 import me.iatog.characterdialogue.dialogs.method.choice.ChoiceUtil;
-import me.iatog.characterdialogue.misc.Choice;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

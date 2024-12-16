@@ -15,24 +15,24 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Command(
-        names = "group"
+      names = "group"
 )
 public class GroupsCommands implements CommandClass {
 
     @Command(
-            names = "create",
-            permission = "characterdialogue.create"
+          names = "create",
+          permission = "characterdialogue.create"
     )
     public void create(@Sender CommandSender sender, @OptArg String groupName) {
         CharacterDialoguePlugin main = CharacterDialoguePlugin.getInstance();
-        if(groupName == null || groupName.isEmpty()) {
+        if (groupName == null || groupName.isEmpty()) {
             sender.sendMessage(TextUtils.colorize("&cGroup name is empty"));
             return;
         }
 
         File file = new File(main.getDataFolder() + "/dialogues/" + groupName + ".yml");
 
-        if(file.exists()) {
+        if (file.exists()) {
             sender.sendMessage(TextUtils.colorize("&cThis group already exists."));
             return;
         }
@@ -49,12 +49,12 @@ public class GroupsCommands implements CommandClass {
     }
 
     @Command(
-            names = "edit",
-            permission = "characterdialogue.groups.edit"
+          names = "edit",
+          permission = "characterdialogue.groups.edit"
     )
     public void edit(@Sender CommandSender sender, Group group) {
         CharacterDialoguePlugin main = CharacterDialoguePlugin.getInstance();
-        if(group == null) {
+        if (group == null) {
             sender.sendMessage(TextUtils.colorize("&cGroup not found."));
             return;
         }

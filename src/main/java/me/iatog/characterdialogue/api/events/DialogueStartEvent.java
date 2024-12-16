@@ -16,14 +16,15 @@ public class DialogueStartEvent extends PlayerEvent {
         this.session = session;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public DialogSession getSession() {
         return session;
     }
 
-    public static HandlerList getHandlerList(){
-        return handlers;
-    }
-    public final @NotNull HandlerList getHandlers(){
+    public final @NotNull HandlerList getHandlers() {
         return handlers;
     }
 

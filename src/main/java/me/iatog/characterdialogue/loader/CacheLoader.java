@@ -11,55 +11,55 @@ import me.iatog.characterdialogue.libraries.Cache;
 import me.iatog.characterdialogue.util.TextUtils;
 
 public class CacheLoader implements Loader {
-	
-	private final CharacterDialoguePlugin main;
-	
-	public CacheLoader(CharacterDialoguePlugin main) {
-		this.main = main;
-	}
 
-	@Override
-	public void load() {
-		Cache cache = main.getCache();
+    private final CharacterDialoguePlugin main;
 
-		main.registerMethods(
-				new SendMethod(),
-				new SoundMethod(main),
-				new BroadcastMethod(),
-				new WaitMethod(main),
-				//new DispatchCommandMethod(),
-				new CommandMethod(main),
-				new TeleportMethod(),
-				new EffectMethod(main),
-				new SendServerMethod(main),
-				//new LegacyChoiceMethod(main),
-				new SneakMethod(main),
-				new ConditionalMethod(main),
-				new GiveMethod(),
-				new TalkMethod(main),
-				new TitleMethod(),
+    public CacheLoader(CharacterDialoguePlugin main) {
+        this.main = main;
+    }
 
-				new StartDialogueMethod(main),
-				new FollowMethod(main),
-				new ChoiceMethod(main),
-				new ConditionalEventsMethod(main)
-		);
-		
-		main.registerChoices(
-				new ContinueChoice(),
-				new DestroyChoice(),
-				new SendChoice(),
-				new DialogueChoice(),
-				new MessageChoice(),
-				new StartDialogChoice(main)
-		);
+    @Override
+    public void load() {
+        Cache cache = main.getCache();
 
-		main.getLogger().info(TextUtils.colorize("Correctly loaded " + cache.getChoices().size() + " choices."));
-		main.getLogger().info(TextUtils.colorize("Correctly loaded " + cache.getMethods().size() + " methods."));
-	}
+        main.registerMethods(
+              new SendMethod(),
+              new SoundMethod(main),
+              new BroadcastMethod(),
+              new WaitMethod(main),
+              //new DispatchCommandMethod(),
+              new CommandMethod(main),
+              new TeleportMethod(),
+              new EffectMethod(main),
+              new SendServerMethod(main),
+              //new LegacyChoiceMethod(main),
+              new SneakMethod(main),
+              new ConditionalMethod(main),
+              new GiveMethod(),
+              new TalkMethod(main),
+              new TitleMethod(),
 
-	@Override
-	public void unload() {
-		main.getCache().clearAll();
-	}
+              new StartDialogueMethod(main),
+              new FollowMethod(main),
+              new ChoiceMethod(main),
+              new ConditionalEventsMethod(main)
+        );
+
+        main.registerChoices(
+              new ContinueChoice(),
+              new DestroyChoice(),
+              new SendChoice(),
+              new DialogueChoice(),
+              new MessageChoice(),
+              new StartDialogChoice(main)
+        );
+
+        main.getLogger().info(TextUtils.colorize("Correctly loaded " + cache.getChoices().size() + " choices."));
+        main.getLogger().info(TextUtils.colorize("Correctly loaded " + cache.getMethods().size() + " methods."));
+    }
+
+    @Override
+    public void unload() {
+        main.getCache().clearAll();
+    }
 }

@@ -1,5 +1,7 @@
 package me.iatog.characterdialogue.api;
 
+import dev.dejvokep.boostedyaml.YamlDocument;
+import dev.dejvokep.boostedyaml.block.implementation.Section;
 import me.iatog.characterdialogue.api.dialog.DialogHologram;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.enums.ClickType;
@@ -63,5 +65,15 @@ public class TestDialogueImpl implements Dialogue {
     @Override
     public boolean isMovementAllowed() {
         return true;
+    }
+
+    @Override
+    public YamlDocument getDocument() {
+        return null;
+    }
+
+    @Override
+    public Section getSection() {
+        return null;
     }
 }

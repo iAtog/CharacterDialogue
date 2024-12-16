@@ -28,14 +28,14 @@ public class MethodPart implements ArgumentPart {
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
         String next = stack.hasNext() ? stack.next() : null;
 
-        if(next == null) {
+        if (next == null) {
             return Collections.emptyList();
         }
 
         List<String> suggest = new ArrayList<>();
 
-        for(String name : main.getCache().getMethods().keySet()) {
-            if(next.isEmpty() || name.toLowerCase().startsWith(next.toLowerCase())) {
+        for (String name : main.getCache().getMethods().keySet()) {
+            if (next.isEmpty() || name.toLowerCase().startsWith(next.toLowerCase())) {
                 suggest.add(name.toLowerCase());
             }
         }
@@ -48,7 +48,7 @@ public class MethodPart implements ArgumentPart {
         String possibleMethod = stack.next().toUpperCase();
         Map<String, DialogMethod<? extends JavaPlugin>> methods = main.getCache().getMethods();
 
-        if(!methods.containsKey(possibleMethod)) {
+        if (! methods.containsKey(possibleMethod)) {
             return Collections.emptyList();
         }
 

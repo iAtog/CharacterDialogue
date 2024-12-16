@@ -19,86 +19,86 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 public class NPCInteractListener implements Listener {
 
-	private final CharacterDialoguePlugin main;
+    private final CharacterDialoguePlugin main;
 
-	public NPCInteractListener(CharacterDialoguePlugin main) {
-		this.main = main;
-	}
+    public NPCInteractListener(CharacterDialoguePlugin main) {
+        this.main = main;
+    }
 
-	@EventHandler
-	public void onNPCRightClick(NPCRightClickEvent event) {
-		runEvent(event);
-	}
+    @EventHandler
+    public void onNPCRightClick(NPCRightClickEvent event) {
+        runEvent(event);
+    }
 
-	@EventHandler
-	public void onNPCLeftClick(NPCLeftClickEvent event) {
-		runEvent(event);
-	}
+    @EventHandler
+    public void onNPCLeftClick(NPCLeftClickEvent event) {
+        runEvent(event);
+    }
 
-	private void runEvent(NPCClickEvent event) {
-		CharacterDialogueAPI api = main.getApi();
-		Player player = event.getClicker();
+    private void runEvent(NPCClickEvent event) {
+        CharacterDialogueAPI api = main.getApi();
+        Player player = event.getClicker();
 
-		NPC npc = event.getNPC();
-		Dialogue dialogue = api.getNPCDialogue(npc.getId());
+        NPC npc = event.getNPC();
+        Dialogue dialogue = api.getNPCDialogue(npc.getId());
 
-		if (dialogue == null || main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
-			return;
-		}
+        if (dialogue == null || main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
+            return;
+        }
 
-		long currentTime = System.currentTimeMillis();
-		// Cooldown logic
+        long currentTime = System.currentTimeMillis();
+        // Cooldown logic
 
-		if(player.hasMetadata("dialogueCooldown")) {
-			long cooldown = player.getMetadata("dialogueCooldown").get(0).asLong();
-			if(currentTime < cooldown) {
-				player.sendMessage(TextUtils.colorize("&cCalm down."));
-				return;
-			}
-		}
+        if (player.hasMetadata("dialogueCooldown")) {
+            long cooldown = player.getMetadata("dialogueCooldown").get(0).asLong();
+            if (currentTime < cooldown) {
+                player.sendMessage(TextUtils.colorize("&cCalm down."));
+                return;
+            }
+        }
 
-		long cooldownTime = 2000;
-		player.setMetadata("dialogueCooldown", new FixedMetadataValue(main, currentTime + cooldownTime));
+        long cooldownTime = 2000;
+        player.setMetadata("dialogueCooldown", new FixedMetadataValue(main, currentTime + cooldownTime));
 
-		ClickType clickType = dialogue.getClickType();
+        ClickType clickType = dialogue.getClickType();
 
-		if ((clickType != ClickType.ALL) &&
-				((event instanceof NPCRightClickEvent && clickType != ClickType.RIGHT) ||
-						(event instanceof NPCLeftClickEvent && clickType != ClickType.LEFT))) {
-			return;
-		}
+        if ((clickType != ClickType.ALL) &&
+              ((event instanceof NPCRightClickEvent && clickType != ClickType.RIGHT) ||
+                    (event instanceof NPCLeftClickEvent && clickType != ClickType.LEFT))) {
+            return;
+        }
 
-		DialoguePermission permissions = dialogue.getPermissions();
-		
-		if(permissions != null && permissions.getPermission() != null) {
-			String permission = permissions.getPermission();
-			String message = permissions.getMessage();
-			
-			if(!player.hasPermission(permission)) {
-				if(message != null) {
-					player.sendMessage(
-							Placeholders.translate(player, message.replace("%npc_name%", dialogue.getDisplayName()))
-					);
-				}
+        DialoguePermission permissions = dialogue.getPermissions();
 
-				return;
-			}
-		}
+        if (permissions != null && permissions.getPermission() != null) {
+            String permission = permissions.getPermission();
+            String message = permissions.getMessage();
 
-		if (dialogue.isFirstInteractionEnabled() && !api.wasReadedBy(player, dialogue)) {
-			dialogue.startFirstInteraction(player, true, npc);
-			return;
-		}
+            if (! player.hasPermission(permission)) {
+                if (message != null) {
+                    player.sendMessage(
+                          Placeholders.translate(player, message.replace("%npc_name%", dialogue.getDisplayName()))
+                    );
+                }
 
-		event.setCancelled(true);
-		dialogue.start(player, npc);
-	}
+                return;
+            }
+        }
 
-	@EventHandler
-	private void interactAtNPC(PlayerInteractEntityEvent event) {
-		if(event.getRightClicked().hasMetadata("characterdialogue-npc")) {
-			//event.setCancelled(true);
+        if (dialogue.isFirstInteractionEnabled() && ! api.wasReadedBy(player, dialogue)) {
+            dialogue.startFirstInteraction(player, true, npc);
+            return;
+        }
 
-		}
-	}
+        event.setCancelled(true);
+        dialogue.start(player, npc);
+    }
+
+    @EventHandler
+    private void interactAtNPC(PlayerInteractEntityEvent event) {
+        if (event.getRightClicked().hasMetadata("characterdialogue-npc")) {
+            //event.setCancelled(true);
+
+        }
+    }
 }

@@ -15,7 +15,7 @@ public class FollowPlayerTrait extends Trait {
 
     @Override
     public void run() {
-        if(target != null && target.isOnline()) {
+        if (target != null && target.isOnline()) {
             Navigator navigator = npc.getNavigator();
             NavigatorParameters params = navigator.getDefaultParameters();
 

@@ -22,7 +22,7 @@ public enum ConditionalExpression {
         //session.destroy();
         completed.accept(CompletedType.DESTROY);
 
-        if(!data.getMain().getCache().getDialogues().containsKey(expression) || expression.isEmpty()) {
+        if (! data.getMain().getCache().getDialogues().containsKey(expression) || expression.isEmpty()) {
             data.getMain().getLogger().severe("The dialogue '" + expression + "' was not found.");
             player.sendMessage(TextUtils.colorize("&c&lUnknown dialogue found."));
             return;
@@ -34,7 +34,7 @@ public enum ConditionalExpression {
         Player player = data.getSession().getPlayer();
         completed.accept(CompletedType.DESTROY);
         player.sendMessage(Placeholders.translate(player, data.getExpression()
-                .replace(data.getSession().getDisplayName(), ChatColor.stripColor(data.getSession().getDisplayName()))));
+              .replace(data.getSession().getDisplayName(), ChatColor.stripColor(data.getSession().getDisplayName()))));
     }),
     STOP((data, completed) -> {
         completed.accept(CompletedType.DESTROY);
@@ -53,10 +53,10 @@ public enum ConditionalExpression {
         }
 
         data.getMain().getApi().runDialogueExpression(player, expression, session.getDisplayName(),
-                SingleUseConsumer.create(completedRes -> {
-            completed.accept(CompletedType.CONTINUE);
-        }), new EmptyDialogSession(data.getMain(), player, Collections.singletonList(expression), session.getDisplayName(),
-                        data.getSession().getNPC()), data.getSession().getNPC());
+              SingleUseConsumer.create(completedRes -> {
+                  completed.accept(CompletedType.CONTINUE);
+              }), new EmptyDialogSession(data.getMain(), player, Collections.singletonList(expression), session.getDisplayName(),
+                    data.getSession().getNPC()), data.getSession().getNPC());
 
     }),
     CONTINUE((data, completed) -> {

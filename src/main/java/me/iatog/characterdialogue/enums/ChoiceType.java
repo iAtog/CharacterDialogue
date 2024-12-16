@@ -1,5 +1,6 @@
 package me.iatog.characterdialogue.enums;
 
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.method.choice.ChoiceData;
 import me.iatog.characterdialogue.dialogs.method.choice.ChoiceGUI;
 import me.iatog.characterdialogue.dialogs.method.choice.ChoiceUtil;
@@ -25,26 +26,27 @@ public enum ChoiceType {
 
         choiceSession.getChoices().forEach((index, choice) -> {
             String parsedModel = TextUtils.colorize(model).replace("{I}",
-                    String.valueOf(index)).replace("{S}", choice.getMessage());
+                  String.valueOf(index)).replace("{S}", choice.getMessage());
             String command = COMMAND_NAME + " " + choiceSession.getUniqueId() + " " + index;
 
             questions.append(Placeholders.translate(data.getPlayer(), parsedModel) + " \n")
-                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command))
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, ChoiceUtil.getSelectText(index)));
+                  .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command))
+                  .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, ChoiceUtil.getSelectText(index)));
         });
 
         data.getPlayer().getInventory().setHeldItemSlot(8);
         data.getPlayer().spigot().sendMessage(questions.create());
-    }, (data -> {})),
+    }, (data -> {
+    })),
     GUI(data -> {
-        ChoiceGUI choiceGUI = new ChoiceGUI();
+        ChoiceGUI choiceGUI = new ChoiceGUI(CharacterDialoguePlugin.getInstance());
         choiceGUI.buildGUI(data);
     }, data -> {
         data.getPlayer().closeInventory();
     }),
     BEDROCK_GUI(data -> {
         Player player = data.getPlayer();
-        if(!FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
+        if (! FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
             ChoiceType.GUI.generateQuestions(data);
         } else {
             ChoiceForm choiceForm = new ChoiceForm();

@@ -8,14 +8,14 @@ import me.iatog.characterdialogue.util.TextUtils;
 import org.bukkit.entity.Player;
 
 public class SendChoice extends DialogChoice {
-	public SendChoice() {
-		super("send", true);
-	}
+    public SendChoice() {
+        super("send", true);
+    }
 
-	@Override
-	public void onSelect(String argument, DialogSession session, ChoiceSession choiceSession) {
-		Player player = session.getPlayer();
-		player.sendMessage(Placeholders.translate(player, TextUtils.colorize(argument)));
-		session.destroy();
-	}
+    @Override
+    public void onSelect(String argument, DialogSession session, ChoiceSession choiceSession) {
+        Player player = session.getPlayer();
+        player.sendMessage(Placeholders.translate(player, TextUtils.colorize(argument)));
+        session.destroy();
+    }
 }

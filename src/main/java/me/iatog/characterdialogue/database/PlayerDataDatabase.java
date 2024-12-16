@@ -17,10 +17,9 @@ import java.util.UUID;
  */
 public class PlayerDataDatabase {
 
-    private final CharacterDialoguePlugin main;
-
     //private Connection connection;
     public final String tableName;
+    private final CharacterDialoguePlugin main;
 
     public PlayerDataDatabase(CharacterDialoguePlugin main) {
         this.main = main;
@@ -28,7 +27,7 @@ public class PlayerDataDatabase {
     }
 
     public void initialize() {
-        try(Connection connection = getConnection()) {
+        try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE uuid = ?");
             ResultSet resultSet = statement.executeQuery();
 
@@ -41,7 +40,7 @@ public class PlayerDataDatabase {
     public Connection getConnection() {
         File dbFile = new File(main.getDataFolder(), "players.db");
 
-        if (!dbFile.exists()) {
+        if (! dbFile.exists()) {
             try {
                 dbFile.createNewFile();
             } catch (IOException e) {
@@ -60,13 +59,13 @@ public class PlayerDataDatabase {
     }
 
     public void load() {
-        try(Connection connection = getConnection()) {
+        try (Connection connection = getConnection()) {
             Statement s = connection.createStatement();
             s.executeUpdate("CREATE TABLE IF NOT EXISTS " + tableName + "(`uuid` text, " +
-                    "`readedDialogs` text NOT NULL, " +
-                    "`removeEffect` boolean, " +
-                    "`lastSpeed` double, " +
-                    "PRIMARY KEY (`uuid`));");
+                  "`readedDialogs` text NOT NULL, " +
+                  "`removeEffect` boolean, " +
+                  "`lastSpeed` double, " +
+                  "PRIMARY KEY (`uuid`));");
             s.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -105,7 +104,7 @@ public class PlayerDataDatabase {
     public void save(Player player, List<String> readedDialogs, boolean removeEffect, double lastSpeed) {
         PreparedStatement statement = null;
 
-        try(Connection connection = getConnection()) {
+        try (Connection connection = getConnection()) {
             statement = connection.prepareStatement("REPLACE INTO " + tableName + " (uuid, readedDialogs, removeEffect, lastSpeed) VALUES (?,?,?)");
             String parsedList = listToString(readedDialogs, ',');
 
@@ -122,7 +121,7 @@ public class PlayerDataDatabase {
             try {
                 if (statement != null)
                     statement.close();
-            } catch(SQLException e) {
+            } catch (SQLException e) {
                 main.getLogger().severe("Error while saving player data");
                 e.printStackTrace();
             }
@@ -139,12 +138,12 @@ public class PlayerDataDatabase {
         PreparedStatement statement = null;
         ResultSet result = null;
 
-        try(Connection connection = getConnection()) {
+        try (Connection connection = getConnection()) {
             statement = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE uuid = '" + uuid + "'");
             result = statement.executeQuery();
 
-            while(result.next()) {
-                if(result.getString("uuid").equalsIgnoreCase(uuid.toString())) {
+            while (result.next()) {
+                if (result.getString("uuid").equalsIgnoreCase(uuid.toString())) {
                     String[] readedDialogsString = result.getString("readedDialogs").split(",");
                     List<String> readed = new ArrayList<>(Arrays.asList(readedDialogsString));
                     boolean removeEffect = result.getBoolean("removeEffect");

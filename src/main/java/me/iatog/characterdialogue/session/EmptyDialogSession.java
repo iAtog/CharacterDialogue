@@ -9,13 +9,13 @@ import java.util.List;
 
 public class EmptyDialogSession extends DialogSession {
 
-	public EmptyDialogSession(CharacterDialoguePlugin main, Player player, List<String> lines, String name, NPC npc) {
-		super(main, player, lines, ClickType.ALL, npc, name, name);
-	}
-	
-	@Override
-	public void start(int index) {
-		// TODO: nothing
-	}
-	
+    public EmptyDialogSession(CharacterDialoguePlugin main, Player player, List<String> lines, String name, NPC npc) {
+        super(main, player, lines, ClickType.ALL, npc, name, name);
+    }
+
+    @Override
+    public void start(int index) {
+        // TODO: nothing
+    }
+
 }

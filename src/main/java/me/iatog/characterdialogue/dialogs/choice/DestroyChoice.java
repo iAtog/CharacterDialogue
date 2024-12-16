@@ -7,18 +7,18 @@ import me.iatog.characterdialogue.session.DialogSession;
 
 public class DestroyChoice extends DialogChoice {
 
-	public DestroyChoice() {
-		super("destroy", false);
-	}
+    public DestroyChoice() {
+        super("destroy", false);
+    }
 
-	@Override
-	public void onSelect(String argument, DialogSession dialogSession, ChoiceSession choiceSession) {
-		if(!argument.isEmpty()) {
-			dialogSession.getPlayer().sendMessage(Placeholders.translate(dialogSession.getPlayer(),
-					argument.replace("%npc_name%", dialogSession.getDisplayName())));
-		}
+    @Override
+    public void onSelect(String argument, DialogSession dialogSession, ChoiceSession choiceSession) {
+        if (! argument.isEmpty()) {
+            dialogSession.getPlayer().sendMessage(Placeholders.translate(dialogSession.getPlayer(),
+                  argument.replace("%npc_name%", dialogSession.getDisplayName())));
+        }
 
-		dialogSession.destroy();
-	}
+        dialogSession.destroy();
+    }
 
 }

@@ -18,14 +18,13 @@ public class StartDialogueMethod extends DialogMethod<CharacterDialoguePlugin> {
 
         this.destroy(context);
 
-        if(dialogue == null) {
+        if (dialogue == null) {
             getProvider().getLogger().warning("The dialogue '" + dialogueName + "' was not found.");
             return;
         }
 
 
-
-        if (dialogue.isFirstInteractionEnabled() && !getProvider().getApi().wasReadedBy(context.getPlayer(), dialogue)) {
+        if (dialogue.isFirstInteractionEnabled() && ! getProvider().getApi().wasReadedBy(context.getPlayer(), dialogue)) {
             dialogue.startFirstInteraction(context.getPlayer(), true, context.getNPC());
         } else {
             dialogue.start(context.getPlayer(), context.getNPC());

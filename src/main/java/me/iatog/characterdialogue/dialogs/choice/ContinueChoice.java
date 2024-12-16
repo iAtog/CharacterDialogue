@@ -7,17 +7,17 @@ import me.iatog.characterdialogue.session.DialogSession;
 
 public class ContinueChoice extends DialogChoice {
 
-	public ContinueChoice() {
-		super("continue", false);
-	}
+    public ContinueChoice() {
+        super("continue", false);
+    }
 
-	@Override
-	public void onSelect(String argument, DialogSession dialogSession, ChoiceSession choiceSession) {
-		if(!argument.isEmpty()) {
-			dialogSession.getPlayer().sendMessage(Placeholders.translate(dialogSession.getPlayer(),
-					argument.replace("%npc_name%", dialogSession.getDisplayName())));
-		}
+    @Override
+    public void onSelect(String argument, DialogSession dialogSession, ChoiceSession choiceSession) {
+        if (! argument.isEmpty()) {
+            dialogSession.getPlayer().sendMessage(Placeholders.translate(dialogSession.getPlayer(),
+                  argument.replace("%npc_name%", dialogSession.getDisplayName())));
+        }
 
-		dialogSession.startNext();
-	}
+        dialogSession.startNext();
+    }
 }

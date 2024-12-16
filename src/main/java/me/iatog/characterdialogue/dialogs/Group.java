@@ -21,8 +21,8 @@ public class Group {
         this.dialogues = new ArrayList<>();
         this.name = Objects.requireNonNull(document.getFile()).getName().split("\\.")[0];
 
-        if(section != null) {
-            for(String name : section.getRoutesAsStrings(false)) {
+        if (section != null) {
+            for (String name : section.getRoutesAsStrings(false)) {
                 this.dialogues.add(main.getCache().getDialogues().get(name));
             }
         }

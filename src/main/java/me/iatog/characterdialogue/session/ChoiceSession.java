@@ -12,63 +12,63 @@ import java.util.UUID;
 
 public class ChoiceSession implements Session {
 
-	private final CharacterDialoguePlugin main;
-	private final Player player;
-	private final UUID uuid;
-	private final Map<Integer, Choice> choices;
-	private boolean destroyed;
+    private final CharacterDialoguePlugin main;
+    private final Player player;
+    private final UUID uuid;
+    private final Map<Integer, Choice> choices;
+    private boolean destroyed;
 
-	public ChoiceSession(CharacterDialoguePlugin main, Player player) {
-		this.main = main;
-		this.player = player;
-		this.uuid = UUID.randomUUID();
-		this.choices = new TreeMap<>();
-	}
-	
-	public Choice getChoice(int index) {
-		return choices.get(index);
-	}
-	
-	public boolean addChoice(int index, String message, Class<? extends DialogChoice> clazz, String argument) {
-		if (choices.containsKey(index) || destroyed) {
-			return false;
-		}
-		
-		choices.put(index, new Choice(index, message, clazz, argument));
-		return true;
-	}
+    public ChoiceSession(CharacterDialoguePlugin main, Player player) {
+        this.main = main;
+        this.player = player;
+        this.uuid = UUID.randomUUID();
+        this.choices = new TreeMap<>();
+    }
 
-	public boolean addChoice(String message, Class<? extends DialogChoice> clazz, String argument) {
-		return addChoice(choices.size() + 1, message, clazz, argument);
-	}
-	
-	public boolean addChoice(String message, Class<? extends DialogChoice> clazz) {
-		return addChoice(choices.size() + 1, message, clazz, "");
-	}
+    public Choice getChoice(int index) {
+        return choices.get(index);
+    }
 
-	public boolean check() {
-		return false;
-	}
+    public boolean addChoice(int index, String message, Class<? extends DialogChoice> clazz, String argument) {
+        if (choices.containsKey(index) || destroyed) {
+            return false;
+        }
 
-	public Player getPlayer() {
-		return player;
-	}
+        choices.put(index, new Choice(index, message, clazz, argument));
+        return true;
+    }
 
-	public Map<Integer, Choice> getChoices() {
-		return choices;
-	}
+    public boolean addChoice(String message, Class<? extends DialogChoice> clazz, String argument) {
+        return addChoice(choices.size() + 1, message, clazz, argument);
+    }
 
-	public UUID getUniqueId() {
-		return uuid;
-	}
-	
-	@Override
-	public void destroy() {
-		main.getCache().getChoiceSessions().remove(player.getUniqueId());
-		this.destroyed = true;
-	}
+    public boolean addChoice(String message, Class<? extends DialogChoice> clazz) {
+        return addChoice(choices.size() + 1, message, clazz, "");
+    }
 
-	public boolean isDestroyed() {
-		return destroyed;
-	}
+    public boolean check() {
+        return false;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Map<Integer, Choice> getChoices() {
+        return choices;
+    }
+
+    public UUID getUniqueId() {
+        return uuid;
+    }
+
+    @Override
+    public void destroy() {
+        main.getCache().getChoiceSessions().remove(player.getUniqueId());
+        this.destroyed = true;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
+    }
 }

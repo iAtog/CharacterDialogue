@@ -18,7 +18,7 @@ public class ConditionalEventListener implements Listener {
         Map<UUID, EventData> dataMap = ConditionalEventsMethod.cache;
         Player player = event.getPlayer();
 
-        if(player == null || !dataMap.containsKey(player.getUniqueId())) {
+        if (player == null || ! dataMap.containsKey(player.getUniqueId())) {
             return;
         }
 
@@ -30,13 +30,13 @@ public class ConditionalEventListener implements Listener {
 
         boolean check = (argument.equals(eventName) && action.equals(data.action()));
 
-        if(!check) {
+        if (! check) {
             return;
         }
 
         ConditionalEventsMethod.cache.remove(event.getPlayer().getUniqueId());
 
-        if(data.isPaused()) {
+        if (data.isPaused()) {
             data.getSession().startNext();
         } else {
             data.consumer().accept(CompletedType.CONTINUE);
