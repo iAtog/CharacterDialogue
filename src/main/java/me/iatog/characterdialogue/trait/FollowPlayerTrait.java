@@ -3,15 +3,19 @@ package me.iatog.characterdialogue.trait;
 import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.ai.NavigatorParameters;
 import net.citizensnpcs.api.trait.Trait;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public class FollowPlayerTrait extends Trait {
-    private Player target;
+    private UUID uuid;
+    private boolean defined;
 
     private int sneakTicks;
     private int onAirTries;
@@ -25,15 +29,24 @@ public class FollowPlayerTrait extends Trait {
         Navigator navigator = npc.getNavigator();
         NavigatorParameters params = navigator.getDefaultParameters();
 
-        params.stuckAction((npc, nav) -> {
-            teleportBehind();
-            return true;
-        });
-
-        if (target != null && target.isOnline()) {
-            navigator.getPathStrategy();
+        if(!defined) {
+            params.baseSpeed(15);
             params.range(30);
-            boolean sneaking = target.isSneaking();
+
+            params.stuckAction((npc, nav) -> {
+                teleportBehind();
+                return true;
+            });
+
+            npc.setProtected(true);
+            npc.setFlyable(false);
+            defined = true;
+        }
+
+        if (getPlayer() != null && getPlayer().isOnline()) {
+            navigator.getPathStrategy();
+
+            boolean sneaking = getPlayer().isSneaking();
             if (sneaking) {
                 if(sneakTicks >= 15) {
                     npc.setSneaking(sneaking);
@@ -45,10 +58,8 @@ public class FollowPlayerTrait extends Trait {
                 npc.setSneaking(false);
             }
 
-            params.baseSpeed(15);
-            npc.setProtected(true);
-            npc.faceLocation(target.getLocation());
-            int distance = (int) target.getLocation().distance(npc.getEntity().getLocation());
+            npc.faceLocation(getPlayer().getLocation());
+            int distance = (int) getPlayer().getLocation().distance(npc.getEntity().getLocation());
             Location npcLoc = npc.getEntity().getLocation();
             Location blockBelow = new Location(npcLoc.getWorld(), npcLoc.getX(),(int)npcLoc.getY() - 1, npcLoc.getZ());
             boolean isAir = blockBelow.getBlock().getType() == Material.AIR;
@@ -65,7 +76,7 @@ public class FollowPlayerTrait extends Trait {
 
             if(distance >= 3 && distance < 50) {
                 navigator.setPaused(false);
-                navigator.setTarget(target.getLocation());
+                navigator.setTarget(getPlayer().getLocation());
             } else if(distance >= 50) {
                 teleportBehind();
             } else {
@@ -74,12 +85,22 @@ public class FollowPlayerTrait extends Trait {
         }
     }
 
-    public void setTarget(Player player) {
-        this.target = player;
+    public void setTarget(@Nullable Player player) {
+        if(player == null) {
+            this.uuid = null;
+            npc.getNavigator().cancelNavigation();
+            return;
+        }
+        this.uuid = player.getUniqueId();
+    }
+
+    public Player getPlayer() {
+        if(uuid == null) return null;
+        return Bukkit.getPlayer(uuid);
     }
 
     public void teleportBehind() {
-        Location tLoc = target.getLocation();
+        Location tLoc = getPlayer().getLocation();
         Location nLoc = npc.getEntity().getLocation();
 
         Vector swap = tLoc.toVector().subtract(nLoc.toVector()).normalize();
