@@ -52,6 +52,11 @@ public class ApiImplementation implements CharacterDialogueAPI {
     }
 
     @Override
+    public HologramLibrary getHologramLibrary() {
+        return hologramLibrary;
+    }
+
+    @Override
     public void reloadHolograms() {
         hologramLibrary.reloadHolograms();
     }
@@ -72,13 +77,13 @@ public class ApiImplementation implements CharacterDialogueAPI {
 
         DialogHologram hologram = dialogue.getHologram();
 
-        if (hologram != null && hologram.isEnabled()) {
+        if (hologram != null && hologram.isEnabled() && !getHologramLibrary().hasHologram(npcId)) {
             Location location = citizensNpc.getStoredLocation();
             location.add(0, 2 + hologram.getY(), 0);
             String npcName = dialogue.getDisplayName();
             List<String> lines = hologram.getLines();
 
-            hologramLibrary.addHologram(lines, location, npcName);
+            hologramLibrary.addHologram(lines, location, npcName, npcId);
 
             citizensNpc.setAlwaysUseNameHologram(false);
         }

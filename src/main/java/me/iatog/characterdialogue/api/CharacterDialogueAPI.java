@@ -5,6 +5,7 @@ import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.libraries.ApiImplementation;
+import me.iatog.characterdialogue.libraries.HologramLibrary;
 import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.util.SingleUseConsumer;
 import net.citizensnpcs.api.npc.NPC;
@@ -64,4 +65,6 @@ public interface CharacterDialogueAPI {
     boolean canEnableMovement(Player player);
 
     Pattern getLineRegex();
+
+    HologramLibrary getHologramLibrary();
 }
