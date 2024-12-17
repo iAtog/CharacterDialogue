@@ -60,9 +60,7 @@ public class HologramLibrary {
                 formattedLines.add(TextUtils.colorize(line.replace("%npc_name%", npcName)));
             }
 
-            eu.decentsoftware.holograms.api.holograms.Hologram hologram = DHAPI.createHologram(
-                  name + npcId, location, formattedLines);
-
+            DHAPI.createHologram(name + npcId, location, formattedLines);
             decentHologramsList.add(npcId);
         }
     }
