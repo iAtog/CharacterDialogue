@@ -44,7 +44,8 @@ public class PlayerDataDatabase {
             try {
                 dbFile.createNewFile();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                main.getLogger().severe("Failed creating players database");
+                e.printStackTrace();
             }
         }
 

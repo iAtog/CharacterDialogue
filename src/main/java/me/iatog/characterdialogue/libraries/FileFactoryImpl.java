@@ -16,11 +16,10 @@ import java.util.Objects;
 
 public class FileFactoryImpl implements FileFactory {
 
-    private final YamlDocument config;
-    //private final YamlFile dialogs;
-    private final YamlDocument lang;
-    private final YamlDocument playerCache;
-    private final YamlDocument choices;
+    private YamlDocument config;
+    private YamlDocument lang;
+    private YamlDocument playerCache;
+    private YamlDocument choices;
 
     private final CharacterDialoguePlugin main;
 
@@ -37,10 +36,9 @@ public class FileFactoryImpl implements FileFactory {
             this.playerCache = createYamlDocument("player-cache.yml");
             this.choices = createYamlDocument("choices.yml");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            main.getLogger().severe("Plugin folder files load failed");
+            e.printStackTrace();
         }
-
-
     }
 
     private YamlDocument createYamlDocument(String name, LoaderSettings loaderSettings, UpdaterSettings updaterSettings) throws IOException {

@@ -114,7 +114,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
         try {
             playerCache.save();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            main.getLogger().warning("Player cache failed saving");
         }
         return true;
     }
