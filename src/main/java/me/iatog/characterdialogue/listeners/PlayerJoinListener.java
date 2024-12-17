@@ -30,13 +30,12 @@ public class PlayerJoinListener implements Listener {
             main.getApi().enableMovement(player);
         }
 
-        PotionEffectType slowness = PotionEffectType.SLOW;
 
-        if (player.hasPotionEffect(slowness)) {
-            PotionEffect effect = player.getPotionEffect(slowness);
+        if (player.hasPotionEffect(PotionEffectType.SLOW)) {
+            PotionEffect effect = player.getPotionEffect(PotionEffectType.SLOW);
 
             if (effect != null && effect.getAmplifier() == 4) {
-                player.removePotionEffect(slowness);
+                player.removePotionEffect(PotionEffectType.SLOW);
             }
         }
     }
