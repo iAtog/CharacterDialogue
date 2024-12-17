@@ -6,7 +6,7 @@ import dev.triumphteam.gui.components.GuiType;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
-import me.iatog.characterdialogue.misc.Choice;
+import me.iatog.characterdialogue.dialogs.Choice;
 import me.iatog.characterdialogue.util.TextUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;

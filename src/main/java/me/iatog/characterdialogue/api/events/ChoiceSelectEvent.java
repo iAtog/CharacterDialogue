@@ -1,6 +1,6 @@
 package me.iatog.characterdialogue.api.events;
 
-import me.iatog.characterdialogue.misc.Choice;
+import me.iatog.characterdialogue.dialogs.Choice;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;

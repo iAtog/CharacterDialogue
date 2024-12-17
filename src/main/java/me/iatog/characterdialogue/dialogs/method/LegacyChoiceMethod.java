@@ -8,7 +8,7 @@ import me.iatog.characterdialogue.dialogs.DialogChoice;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.dialogs.MethodContext;
-import me.iatog.characterdialogue.misc.Choice;
+import me.iatog.characterdialogue.dialogs.Choice;
 import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
