@@ -4,22 +4,18 @@ import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.api.events.DialogueFinishEvent;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodContext;
+import me.iatog.characterdialogue.libraries.HologramLibrary;
 import me.iatog.characterdialogue.trait.FollowPlayerTrait;
 import me.iatog.characterdialogue.util.TextUtils;
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.event.SpawnReason;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitInfo;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,8 +35,10 @@ public class FollowMethod extends DialogMethod<CharacterDialoguePlugin> implemen
     public void execute(MethodContext context) {
         NPC npc = context.getNPC();
         Player player = context.getPlayer();
+        HologramLibrary hologramLibrary = getProvider().getApi().getHologramLibrary();
 
         if (linkedPlayers.containsKey(player.getUniqueId())) {
+            hologramLibrary.showHologram(player, npc.getId());
             removeRegistered(player);
             this.next(context);
             return;
@@ -51,10 +49,15 @@ public class FollowMethod extends DialogMethod<CharacterDialoguePlugin> implemen
             this.next(context);
             return;
         }
+
         NPC clone = npc.copy();
+
+        clone.spawn(npc.getStoredLocation(), SpawnReason.PLUGIN);
         linkedPlayers.put(player.getUniqueId(), new NPCS(npc, clone));
+        hologramLibrary.hideHologram(player, npc.getId());
         clone.setName(TextUtils.colorize(context.getSession().getDialogue().getDisplayName()));
-        Entity cloneEntity = clone.getEntity();
+        clone.getEntity().setVisibleByDefault(false);
+        clone.getEntity().setSilent(true);
 
         if (!clone.hasTrait(FollowPlayerTrait.class)) {
             clone.addTrait(FollowPlayerTrait.class);
@@ -64,12 +67,9 @@ public class FollowMethod extends DialogMethod<CharacterDialoguePlugin> implemen
             clone.addTrait(trait);
         }
 
-        clone.spawn(npc.getStoredLocation(), SpawnReason.PLUGIN);
-        cloneEntity.setVisibleByDefault(false);
-        player.showEntity(getProvider(), cloneEntity);
-        cloneEntity.setSilent(true);
-
+        player.showEntity(getProvider(), clone.getEntity());
         player.hideEntity(getProvider(), npc.getEntity());
+
         FollowPlayerTrait trait = clone.getTraitNullable(FollowPlayerTrait.class);
         trait.setTarget(player);
         context.getSession().sendDebugMessage("Now clone of npc is following the player", "FollowMethod");

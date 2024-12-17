@@ -22,7 +22,6 @@ public class NPCSpawnListener implements Listener {
         int id = npc.getId();
         CharacterDialogueAPI api = main.getApi();
 
-
         if (api.getNPCDialogue(id) == null) {
             return;
         }
