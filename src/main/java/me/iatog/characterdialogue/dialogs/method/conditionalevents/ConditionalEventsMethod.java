@@ -48,7 +48,7 @@ public class ConditionalEventsMethod extends DialogMethod<CharacterDialoguePlugi
 
         if (argument.isEmpty()) {
             getProvider().getLogger().warning("No ConditionalEvents event provided.");
-            context.destroy();
+            context.next();
             return;
         }
 
@@ -58,7 +58,7 @@ public class ConditionalEventsMethod extends DialogMethod<CharacterDialoguePlugi
         EventData data = new EventData(argument, session, exp, context.getConsumer(), pause, action, onTimeout);
         cache.put(context.getPlayer().getUniqueId(), data);
         if (pause) {
-            context.destroy();
+            context.pause();
         }
 
         session.sendDebugMessage("Waiting for ConditionalEvents response...", "ConditionalEventsMethod");
