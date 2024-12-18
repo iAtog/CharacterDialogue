@@ -62,14 +62,12 @@ public class MethodConfiguration {
 
     public int getInteger(String key) {
         Object value = get(key);
-
-        if (value instanceof Float) {
-            return ((Float) value).intValue();
-        } else if (value instanceof String) {
-            return Integer.parseInt((String) value);
-        } else {
-            return (int) value;
-        }
+        return switch (value) {
+            case null -> 0;
+            case Float v -> v.intValue();
+            case String s -> Integer.parseInt(s);
+            default -> (int) value;
+        };
     }
 
     public int getInteger(String key, int def) {
@@ -78,14 +76,12 @@ public class MethodConfiguration {
 
     public float getFloat(String key) {
         Object value = get(key);
-
-        if (value instanceof Integer) {
-            return ((Integer) value).floatValue();
-        } else if (value instanceof String) {
-            return Float.parseFloat((String) value);
-        } else {
-            return (float) value;
-        }
+        return switch (value) {
+            case null -> 0f;
+            case Integer i -> i.floatValue();
+            case String s -> Float.parseFloat(s);
+            default -> (float) value;
+        };
     }
 
     public float getFloat(String key, float def) {

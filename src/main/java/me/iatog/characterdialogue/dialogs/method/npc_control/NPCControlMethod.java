@@ -75,14 +75,17 @@ public class NPCControlMethod extends DialogMethod<CharacterDialoguePlugin> impl
             registries.put(player.getUniqueId(), new ControlRegistry(player));
         }
 
-        try {
-            ControlAction controlAction = ControlAction.valueOf(action);
+        ControlAction controlAction;
 
-            controlAction.execute(context, util, targetNpc);
+        try {
+            controlAction = ControlAction.valueOf(action);
         } catch(Exception ex) {
             getProvider().getLogger().warning("The '" + action +  "' action is not valid for the follow method. L" + context.getSession().getCurrentIndex());
             context.destroy();
+            return;
         }
+
+        controlAction.execute(context, util, targetNpc);
     }
 
     @EventHandler

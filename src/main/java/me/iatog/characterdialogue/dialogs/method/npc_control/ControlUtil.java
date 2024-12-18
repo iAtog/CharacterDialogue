@@ -33,6 +33,7 @@ public class ControlUtil {
 
         if(registry.isOnRegistry(npcId)) {
             context.getSession().sendDebugMessage("NPC (" +npcId+ ") is already cloned.", "FollowMethod");
+            context.next();
             return;
         }
 
@@ -86,15 +87,15 @@ public class ControlUtil {
 
     @Nullable
     public Location getConfigLocation(@NotNull MethodConfiguration configuration, @NotNull Location defLoc) {
+        if(!configuration.contains("x") || !configuration.contains("y") || !configuration.contains("z")) {
+            return null;
+        }
+
         float x = configuration.getFloat("x");
         float y = configuration.getFloat("y");
         float z = configuration.getFloat("z");
         float yaw = configuration.getFloat("yaw", defLoc.getYaw());
         float pitch = configuration.getFloat("pitch", defLoc.getPitch());
-
-        if(!configuration.contains("x") || !configuration.contains("y") || !configuration.contains("z")) {
-            return null;
-        }
 
         return new Location(defLoc.getWorld(), x, y, z, yaw, pitch);
     }
