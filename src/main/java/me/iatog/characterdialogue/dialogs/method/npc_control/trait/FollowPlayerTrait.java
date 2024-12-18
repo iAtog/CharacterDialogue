@@ -1,4 +1,4 @@
-package me.iatog.characterdialogue.trait;
+package me.iatog.characterdialogue.dialogs.method.npc_control.trait;
 
 import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.ai.NavigatorParameters;
@@ -62,11 +62,10 @@ public class FollowPlayerTrait extends Trait {
             int distance = (int) getPlayer().getLocation().distance(npc.getEntity().getLocation());
             Location npcLoc = npc.getEntity().getLocation();
             Location blockBelow = new Location(npcLoc.getWorld(), npcLoc.getX(),(int)npcLoc.getY() - 1, npcLoc.getZ());
-            boolean isAir = blockBelow.getBlock().getType() == Material.AIR;
 
-            if(isAir) {
+            if(blockBelow.getBlock().getType() == Material.AIR) {
                 onAirTries++;
-                if(onAirTries >= 30) {
+                if(onAirTries >= 45) {
                     teleportBehind();
                     onAirTries = 0;
                 }
