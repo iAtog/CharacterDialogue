@@ -8,6 +8,7 @@ import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.dialogs.MethodContext;
 import me.iatog.characterdialogue.util.TextUtils;
+import org.bukkit.entity.Player;
 
 public class SendServerMethod extends DialogMethod<CharacterDialoguePlugin> {
     // send_server{channel="BungeeCord"}: lobby2
@@ -18,6 +19,7 @@ public class SendServerMethod extends DialogMethod<CharacterDialoguePlugin> {
 
     @Override
     public void execute(MethodContext context) {
+        Player player = context.getPlayer();
         MethodConfiguration configuration = context.getConfiguration();
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
 
@@ -25,14 +27,17 @@ public class SendServerMethod extends DialogMethod<CharacterDialoguePlugin> {
         String channel = configuration.getString("channel", "BungeeCord");
 
         if (server.isEmpty()) {
-            this.destroy(context);
-            context.getPlayer().sendMessage(TextUtils.colorize("&cNo server found"));
-            return;
+            player.sendMessage(TextUtils.colorize("&cNo server found"));
+
+        } else {
+            out.writeUTF("Connect");
+            out.writeUTF(server);
+
+            player.sendPluginMessage(getProvider(), channel, out.toByteArray());
         }
 
-        out.writeUTF("Connect");
-        out.writeUTF(server);
-        this.destroy(context);
-        context.getPlayer().sendPluginMessage(getProvider(), channel, out.toByteArray());
+        context.destroy();
+
+
     }
 }

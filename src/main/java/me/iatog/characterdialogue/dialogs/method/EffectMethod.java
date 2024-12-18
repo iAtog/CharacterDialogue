@@ -30,7 +30,7 @@ public class EffectMethod extends DialogMethod<CharacterDialoguePlugin> {
 
         if (configuration.getArgument().equalsIgnoreCase("clear")) {
             player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-            this.next(context);
+            context.next();
             return;
         }
 
@@ -38,7 +38,7 @@ public class EffectMethod extends DialogMethod<CharacterDialoguePlugin> {
             String msg = "No potion effects have been specified in L" + session.getCurrentIndex() + ", skipping...";
             getProvider().getLogger().warning(msg);
             session.sendDebugMessage(msg, "EffectMethod");
-            this.next(context);
+            context.next();
             return;
         }
 
@@ -64,6 +64,6 @@ public class EffectMethod extends DialogMethod<CharacterDialoguePlugin> {
             }
         }
 
-        this.next(context);
+        context.next();
     }
 }

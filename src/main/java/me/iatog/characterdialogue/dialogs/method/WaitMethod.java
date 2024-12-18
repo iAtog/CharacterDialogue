@@ -24,7 +24,7 @@ public class WaitMethod extends DialogMethod<CharacterDialoguePlugin> {
             seconds = Double.parseDouble(arg);
         } catch (NumberFormatException e) {
             getProvider().getLogger().warning("The argument '" + arg + "' in " + session.getDisplayName() + " isn't valid. Line: " + session.getCurrentIndex());
-            this.destroy(context);
+            context.destroy();
             return;
         }
 
@@ -37,9 +37,9 @@ public class WaitMethod extends DialogMethod<CharacterDialoguePlugin> {
 
         Bukkit.getScheduler().runTaskLater(getProvider(), () -> {
             if (next < session.getLines().size() && (player != null && player.isOnline())) {
-                this.next(context);
+                context.next();
             } else {
-                this.destroy(context);
+                context.destroy();
             }
         }, (long) (20 * seconds));
     }

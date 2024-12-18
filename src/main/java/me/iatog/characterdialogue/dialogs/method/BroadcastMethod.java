@@ -14,7 +14,7 @@ public class BroadcastMethod extends DialogMethod<CharacterDialoguePlugin> {
     @Override
     public void execute(MethodContext context) {
         Bukkit.broadcastMessage(context.getConfiguration().getArgument());
-        this.next(context);
+        context.next();
     }
 
 }

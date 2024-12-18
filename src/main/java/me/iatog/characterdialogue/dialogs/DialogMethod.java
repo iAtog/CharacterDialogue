@@ -57,18 +57,6 @@ public abstract class DialogMethod<T extends JavaPlugin> {
         return provider;
     }
 
-    protected void next(MethodContext context) {
-        context.getConsumer().accept(CompletedType.CONTINUE);
-    }
-
-    protected void pause(MethodContext context) {
-        context.getConsumer().accept(CompletedType.PAUSE);
-    }
-
-    protected void destroy(MethodContext context) {
-        context.getConsumer().accept(CompletedType.DESTROY);
-    }
-
     public boolean isDisabled() {
         return disabled;
     }

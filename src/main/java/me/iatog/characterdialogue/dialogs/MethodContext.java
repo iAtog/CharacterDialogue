@@ -16,7 +16,7 @@ public class MethodContext {
     private final SingleUseConsumer<CompletedType> consumer;
     private final NPC npc;
 
-    public MethodContext(Player player,
+    public MethodContext(@NotNull Player player,
                          @NotNull DialogSession session,
                          @NotNull MethodConfiguration configuration,
                          @NotNull SingleUseConsumer<CompletedType> consumer,
@@ -46,5 +46,17 @@ public class MethodContext {
 
     public NPC getNPC() {
         return npc;
+    }
+
+    public void next() {
+        this.consumer.accept(CompletedType.CONTINUE);
+    }
+
+    public void destroy() {
+        this.consumer.accept(CompletedType.DESTROY);
+    }
+
+    public void pause() {
+        this.consumer.accept(CompletedType.PAUSE);
     }
 }

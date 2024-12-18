@@ -34,7 +34,7 @@ public class GiveMethod extends DialogMethod<CharacterDialoguePlugin> {
             String msg = "The item material '" + configuration.getString("material") + "' is not valid.";
             session.sendDebugMessage(msg, "GiveMethod");
             getProvider().getLogger().warning(msg);
-            this.destroy(context);
+            context.next();
             return;
         }
         ItemStack itemStack = new ItemStack(material, amount);
@@ -46,6 +46,6 @@ public class GiveMethod extends DialogMethod<CharacterDialoguePlugin> {
         }
 
         context.getPlayer().getInventory().addItem(itemStack);
-        this.next(context);
+        context.next();
     }
 }

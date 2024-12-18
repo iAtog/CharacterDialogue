@@ -27,6 +27,6 @@ public class TitleMethod extends DialogMethod<CharacterDialoguePlugin> {
         int fadeOut = configuration.getInteger("fadeOut", 20);
 
         context.getPlayer().sendTitle(title, subtitle, fadeIn, stay, fadeOut);
-        this.next(context);
+        context.next();
     }
 }

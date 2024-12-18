@@ -30,7 +30,7 @@ public class SoundMethod extends DialogMethod<CharacterDialoguePlugin> {
             sound = Sound.valueOf(configuration.getString("sound"));
         } catch (Exception exception) {
             getProvider().getLogger().log(Level.SEVERE, "Unknown sound \"" + configuration.getString("sound") + "\", stopping dialogue.", exception);
-            this.destroy(context);
+            context.destroy();
             return;
         }
 
@@ -38,7 +38,7 @@ public class SoundMethod extends DialogMethod<CharacterDialoguePlugin> {
         float pitch = configuration.getFloat("pitch", 1f);
 
         player.playSound(player.getLocation(), sound, volume, pitch);
-        next(context);
+        context.next();
     }
 
 }

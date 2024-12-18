@@ -16,7 +16,7 @@ public class StartDialogueMethod extends DialogMethod<CharacterDialoguePlugin> {
         String dialogueName = context.getConfiguration().getArgument().trim();
         Dialogue dialogue = getProvider().getApi().getDialogue(dialogueName);
 
-        this.destroy(context);
+        context.destroy();
 
         if (dialogue == null) {
             getProvider().getLogger().warning("The dialogue '" + dialogueName + "' was not found.");

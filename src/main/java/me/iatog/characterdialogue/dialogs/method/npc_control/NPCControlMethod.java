@@ -65,7 +65,7 @@ public class NPCControlMethod extends DialogMethod<CharacterDialoguePlugin> impl
 
         if(targetNpc == null) {
             getProvider().getLogger().severe("The specified npc has not been found while using follow method.");
-            this.destroy(context);
+            context.destroy();
             return;
         }
 

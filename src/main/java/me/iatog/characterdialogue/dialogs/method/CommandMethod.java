@@ -34,12 +34,12 @@ public class CommandMethod extends DialogMethod<CharacterDialoguePlugin> {
             String msg = "Invalid sender specified '" + configSender + "' in dialogue: " + session.getDialogue().getName();
             getProvider().getLogger().warning(msg);
             session.sendDebugMessage(msg, "CommandMethod");
-            this.destroy(context);
+            context.destroy();
             return;
         }
 
         Bukkit.dispatchCommand(sender, command);
-        this.next(context);
+        context.next();
     }
 
 }

@@ -38,6 +38,6 @@ public class TeleportMethod extends DialogMethod<CharacterDialoguePlugin> {
 
         Location to = new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
         player.teleport(to);
-        next(context);
+        context.next();
     }
 }

@@ -13,7 +13,7 @@ public class SendMethod extends DialogMethod<CharacterDialoguePlugin> {
     @Override
     public void execute(MethodContext context) {
         context.getPlayer().sendMessage(context.getConfiguration().getArgument());
-        this.next(context);
+        context.next();
     }
 
 }

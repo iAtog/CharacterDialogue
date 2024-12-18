@@ -51,7 +51,7 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
                 getProvider().getLogger().severe("Condition: " + found(! condition.isEmpty()));
                 getProvider().getLogger().severe("ifTrue: " + found(! ifTrue.isEmpty()));
                 getProvider().getLogger().severe("ifFalse: " + found(! ifFalse.isEmpty()));
-                this.destroy(context);
+                context.destroy();
                 session.sendDebugMessage("Error obtaining configuration", "ConditionalMethod");
                 return;
             }
@@ -63,8 +63,7 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
             } catch (IllegalArgumentException e) {
                 context.getPlayer().sendMessage(TextUtils.colorize("&c&lFatal error occurred."));
                 getProvider().getLogger().warning("The dialogue '" + session.getDialogue().getName() + "' has an invalid condition in L" + session.getCurrentIndex());
-
-                this.destroy(context);
+                context.destroy();
                 return;
             }
 
@@ -86,7 +85,7 @@ public class ConditionalMethod extends DialogMethod<CharacterDialoguePlugin> {
             context.getPlayer().sendMessage(TextUtils.colorize("&c&lFatal error occurred."));
             getProvider().getLogger().warning("The dialogue '" + session.getDialogue().getName() + "' has an invalid format in L" + session.getCurrentIndex());
             e.printStackTrace();
-            this.destroy(context);
+            context.destroy();
         }
     }
 
