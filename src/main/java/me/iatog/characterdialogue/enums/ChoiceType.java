@@ -16,7 +16,7 @@ import org.geysermc.floodgate.api.FloodgateApi;
 
 import java.util.function.Consumer;
 
-import static me.iatog.characterdialogue.dialogs.method.LegacyChoiceMethod.COMMAND_NAME;
+import static me.iatog.characterdialogue.dialogs.method.choice.ChoiceMethod.COMMAND_NAME;
 
 public enum ChoiceType {
     CHAT(data -> {

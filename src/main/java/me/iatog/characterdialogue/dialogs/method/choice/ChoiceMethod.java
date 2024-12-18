@@ -19,6 +19,9 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> {
+
+    public static String COMMAND_NAME = "/;;$/5-choice";
+
     // 'choice{type=chat, timeout=15}: choice_sample'
     // 'choice{type=bedrock, timeout=20}: choice_sample'
     // 'choice{type=gui, timeout=0}: no_cooldown_choice'
@@ -59,8 +62,8 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> {
         String selectedChoice = configuration.getArgument();
         int cooldown = configuration.getInteger("timeout", 30);
 
-        if (! ChoiceUtil.isContextValid(context)) {
-            this.next(context);
+        if (!ChoiceUtil.isContextValid(context)) {
+            context.next();
             return;
         }
 
@@ -74,7 +77,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> {
                   dialogSession.getDialogue().getName() + "\" dialogue.";
             getProvider().getLogger().warning(msg);
             dialogSession.sendDebugMessage(msg, "ChoiceMethod");
-            this.next(context);
+            context.next();
             return;
         }
 
@@ -88,7 +91,7 @@ public class ChoiceMethod extends DialogMethod<CharacterDialoguePlugin> {
 
         ChoiceSession choiceSession = new ChoiceSession(getProvider(), player);
 
-        this.pause(context);
+        context.pause();
 
         ChoiceUtil.addChoices(choiceSession, selectedChoice);
         sessions.put(player.getUniqueId(), choiceSession);

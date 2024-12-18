@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import java.util.Map;
 import java.util.UUID;
 
-import static me.iatog.characterdialogue.dialogs.method.LegacyChoiceMethod.COMMAND_NAME;
+import static me.iatog.characterdialogue.dialogs.method.choice.ChoiceMethod.COMMAND_NAME;
 
 public class ChoiceChatTypeListener implements Listener {
 
