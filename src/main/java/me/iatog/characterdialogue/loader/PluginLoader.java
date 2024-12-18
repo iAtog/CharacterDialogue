@@ -1,7 +1,7 @@
 package me.iatog.characterdialogue.loader;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
-import me.iatog.characterdialogue.dialogs.method.follow.FollowMethod;
+import me.iatog.characterdialogue.dialogs.method.npc_control.NPCControlMethod;
 import me.iatog.characterdialogue.filter.ConsoleFilter;
 import me.iatog.characterdialogue.util.TextUtils;
 import org.apache.logging.log4j.LogManager;
@@ -41,7 +41,7 @@ public class PluginLoader implements Loader {
     public void unload() {
         loaders.forEach(Loader::unload);
         loaders.clear();
-        FollowMethod.registries.forEach((_uuid, npcs) -> {
+        NPCControlMethod.registries.forEach((_uuid, npcs) -> {
             npcs.clearAll();
         });
     }

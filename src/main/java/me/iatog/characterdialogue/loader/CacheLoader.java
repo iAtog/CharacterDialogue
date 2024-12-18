@@ -6,7 +6,7 @@ import me.iatog.characterdialogue.dialogs.method.*;
 import me.iatog.characterdialogue.dialogs.method.choice.ChoiceMethod;
 import me.iatog.characterdialogue.dialogs.method.conditional.ConditionalMethod;
 import me.iatog.characterdialogue.dialogs.method.conditionalevents.ConditionalEventsMethod;
-import me.iatog.characterdialogue.dialogs.method.follow.FollowMethod;
+import me.iatog.characterdialogue.dialogs.method.npc_control.NPCControlMethod;
 import me.iatog.characterdialogue.dialogs.method.talk.TalkMethod;
 import me.iatog.characterdialogue.libraries.Cache;
 import me.iatog.characterdialogue.util.TextUtils;
@@ -41,7 +41,7 @@ public class CacheLoader implements Loader {
               new TitleMethod(),
 
               new StartDialogueMethod(main),
-              new FollowMethod(main),
+              new NPCControlMethod(main),
               new ChoiceMethod(main),
               new ConditionalEventsMethod(main)
         );

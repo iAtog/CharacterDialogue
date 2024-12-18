@@ -1,5 +1,6 @@
-package me.iatog.characterdialogue.dialogs.method.follow;
+package me.iatog.characterdialogue.dialogs.method.npc_control;
 
+import me.iatog.characterdialogue.dialogs.method.npc_control.data.ControlData;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.entity.Player;
 
@@ -7,32 +8,32 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class FollowRegistry {
+public class ControlRegistry {
 
     private final UUID playerId;
 
     // Integer = the original npc id
     // FollowData = original and his clone
-    private final Map<Integer, FollowData> npcMap;
+    private final Map<Integer, ControlData> npcMap;
 
-    public FollowRegistry(Player player) {
+    public ControlRegistry(Player player) {
         this.npcMap = new HashMap<>();
         this.playerId = player.getUniqueId();
     }
 
-    public FollowData get(int npcId) {
+    public ControlData get(int npcId) {
         return npcMap.get(npcId);
     }
 
     public void addNPC(NPC original, NPC clone) {
-        this.npcMap.put(original.getId(), new FollowData(original, clone));
+        this.npcMap.put(original.getId(), new ControlData(original, clone));
     }
 
-    public FollowData removeNPC(int npcId) {
+    public ControlData removeNPC(int npcId) {
         return this.npcMap.remove(npcId);
     }
 
-    public FollowData removeNPC(NPC originalNpc) {
+    public ControlData removeNPC(NPC originalNpc) {
         return this.removeNPC(originalNpc.getId());
     }
 
