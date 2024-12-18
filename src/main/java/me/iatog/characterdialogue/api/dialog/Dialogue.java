@@ -43,6 +43,8 @@ public interface Dialogue {
         return getDocument().getSection("dialogue." + getName());
     }
 
+    boolean isSlowEffectEnabled();
+
     class DialoguePermission {
 
         private final String permission;

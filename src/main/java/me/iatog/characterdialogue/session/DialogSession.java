@@ -26,11 +26,13 @@ public class DialogSession implements Session {
     private final List<String> lines;
     private final String displayName;
     private final NPC npc;
-    private Dialogue dialogue;
+    private final Dialogue dialogue;
     private int index = 0;
     private boolean stop;
-    private boolean debug = false;
-    private boolean isDestroyed = false;
+
+    private boolean debug;
+    private boolean isDestroyed;
+    private boolean slowEffect;
 
     public DialogSession(CharacterDialoguePlugin main, Player player, List<String> lines, ClickType clickType,
                          NPC npc, String displayName, String dialogueName) {
@@ -41,11 +43,12 @@ public class DialogSession implements Session {
         this.displayName = displayName;
         this.dialogue = main.getCache().getDialogues().get(dialogueName);
         this.npc = npc;
+        this.slowEffect = this.dialogue.isSlowEffectEnabled();
     }
 
     public DialogSession(CharacterDialoguePlugin main, Player player, Dialogue dialogue, NPC npc) {
         this(main, player, dialogue.getLines(), dialogue.getClickType(), npc, dialogue.getDisplayName(), dialogue.getName());
-        this.dialogue = dialogue;
+        //this.slowEffect = this.dialogue.isSlowEffectEnabled();
     }
 
     public DialogSession(CharacterDialoguePlugin main, Player player, Dialogue dialogue) {
@@ -61,9 +64,11 @@ public class DialogSession implements Session {
         setCurrentIndex(index);
         sendDebugMessage("Started in: " + index,
               "DialogSession:63");
-        getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE,
-              4, true,
-              false, false));
+        if(slowEffect && getPlayer().isOnline()) {
+            getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE,
+                  4, true,
+                  false, false));
+        }
 
         SingleUseConsumer<CompletedType> consumer = SingleUseConsumer.create((result) -> {
             if (index >= lines.size()) {
@@ -79,8 +84,10 @@ public class DialogSession implements Session {
                 this.destroy();
                 return;
             } else if (result == CompletedType.PAUSE) {
-                if (getPlayer() != null)
+                if (getPlayer() != null && slowEffect) {
                     getPlayer().removePotionEffect(PotionEffectType.SLOW);
+                }
+
                 sendDebugMessage("Dialogue paused", "SingleUseConsumer");
                 return;
             }

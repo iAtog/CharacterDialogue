@@ -76,4 +76,9 @@ public class TestDialogueImpl implements Dialogue {
     public Section getSection() {
         return null;
     }
+
+    @Override
+    public boolean isSlowEffectEnabled() {
+        return false;
+    }
 }

@@ -24,7 +24,9 @@ public class DialogueImpl implements Dialogue {
     private DialogHologram hologram;
     private List<String> firstInteraction;
     private DialoguePermission permissions;
+
     private boolean movement;
+    private boolean slowEffect;
 
     private CharacterDialoguePlugin main;
 
@@ -60,6 +62,7 @@ public class DialogueImpl implements Dialogue {
         }
 
         this.movement = section.getBoolean("allow-movement", true);
+        this.slowEffect = section.getBoolean("slow-effect", true);
 
         this.main = instance;
     }
@@ -155,5 +158,9 @@ public class DialogueImpl implements Dialogue {
     @Override
     public YamlDocument getDocument() {
         return document;
+    }
+
+    public boolean isSlowEffectEnabled() {
+        return this.slowEffect;
     }
 }
