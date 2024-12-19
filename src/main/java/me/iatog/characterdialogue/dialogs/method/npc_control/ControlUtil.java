@@ -81,7 +81,7 @@ public class ControlUtil {
 
         player.showEntity(main, data.getOriginal().getEntity());
         data.getCopy().destroy();
-        NPCControlMethod.registries.remove(player.getUniqueId());
+        //NPCControlMethod.registries.remove(player.getUniqueId());
         hologramLibrary.showHologram(player, data.getOriginal().getId());
     }
 
