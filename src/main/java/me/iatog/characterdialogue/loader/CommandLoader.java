@@ -18,6 +18,8 @@ import me.iatog.characterdialogue.part.gui.GUIPartFactory;
 import me.iatog.characterdialogue.part.method.DialogMethodArgument;
 import me.iatog.characterdialogue.part.method.MethodPartFactory;
 import me.iatog.characterdialogue.part.npc.NPCPartFactory;
+import me.iatog.characterdialogue.part.record.RecordPartFactory;
+import me.iatog.characterdialogue.path.Record;
 import net.citizensnpcs.api.npc.NPC;
 
 public class CommandLoader implements Loader {
@@ -38,6 +40,7 @@ public class CommandLoader implements Loader {
         injector.bindFactory(Group.class, new GroupPartFactory(main));
         injector.bindFactory(NPC.class, new NPCPartFactory());
         injector.bindFactory(GUI.class, new GUIPartFactory(main));
+        injector.bindFactory(Record.class, new RecordPartFactory(main));
 
         this.builder = new AnnotatedCommandTreeBuilderImpl(injector);
     }
