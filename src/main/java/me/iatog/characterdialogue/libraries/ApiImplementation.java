@@ -43,7 +43,8 @@ public class ApiImplementation implements CharacterDialogueAPI {
     public ApiImplementation(CharacterDialoguePlugin main) {
         this.main = main;
         hologramLibrary = new HologramLibrary(main);
-        String regex = "^(\\w+)(?:\\{([^}]*)})?(?::\\s*(.*))?$";
+        //String regex = "^(\\w+)(?:\\{([^}]*)})?(?::\\s*(.*))?$";
+        String regex = "^(\\w+)(?:\\{([^{}]*(?:\\{[^{}]*}[^{}]*)*)})?(?::\\s*(.*))?$";
         this.lineRegex = Pattern.compile(regex);
     }
 
