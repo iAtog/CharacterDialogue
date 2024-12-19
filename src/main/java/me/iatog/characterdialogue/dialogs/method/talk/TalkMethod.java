@@ -39,6 +39,7 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
         super("talk", main);
         this.players = new ArrayList<>();
         addConfigurationType("type", ConfigurationType.TEXT);
+        addConfigurationType("name", ConfigurationType.TEXT);
         addConfigurationType("sound", ConfigurationType.TEXT);
         addConfigurationType("volume", ConfigurationType.FLOAT);
         addConfigurationType("pitch", ConfigurationType.FLOAT);
@@ -60,7 +61,7 @@ public class TalkMethod extends DialogMethod<CharacterDialoguePlugin> implements
                                SingleUseConsumer<CompletedType> completed) {
         String message = configuration.getArgument();
         UUID uuid = player.getUniqueId();
-        final String npcName = session.getDialogue().getDisplayName();
+        final String npcName = configuration.getString("name", session.getDialogue().getDisplayName());
         final String translatedMessage = Placeholders.translate(player, message);
 
         float volume = configuration.getFloat("volume", 0.5f);
