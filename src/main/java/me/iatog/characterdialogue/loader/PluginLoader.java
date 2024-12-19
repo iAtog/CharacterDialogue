@@ -3,7 +3,10 @@ package me.iatog.characterdialogue.loader;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.dialogs.method.npc_control.NPCControlMethod;
 import me.iatog.characterdialogue.filter.ConsoleFilter;
+import me.iatog.characterdialogue.path.PathTrait;
 import me.iatog.characterdialogue.util.TextUtils;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.trait.TraitInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 
@@ -33,6 +36,8 @@ public class PluginLoader implements Loader {
               new DialogLoader(main),
               new GUILoader(main)
         );
+
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(PathTrait.class).withName("path_trait"));
 
         main.getLogger().info(TextUtils.colorize("&a" + main.getDescription().getName() + " enabled. &7" + main.getDescription().getVersion()));
     }
