@@ -21,7 +21,8 @@ public class ListenerLoader implements Loader {
               new NPCSpawnListener(main),
               new PlayerQuitListener(main),
               new PlayerMoveListener(main),
-              new PlayerJoinListener(main)
+              new PlayerJoinListener(main),
+              new RecordListener()
         );
     }
 
