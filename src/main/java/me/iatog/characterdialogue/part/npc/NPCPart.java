@@ -37,12 +37,11 @@ public class NPCPart implements ArgumentPart {
         List<String> suggest = new ArrayList<>();
         for (NPCRegistry registries : CitizensAPI.getNPCRegistries()) {
             registries.forEach(npc -> {
-                suggest.add(npc.getName());
+                suggest.add(String.valueOf(npc.getId()));
             });
         }
 
         return suggest;
-
     }
 
     @Override
