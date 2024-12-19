@@ -1,4 +1,5 @@
 package me.iatog.characterdialogue.path;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
@@ -16,9 +17,10 @@ import java.util.Map;
 public class PathStorage {
     private final String dbPath;
     private final Map<String, List<RecordLocation>> pathMap = new HashMap<>();
-    private final Gson gson = new Gson();
+    private final Gson gson;
 
     public PathStorage(CharacterDialoguePlugin main) {
+        this.gson = new Gson();
         File dbFile = new File(main.getDataFolder(), "path_storage.db");
         this.dbPath = "jdbc:sqlite:" + dbFile.getAbsolutePath();
 
