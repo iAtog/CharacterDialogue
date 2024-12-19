@@ -24,7 +24,6 @@ public class NPCControlMethod extends DialogMethod<CharacterDialoguePlugin> impl
 
     public static final Map<UUID, ControlRegistry> registries = new HashMap<>();
 
-    private final HologramLibrary hologramLibrary;
     private final ControlUtil util;
 
     // Custom actions | default = start
@@ -38,7 +37,6 @@ public class NPCControlMethod extends DialogMethod<CharacterDialoguePlugin> impl
     // npc_control{action=destroy, npcId=18}
     public NPCControlMethod(CharacterDialoguePlugin main) {
         super("npc_control", main);
-        this.hologramLibrary = getProvider().getApi().getHologramLibrary();
         this.util = new ControlUtil(main);
 
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(FollowPlayerTrait.class));
@@ -64,7 +62,7 @@ public class NPCControlMethod extends DialogMethod<CharacterDialoguePlugin> impl
         NPC targetNpc = CitizensAPI.getNPCRegistry().getById(npcId);
 
         if(targetNpc == null) {
-            getProvider().getLogger().severe("The specified npc has not been found while using follow method.");
+            getProvider().getLogger().severe("The specified npc has not been found while using npc_control method.");
             context.destroy();
             return;
         }
