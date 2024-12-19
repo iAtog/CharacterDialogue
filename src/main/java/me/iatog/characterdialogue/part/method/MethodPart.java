@@ -45,7 +45,7 @@ public class MethodPart implements ArgumentPart {
 
     @Override
     public List<DialogMethodArgument> parseValue(CommandContext context, ArgumentStack stack, CommandPart caller) throws ArgumentParseException {
-        String possibleMethod = stack.next().toUpperCase();
+        String possibleMethod = stack.next();
         Map<String, DialogMethod<? extends JavaPlugin>> methods = main.getCache().getMethods();
 
         if (! methods.containsKey(possibleMethod)) {
