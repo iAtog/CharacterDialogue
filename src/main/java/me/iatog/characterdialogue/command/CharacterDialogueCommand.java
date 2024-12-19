@@ -35,7 +35,8 @@ import static me.iatog.characterdialogue.util.TextUtils.colorize;
 @SubCommandClasses({
       DialogueCommands.class,
       MethodCommands.class,
-      GroupsCommands.class
+      GroupsCommands.class,
+      RecordCommand.class
 })
 public class CharacterDialogueCommand implements CommandClass {
 
@@ -157,7 +158,6 @@ public class CharacterDialogueCommand implements CommandClass {
     )
     public void openGUI(@Sender Player player, GUI gui) {
         if (gui == null) {
-            player.sendMessage("Nopiti");
             return;
         }
 
