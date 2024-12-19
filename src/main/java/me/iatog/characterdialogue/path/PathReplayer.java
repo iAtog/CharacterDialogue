@@ -21,8 +21,4 @@ public class PathReplayer {
 
         trait.setPaths(paths, teleport);
     }
-
-    public void setTeleport(boolean teleport) {
-        this.teleport = teleport;
-    }
 }

@@ -70,7 +70,6 @@ public class PathRecorder {
 
     private void save() {
         main.getPathStorage().savePath(name, this.paths);
-        //player().sendMessage(colorize("&aThe path '" + name + "' has been saved."));
     }
 
     public String getPathAsJson() {

@@ -5,13 +5,15 @@ import me.iatog.characterdialogue.dialogs.MethodContext;
 import me.iatog.characterdialogue.dialogs.method.npc_control.data.ActionData;
 import me.iatog.characterdialogue.dialogs.method.npc_control.data.ControlData;
 import me.iatog.characterdialogue.dialogs.method.npc_control.trait.FollowPlayerTrait;
+import me.iatog.characterdialogue.path.PathReplayer;
+import me.iatog.characterdialogue.path.RecordLocation;
 import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.ai.NavigatorParameters;
 import net.citizensnpcs.api.npc.NPC;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import static me.iatog.characterdialogue.dialogs.method.npc_control.NPCControlMethod.registries;
@@ -101,6 +103,34 @@ public enum ControlAction {
 
             navigator.getPathStrategy();
             navigator.setTarget(moveTo);
+        }
+
+        ctx.context().next();
+    }),
+    RECORD((ctx) -> {
+        String recordName = ctx.context().getConfiguration().getString("record");
+        ControlRegistry registry = registries.get(ctx.player().getUniqueId());
+        ControlData data = registry.get(ctx.targetNPC().getId());
+
+        if(recordName == null || recordName.isEmpty()) {
+            ctx.plugin().getLogger().warning("No record name specified in record action.");
+            ctx.context().destroy();
+            return;
+        }
+
+        List<RecordLocation> locations = ctx.plugin().getPathStorage().getPath(recordName);
+
+        if(locations == null) {
+            ctx.plugin().getLogger().warning("Record '" + recordName + "' not found.");
+            ctx.context().destroy();
+            return;
+        }
+
+        if(data != null) {
+            PathReplayer replayer = new PathReplayer(locations, data.getCopy());
+            replayer.startReplay();
+        } else {
+            ctx.plugin().getLogger().warning("An attempt was made to play a recording but the cloned npc was not found.");
         }
 
         ctx.context().next();
