@@ -74,7 +74,7 @@ public class RecordCommand implements CommandClass {
 
         PathRecorder recorder = recorders.get(sender.getUniqueId());
         recorder.stopRecording(true);
-        sender.sendMessage(colorize("&aThe recording has been stopped and saved."));
+        sender.sendMessage(colorize("&aRecording &8'&c" + recorder.getName() + "&8'&a has been saved."));
     }
 
     @Command(

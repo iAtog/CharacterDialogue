@@ -23,9 +23,10 @@ public class RecordListener implements Listener {
                 event.setCancelled(true);
                 recorder.stopRecording(true);
                 player.spigot().sendMessage(
-                      ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(colorize("&cRecording stopped."))
+                      ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(colorize("&cRecording saved."))
                 );
-                player.sendMessage(colorize("&aRecording &8'&c" + recorder.getName() + "&8'&a saved."));
+
+                player.sendMessage(colorize("&aRecording &8'&c" + recorder.getName() + "&8'&a has been saved."));
             }
         }
     }
