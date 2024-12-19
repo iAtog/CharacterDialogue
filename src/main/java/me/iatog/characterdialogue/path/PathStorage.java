@@ -22,10 +22,6 @@ public class PathStorage {
         File dbFile = new File(main.getDataFolder(), "path_storage.db");
         this.dbPath = "jdbc:sqlite:" + dbFile.getAbsolutePath();
 
-        if (!main.getDataFolder().exists()) {
-            main.getDataFolder().mkdirs();
-        }
-
         createTable();
         loadPathsFromDatabase();
     }
