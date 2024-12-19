@@ -10,6 +10,7 @@ import me.iatog.characterdialogue.interfaces.FileFactory;
 import me.iatog.characterdialogue.libraries.ApiImplementation;
 import me.iatog.characterdialogue.libraries.Cache;
 import me.iatog.characterdialogue.loader.PluginLoader;
+import me.iatog.characterdialogue.path.PathStorage;
 import me.iatog.characterdialogue.util.TextUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -38,6 +39,7 @@ public class CharacterDialoguePlugin extends JavaPlugin {
     private Metrics metrics;
     private GUIFactory guiFactory;
     private List<YamlDocument> dialogues;
+    private PathStorage pathStorage;
 
     /**
      * I only set this method for third party plugins, I do not use this method and
@@ -79,6 +81,7 @@ public class CharacterDialoguePlugin extends JavaPlugin {
         this.loader = new PluginLoader(this);
         this.hooks = new Hooks();
         this.api = new ApiImplementation(this);
+        this.pathStorage = new PathStorage(this);
 
         loader.load();
 
@@ -144,7 +147,10 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 
             choiceCache.put(choice.getId(), choice);
         }
+    }
 
+    public PathStorage  getPathStorage() {
+        return pathStorage;
     }
 
     public List<YamlDocument> getAllDialogues() {
