@@ -5,7 +5,10 @@ import me.iatog.characterdialogue.dialogs.MethodContext;
 import me.iatog.characterdialogue.dialogs.method.npc_control.data.ActionData;
 import me.iatog.characterdialogue.dialogs.method.npc_control.data.ControlData;
 import me.iatog.characterdialogue.dialogs.method.npc_control.trait.FollowPlayerTrait;
+import net.citizensnpcs.api.ai.Navigator;
+import net.citizensnpcs.api.ai.NavigatorParameters;
 import net.citizensnpcs.api.npc.NPC;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -70,7 +73,37 @@ public enum ControlAction {
         }
     }),
     MOVE_TO((ctx) -> {
+        ControlRegistry registry = registries.get(ctx.player().getUniqueId());
+        ControlData data = registry.get(ctx.targetNPC().getId());
+        MethodConfiguration configuration = ctx.context().getConfiguration();
 
+        if(data != null) {
+            NPC clone = data.getCopy();
+            Location moveTo = ctx.util().getConfigLocation(configuration, ctx.player().getLocation());
+
+            if(moveTo == null) {
+                ctx.plugin().getLogger().severe("Invalid coordinates provided");
+                ctx.context().destroy();
+                return;
+            }
+
+            FollowPlayerTrait trait = clone.getOrAddTrait(FollowPlayerTrait.class);
+            trait.setTarget(null);
+
+            Navigator navigator = clone.getNavigator();
+            NavigatorParameters params = navigator.getDefaultParameters();
+            if(navigator.isNavigating()) {
+                navigator.cancelNavigation();
+            }
+
+            params.baseSpeed(15);
+            params.range(30);
+
+            navigator.getPathStrategy();
+            navigator.setTarget(moveTo);
+        }
+
+        ctx.context().next();
     });
 
     private final Consumer<ActionData> consumer;
