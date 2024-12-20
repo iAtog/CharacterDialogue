@@ -5,9 +5,9 @@ import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
-import me.iatog.characterdialogue.path.*;
+import me.iatog.characterdialogue.adapter.AdaptedNPC;
 import me.iatog.characterdialogue.path.Record;
-import net.citizensnpcs.api.npc.NPC;
+import me.iatog.characterdialogue.path.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -117,7 +117,7 @@ public class RecordCommand implements CommandClass {
     @Command(
           names = "replay"
     )
-    public void replay(@Sender Player player, Record record, NPC npc) {
+    public void replay(@Sender Player player, Record record, AdaptedNPC npc) {
         if(record == null) {
             player.sendMessage("Record not found.");
             return;

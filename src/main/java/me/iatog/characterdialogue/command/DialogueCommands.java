@@ -16,10 +16,12 @@ import org.bukkit.entity.Player;
 public class DialogueCommands implements CommandClass {
 
     @Command(names = "start", desc = "Run a dialogue")
-    public void dialoguesCommand(@Sender CommandSender sender,
-                                 Dialogue dialogue,
-                                 @OptArg Player playerOpt,
-                                 @Switch("debug") boolean debug) {
+    public void dialoguesCommand(
+          @Sender CommandSender sender,
+          Dialogue dialogue,
+          @OptArg Player playerOpt,
+          @Switch("debug") boolean debug
+    ) {
         Player target;
         if (dialogue == null) {
             sender.sendMessage(TextUtils.colorize("&cDialogue with that name was not found."));

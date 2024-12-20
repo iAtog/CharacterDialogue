@@ -1,7 +1,10 @@
 package me.iatog.characterdialogue.loader;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
-import me.iatog.characterdialogue.listeners.*;
+import me.iatog.characterdialogue.listeners.PlayerJoinListener;
+import me.iatog.characterdialogue.listeners.PlayerMoveListener;
+import me.iatog.characterdialogue.listeners.PlayerQuitListener;
+import me.iatog.characterdialogue.listeners.RecordListener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -17,8 +20,6 @@ public class ListenerLoader implements Loader {
     @Override
     public void load() {
         registerListeners(
-              new NPCInteractListener(main),
-              new NPCSpawnListener(main),
               new PlayerQuitListener(main),
               new PlayerMoveListener(main),
               new PlayerJoinListener(main),

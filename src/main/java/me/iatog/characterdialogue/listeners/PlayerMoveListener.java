@@ -19,7 +19,7 @@ public class PlayerMoveListener implements Listener {
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
-        if (! main.getCache().getFrozenPlayers().contains(player.getUniqueId())) {
+        if (!main.getCache().getFrozenPlayers().contains(player.getUniqueId())) {
             return;
         }
 

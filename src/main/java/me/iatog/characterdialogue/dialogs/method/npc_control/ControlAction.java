@@ -1,17 +1,13 @@
 package me.iatog.characterdialogue.dialogs.method.npc_control;
 
+import me.iatog.characterdialogue.adapter.AdaptedNPC;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.dialogs.MethodContext;
 import me.iatog.characterdialogue.dialogs.method.npc_control.data.ActionData;
 import me.iatog.characterdialogue.dialogs.method.npc_control.data.ControlData;
-import me.iatog.characterdialogue.dialogs.method.npc_control.trait.FollowPlayerTrait;
 import me.iatog.characterdialogue.path.PathReplayer;
 import me.iatog.characterdialogue.path.RecordLocation;
-import net.citizensnpcs.api.ai.Navigator;
-import net.citizensnpcs.api.ai.NavigatorParameters;
-import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Location;
-import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -55,16 +51,15 @@ public enum ControlAction {
         MethodConfiguration configuration = ctx.context().getConfiguration();
 
         if(data != null) {
-            NPC clone = data.getCopy();
+            AdaptedNPC clone = data.getCopy();
             Location newLocation = ctx.util().getConfigLocation(configuration, ctx.player().getLocation());
 
             if(newLocation == null) {
                 ctx.plugin().getLogger().warning("Invalid coordinates specified in pose action.");
                 ctx.context().destroy();
             } else {
-                FollowPlayerTrait trait = clone.getOrAddTrait(FollowPlayerTrait.class);
-                trait.setTarget(null);
-                clone.teleport(newLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
+                ctx.util().toggleFollow(clone, ctx.player(), false);
+                clone.teleport(newLocation);
 
                 if(configuration.getBoolean("lookPlayer", false)) {
                     clone.faceLocation(ctx.player().getLocation());
@@ -75,12 +70,15 @@ public enum ControlAction {
         }
     }),
     MOVE_TO((ctx) -> {
+        ctx.player().sendMessage("Disabled.");
+        ctx.context().next();
+        /*
         ControlRegistry registry = registries.get(ctx.player().getUniqueId());
         ControlData data = registry.get(ctx.targetNPC().getId());
         MethodConfiguration configuration = ctx.context().getConfiguration();
 
         if(data != null) {
-            NPC clone = data.getCopy();
+            AdaptedNPC clone = data.getCopy();
             Location moveTo = ctx.util().getConfigLocation(configuration, ctx.player().getLocation());
 
             if(moveTo == null) {
@@ -89,8 +87,8 @@ public enum ControlAction {
                 return;
             }
 
-            FollowPlayerTrait trait = clone.getOrAddTrait(FollowPlayerTrait.class);
-            trait.setTarget(null);
+            //FollowPlayerTrait trait = clone.getOrAddTrait(FollowPlayerTrait.class);
+            //trait.setTarget(null);
 
             Navigator navigator = clone.getNavigator();
             NavigatorParameters params = navigator.getDefaultParameters();
@@ -105,7 +103,7 @@ public enum ControlAction {
             navigator.setTarget(moveTo);
         }
 
-        ctx.context().next();
+        ctx.context().next();*/
     }),
     RECORD((ctx) -> {
         String recordName = ctx.context().getConfiguration().getString("record");
@@ -142,7 +140,7 @@ public enum ControlAction {
         this.consumer = consumer;
     }
 
-    public void execute(MethodContext context, ControlUtil util, NPC target) {
+    public void execute(MethodContext context, ControlUtil util, AdaptedNPC target) {
         this.consumer.accept(new ActionData(context, util, target));
     }
 }

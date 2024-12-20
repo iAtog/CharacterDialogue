@@ -1,6 +1,7 @@
 package me.iatog.characterdialogue.api;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.adapter.AdaptedNPC;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.enums.CompletedType;
@@ -8,7 +9,6 @@ import me.iatog.characterdialogue.libraries.ApiImplementation;
 import me.iatog.characterdialogue.libraries.HologramLibrary;
 import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.util.SingleUseConsumer;
-import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
@@ -36,17 +36,17 @@ public interface CharacterDialogueAPI {
 
     boolean wasReadedBy(Player player, Dialogue dialog);
 
-    void runDialogue(Player player, Dialogue dialogue, boolean debugMode, NPC npc);
+    void runDialogue(Player player, Dialogue dialogue, boolean debugMode, AdaptedNPC npc);
 
-    void runDialogue(Player player, String dialogueName, boolean debugMode, NPC npc);
+    void runDialogue(Player player, String dialogueName, boolean debugMode, AdaptedNPC npc);
 
     void runDialogueExpression(Player player, String dialog);
 
     void runDialogueExpression(Player player, String dialog, String npcName);
 
-    void runDialogueExpression(Player player, String dialog, String npcName, SingleUseConsumer<CompletedType> onComplete, DialogSession session, NPC npc);
+    void runDialogueExpression(Player player, String dialog, String npcName, SingleUseConsumer<CompletedType> onComplete, DialogSession session, AdaptedNPC npc);
 
-    void runDialogueExpressions(Player player, List<String> lines, ClickType type, NPC npc, String displayName, String dialogueName);
+    void runDialogueExpressions(Player player, List<String> lines, ClickType type, AdaptedNPC npc, String displayName, String dialogueName);
 
     void runDialogueExpressions(Player player, List<String> lines, String displayName, String dialogueName);
 

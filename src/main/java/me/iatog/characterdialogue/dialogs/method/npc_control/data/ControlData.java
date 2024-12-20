@@ -1,7 +1,7 @@
 package me.iatog.characterdialogue.dialogs.method.npc_control.data;
 
-import net.citizensnpcs.api.npc.NPC;
+import me.iatog.characterdialogue.adapter.AdaptedNPC;
 
-public record ControlData(NPC getOriginal, NPC getCopy) {
+public record ControlData(AdaptedNPC getOriginal, AdaptedNPC getCopy) {
 
 }

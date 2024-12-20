@@ -1,7 +1,6 @@
 package me.iatog.characterdialogue.dialogs;
 
 import me.iatog.characterdialogue.api.dialog.ConfigurationType;
-import me.iatog.characterdialogue.enums.CompletedType;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 

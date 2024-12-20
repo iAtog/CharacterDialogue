@@ -2,10 +2,10 @@ package me.iatog.characterdialogue.api;
 
 import dev.dejvokep.boostedyaml.YamlDocument;
 import dev.dejvokep.boostedyaml.block.implementation.Section;
+import me.iatog.characterdialogue.adapter.AdaptedNPC;
 import me.iatog.characterdialogue.api.dialog.DialogHologram;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.enums.ClickType;
-import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
@@ -48,12 +48,12 @@ public class TestDialogueImpl implements Dialogue {
     }
 
     @Override
-    public boolean start(Player player, boolean debug, NPC npc) {
+    public boolean start(Player player, boolean debug, AdaptedNPC npc) {
         return false;
     }
 
     @Override
-    public boolean startFirstInteraction(Player player, boolean log, NPC npc) {
+    public boolean startFirstInteraction(Player player, boolean log, AdaptedNPC npc) {
         return false;
     }
 

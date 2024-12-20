@@ -37,7 +37,7 @@ public class PathTrait extends Trait {
         return index;
     }
 
-    public void setPaths(List<RecordLocation> paths, boolean teleport) {
+    public void setPaths(List<RecordLocation> paths) {
         this.index = 0;
         this.paths = paths;
     }

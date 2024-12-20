@@ -8,12 +8,10 @@ import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.path.PathStorage;
 import me.iatog.characterdialogue.path.Record;
-import me.iatog.characterdialogue.path.RecordLocation;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class RecordPart implements ArgumentPart {
     private final String name;

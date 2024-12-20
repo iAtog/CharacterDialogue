@@ -1,6 +1,7 @@
 package me.iatog.characterdialogue.session;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.adapter.AdaptedNPC;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.api.events.DialogueFinishEvent;
 import me.iatog.characterdialogue.enums.ClickType;
@@ -8,7 +9,6 @@ import me.iatog.characterdialogue.enums.CompletedType;
 import me.iatog.characterdialogue.interfaces.Session;
 import me.iatog.characterdialogue.util.SingleUseConsumer;
 import me.iatog.characterdialogue.util.TextUtils;
-import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -25,7 +25,7 @@ public class DialogSession implements Session {
     private final ClickType clickType;
     private final List<String> lines;
     private final String displayName;
-    private final NPC npc;
+    private final AdaptedNPC npc;
     private final Dialogue dialogue;
     private int index = 0;
     private boolean stop;
@@ -35,7 +35,7 @@ public class DialogSession implements Session {
     private boolean slowEffect;
 
     public DialogSession(CharacterDialoguePlugin main, Player player, List<String> lines, ClickType clickType,
-                         NPC npc, String displayName, String dialogueName) {
+                         AdaptedNPC npc, String displayName, String dialogueName) {
         this.main = main;
         this.uuid = player.getUniqueId();
         this.clickType = clickType;
@@ -46,7 +46,7 @@ public class DialogSession implements Session {
         this.slowEffect = this.dialogue.isSlowEffectEnabled();
     }
 
-    public DialogSession(CharacterDialoguePlugin main, Player player, Dialogue dialogue, NPC npc) {
+    public DialogSession(CharacterDialoguePlugin main, Player player, Dialogue dialogue, AdaptedNPC npc) {
         this(main, player, dialogue.getLines(), dialogue.getClickType(), npc, dialogue.getDisplayName(), dialogue.getName());
         //this.slowEffect = this.dialogue.isSlowEffectEnabled();
     }
@@ -155,7 +155,7 @@ public class DialogSession implements Session {
         return clickType;
     }
 
-    public NPC getNPC() {
+    public AdaptedNPC getNPC() {
         return npc;
     }
 

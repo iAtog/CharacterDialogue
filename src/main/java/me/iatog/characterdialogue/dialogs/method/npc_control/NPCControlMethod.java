@@ -1,15 +1,14 @@
 package me.iatog.characterdialogue.dialogs.method.npc_control;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.adapter.AdaptedNPC;
 import me.iatog.characterdialogue.api.dialog.ConfigurationType;
 import me.iatog.characterdialogue.api.events.DialogueFinishEvent;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.dialogs.MethodContext;
-import me.iatog.characterdialogue.libraries.HologramLibrary;
 import me.iatog.characterdialogue.dialogs.method.npc_control.trait.FollowPlayerTrait;
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -53,13 +52,15 @@ public class NPCControlMethod extends DialogMethod<CharacterDialoguePlugin> impl
 
     @Override
     public void execute(MethodContext context) {
-        NPC npc = context.getNPC();
+        AdaptedNPC npc = context.getNPC();
         Player player = context.getPlayer();
         MethodConfiguration configuration = context.getConfiguration();
         String action = configuration.getString("action", "start").toUpperCase();
         int npcId = configuration.getInteger("npcId", npc.getId());
 
-        NPC targetNpc = CitizensAPI.getNPCRegistry().getById(npcId);
+        //NPC targetNpc = CitizensAPI.getNPCRegistry().getById(npcId);
+
+        AdaptedNPC targetNpc = getProvider().getAdapter().getById(npcId);
 
         if(targetNpc == null) {
             getProvider().getLogger().severe("The specified npc has not been found while using npc_control method.");

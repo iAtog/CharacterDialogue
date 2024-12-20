@@ -1,24 +1,22 @@
 package me.iatog.characterdialogue.path;
 
-import net.citizensnpcs.api.npc.NPC;
+import me.iatog.characterdialogue.adapter.AdaptedNPC;
 
 import java.util.List;
 
 public class PathReplayer {
 
     private final List<RecordLocation> paths;
-    private final NPC npc;
+    private final AdaptedNPC npc;
     private boolean teleport;
 
-    public PathReplayer(List<RecordLocation> paths, NPC npc) {
+    public PathReplayer(List<RecordLocation> paths, AdaptedNPC npc) {
         this.paths = paths;
         this.npc = npc;
     }
 
     public void startReplay() {
         npc.getEntity().teleport(paths.getFirst().toLocation());
-        PathTrait trait = npc.getOrAddTrait(PathTrait.class);
-
-        trait.setPaths(paths, teleport);
+        npc.followPath(paths);
     }
 }

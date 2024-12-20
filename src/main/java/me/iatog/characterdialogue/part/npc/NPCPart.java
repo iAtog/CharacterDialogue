@@ -5,9 +5,8 @@ import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.ArgumentPart;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.npc.NPCRegistry;
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.adapter.AdaptedNPC;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,9 +15,11 @@ import java.util.List;
 public class NPCPart implements ArgumentPart {
 
     private final String name;
+    private final CharacterDialoguePlugin main;
 
-    public NPCPart(String name) {
+    public NPCPart(CharacterDialoguePlugin main, String name) {
         this.name = name;
+        this.main = main;
     }
 
     @Override
@@ -35,24 +36,22 @@ public class NPCPart implements ArgumentPart {
         }
 
         List<String> suggest = new ArrayList<>();
-        for (NPCRegistry registries : CitizensAPI.getNPCRegistries()) {
-            registries.forEach(npc -> {
-                suggest.add(String.valueOf(npc.getId()));
-            });
+        for (AdaptedNPC npc : main.getAdapter().getInMemoryNPCs()) {
+            suggest.add(String.valueOf(npc.getId()));
         }
 
         return suggest;
     }
 
     @Override
-    public List<NPC> parseValue(CommandContext context, ArgumentStack stack, CommandPart caller) throws ArgumentParseException {
+    public List<AdaptedNPC> parseValue(CommandContext context, ArgumentStack stack, CommandPart caller) throws ArgumentParseException {
         String possibleNpc = stack.next();
 
-        if (! isNum(possibleNpc)) {
+        if (!isNum(possibleNpc)) {
             return Collections.emptyList();
         }
 
-        NPC npc = CitizensAPI.getNPCRegistry().getById(Integer.parseInt(possibleNpc));
+        AdaptedNPC npc = main.getAdapter().getById(Integer.parseInt(possibleNpc));
 
         if (npc == null) {
             return Collections.emptyList();

@@ -1,19 +1,17 @@
 package me.iatog.characterdialogue.dialogs.method.npc_control;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.adapter.AdaptedNPC;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.dialogs.MethodContext;
 import me.iatog.characterdialogue.dialogs.method.npc_control.data.ControlData;
 import me.iatog.characterdialogue.libraries.HologramLibrary;
-import me.iatog.characterdialogue.dialogs.method.npc_control.trait.FollowPlayerTrait;
-import me.iatog.characterdialogue.util.TextUtils;
-import net.citizensnpcs.api.event.SpawnReason;
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import static me.iatog.characterdialogue.util.TextUtils.colorize;
 
 public class ControlUtil {
 
@@ -25,7 +23,7 @@ public class ControlUtil {
         this.hologramLibrary = main.getApi().getHologramLibrary();
     }
 
-    public void createClone(@NotNull MethodContext context, @NotNull NPC npc) {
+    public void createClone(@NotNull MethodContext context, @NotNull AdaptedNPC npc) {
         Player player = context.getPlayer();
         MethodConfiguration configuration = context.getConfiguration();
         ControlRegistry registry = NPCControlMethod.registries.get(player.getUniqueId());
@@ -46,32 +44,31 @@ public class ControlUtil {
             spawnLocation = configLocation;
         }
 
-        NPC clone = npc.copy();
+        AdaptedNPC clone = npc.copy();
 
-        clone.spawn(spawnLocation, SpawnReason.PLUGIN);
+        clone.spawn(spawnLocation);
         registry.addNPC(npc, clone);
         hologramLibrary.hideHologram(player, npc.getId());
-        clone.setName(TextUtils.colorize(context.getSession().getDialogue().getDisplayName()));
+        clone.setName(colorize(context.getSession().getDialogue().getDisplayName()));
         clone.getEntity().setVisibleByDefault(false);
         clone.getEntity().setSilent(true);
-
-        for (Trait trait : npc.getTraits()) {
-            clone.addTrait(trait);
-        }
 
         player.showEntity(main, clone.getEntity());
         player.hideEntity(main, npc.getEntity());
 
-        //toggleFollow(clone, player, true);
+        toggleFollow(clone, player, true);
         context.getSession().sendDebugMessage("Now clone of npc is following the player", "FollowMethod");
     }
 
-    public void toggleFollow(@NotNull NPC npc, Player player, boolean follow) {
-        FollowPlayerTrait trait = npc.getOrAddTrait(FollowPlayerTrait.class);
-        trait.setTarget(follow ? player : null);
+    public void toggleFollow(@NotNull AdaptedNPC npc, Player player, boolean follow) {
+       if(follow) {
+           npc.follow(player);
+       } else {
+           npc.unfollow(player);
+       }
     }
 
-    public void removeRegistered(@NotNull Player player, NPC original) {
+    public void removeRegistered(@NotNull Player player, AdaptedNPC original) {
         ControlRegistry registry = NPCControlMethod.registries.get(player.getUniqueId());
         ControlData data = registry.removeNPC(original);
 
@@ -81,7 +78,6 @@ public class ControlUtil {
 
         player.showEntity(main, data.getOriginal().getEntity());
         data.getCopy().destroy();
-        //NPCControlMethod.registries.remove(player.getUniqueId());
         hologramLibrary.showHologram(player, data.getOriginal().getId());
     }
 

@@ -8,6 +8,7 @@ import me.fixeddev.commandflow.annotated.part.defaults.DefaultsModule;
 import me.fixeddev.commandflow.bukkit.BukkitCommandManager;
 import me.fixeddev.commandflow.bukkit.factory.BukkitModule;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.adapter.AdaptedNPC;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.command.CharacterDialogueCommand;
 import me.iatog.characterdialogue.dialogs.Group;
@@ -20,7 +21,6 @@ import me.iatog.characterdialogue.part.method.MethodPartFactory;
 import me.iatog.characterdialogue.part.npc.NPCPartFactory;
 import me.iatog.characterdialogue.part.record.RecordPartFactory;
 import me.iatog.characterdialogue.path.Record;
-import net.citizensnpcs.api.npc.NPC;
 
 public class CommandLoader implements Loader {
 
@@ -38,7 +38,7 @@ public class CommandLoader implements Loader {
         injector.bindFactory(Dialogue.class, new DialoguePartFactory(main));
         injector.bindFactory(DialogMethodArgument.class, new MethodPartFactory(main));
         injector.bindFactory(Group.class, new GroupPartFactory(main));
-        injector.bindFactory(NPC.class, new NPCPartFactory());
+        injector.bindFactory(AdaptedNPC.class, new NPCPartFactory(main));
         injector.bindFactory(GUI.class, new GUIPartFactory(main));
         injector.bindFactory(Record.class, new RecordPartFactory(main));
 

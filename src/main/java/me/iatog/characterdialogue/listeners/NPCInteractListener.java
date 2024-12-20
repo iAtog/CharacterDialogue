@@ -1,6 +1,7 @@
 package me.iatog.characterdialogue.listeners;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.adapter.NPCAdapter;
 import me.iatog.characterdialogue.api.CharacterDialogueAPI;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.api.dialog.Dialogue.DialoguePermission;
@@ -38,6 +39,7 @@ public class NPCInteractListener implements Listener {
     private void runEvent(NPCClickEvent event) {
         CharacterDialogueAPI api = main.getApi();
         Player player = event.getClicker();
+        NPCAdapter<NPC> adapter = main.getAdapter();
 
         NPC npc = event.getNPC();
         Dialogue dialogue = api.getNPCDialogue(npc.getId());
@@ -74,7 +76,7 @@ public class NPCInteractListener implements Listener {
             String permission = permissions.getPermission();
             String message = permissions.getMessage();
 
-            if (! player.hasPermission(permission)) {
+            if (!player.hasPermission(permission)) {
                 if (message != null) {
                     player.sendMessage(
                           Placeholders.translate(player, message.replace("%npc_name%", dialogue.getDisplayName()))
@@ -86,15 +88,15 @@ public class NPCInteractListener implements Listener {
         }
 
         if (dialogue.isFirstInteractionEnabled() && ! api.wasReadedBy(player, dialogue)) {
-            dialogue.startFirstInteraction(player, true, npc);
+            dialogue.startFirstInteraction(player, true, adapter.adapt(npc));
             return;
         }
 
         event.setCancelled(true);
-        dialogue.start(player, npc);
+        dialogue.start(player, adapter.adapt(npc));
     }
 
-    @EventHandler
+    //@EventHandler
     private void interactAtNPC(PlayerInteractEntityEvent event) {
         if (event.getRightClicked().hasMetadata("characterdialogue-npc")) {
             //event.setCancelled(true);

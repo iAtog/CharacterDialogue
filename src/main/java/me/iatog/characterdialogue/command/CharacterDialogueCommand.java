@@ -4,19 +4,17 @@ import dev.dejvokep.boostedyaml.YamlDocument;
 import dev.dejvokep.boostedyaml.block.implementation.Section;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
-import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import me.fixeddev.commandflow.annotated.annotation.SubCommandClasses;
 import me.fixeddev.commandflow.annotated.annotation.Usage;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.adapter.AdaptedNPC;
 import me.iatog.characterdialogue.api.DialogueImpl;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
 import me.iatog.characterdialogue.gui.GUI;
 import me.iatog.characterdialogue.libraries.Cache;
 import me.iatog.characterdialogue.session.ChoiceSession;
 import me.iatog.characterdialogue.session.DialogSession;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -123,25 +121,19 @@ public class CharacterDialogueCommand implements CommandClass {
           desc = "Assign a dialogue to npc"
     )
     @Usage("<dialogue> [npcId]")
-    public void assignNpc(@Sender CommandSender sender, Dialogue dialogue, @OptArg NPC npc) {
-        NPC current = null;
-
-        if (npc == null) {
-            current = CitizensAPI.getDefaultNPCSelector().getSelected(sender);
-        }
-
+    public void assignNpc(@Sender CommandSender sender, Dialogue dialogue, AdaptedNPC npc) {
         if (dialogue == null) {
             sender.sendMessage(colorize("&8[&cCD&8] &cThe dialogue was not found."));
             return;
         }
 
-        if (current == null) {
+        if (npc == null) {
             sender.sendMessage(colorize("&8[&cCD&8] &cNo npc selected."));
             return;
         }
 
         YamlDocument config = main.getFileFactory().getConfig();
-        config.set("npc." + current.getId(), dialogue.getName());
+        config.set("npc." + npc.getId(), dialogue.getName());
         try {
             config.save();
         } catch (IOException e) {
@@ -149,7 +141,7 @@ public class CharacterDialogueCommand implements CommandClass {
             return;
         }
         sender.sendMessage(colorize(String.format("&8[&cCD&8] &aThe npc '%s' was assigned to '%s' dialogue.",
-              current.getName(), dialogue.getName())));
+              npc.getName(), dialogue.getName())));
     }
 
     @Command(

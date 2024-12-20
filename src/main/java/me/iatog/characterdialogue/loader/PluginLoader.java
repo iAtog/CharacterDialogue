@@ -34,7 +34,8 @@ public class PluginLoader implements Loader {
               new CacheLoader(main),
               new CommandLoader(main),
               new DialogLoader(main),
-              new GUILoader(main)
+              new GUILoader(main),
+              new AdapterLoader(main)
         );
 
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(PathTrait.class).withName("path_trait"));

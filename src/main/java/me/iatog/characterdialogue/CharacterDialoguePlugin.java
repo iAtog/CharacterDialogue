@@ -1,6 +1,8 @@
 package me.iatog.characterdialogue;
 
 import dev.dejvokep.boostedyaml.YamlDocument;
+import me.iatog.characterdialogue.adapter.AdapterManager;
+import me.iatog.characterdialogue.adapter.NPCAdapter;
 import me.iatog.characterdialogue.api.CharacterDialogueAPI;
 import me.iatog.characterdialogue.dialogs.DialogChoice;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
@@ -40,6 +42,7 @@ public class CharacterDialoguePlugin extends JavaPlugin {
     private GUIFactory guiFactory;
     private List<YamlDocument> dialogues;
     private PathStorage pathStorage;
+    private AdapterManager adapterManager;
 
     /**
      * I only set this method for third party plugins, I do not use this method and
@@ -82,6 +85,7 @@ public class CharacterDialoguePlugin extends JavaPlugin {
         this.hooks = new Hooks();
         this.api = new ApiImplementation(this);
         this.pathStorage = new PathStorage(this);
+        this.adapterManager = new AdapterManager(this);
 
         loader.load();
 
@@ -111,6 +115,15 @@ public class CharacterDialoguePlugin extends JavaPlugin {
 
     public Hooks getHooks() {
         return hooks;
+    }
+
+    public AdapterManager getAdapterManager() {
+        return adapterManager;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> NPCAdapter<T> getAdapter() {
+        return (NPCAdapter<T>) adapterManager.getAdapter();
     }
 
     /**

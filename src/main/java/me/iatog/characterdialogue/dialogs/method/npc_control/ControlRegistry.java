@@ -1,7 +1,7 @@
 package me.iatog.characterdialogue.dialogs.method.npc_control;
 
+import me.iatog.characterdialogue.adapter.AdaptedNPC;
 import me.iatog.characterdialogue.dialogs.method.npc_control.data.ControlData;
-import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -25,7 +25,7 @@ public class ControlRegistry {
         return npcMap.get(npcId);
     }
 
-    public void addNPC(NPC original, NPC clone) {
+    public void addNPC(AdaptedNPC original, AdaptedNPC clone) {
         this.npcMap.put(original.getId(), new ControlData(original, clone));
     }
 
@@ -33,7 +33,7 @@ public class ControlRegistry {
         return this.npcMap.remove(npcId);
     }
 
-    public ControlData removeNPC(NPC originalNpc) {
+    public ControlData removeNPC(AdaptedNPC originalNpc) {
         return this.removeNPC(originalNpc.getId());
     }
 

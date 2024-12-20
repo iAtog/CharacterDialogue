@@ -3,7 +3,6 @@ package me.iatog.characterdialogue.gui;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.builder.item.SkullBuilder;
 import dev.triumphteam.gui.guis.BaseGui;
-import dev.triumphteam.gui.guis.Gui;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static me.iatog.characterdialogue.util.TextUtils.colorize;
 import static me.iatog.characterdialogue.util.TextUtils.colorizeComponent;
 
 public abstract class GUI {

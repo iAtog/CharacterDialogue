@@ -2,6 +2,8 @@ package me.iatog.characterdialogue.libraries;
 
 import dev.dejvokep.boostedyaml.YamlDocument;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.adapter.AdaptedNPC;
+import me.iatog.characterdialogue.adapter.NPCAdapter;
 import me.iatog.characterdialogue.api.CharacterDialogueAPI;
 import me.iatog.characterdialogue.api.dialog.DialogHologram;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
@@ -50,6 +52,10 @@ public class ApiImplementation implements CharacterDialogueAPI {
 
     public Pattern getLineRegex() {
         return lineRegex;
+    }
+
+    public NPCAdapter<?> getAdapter() {
+        return this.main.getAdapter();
     }
 
     @Override
@@ -151,7 +157,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
     }
 
     @Override
-    public void runDialogue(Player player, Dialogue dialogue, boolean debugMode, NPC npc) {
+    public void runDialogue(Player player, Dialogue dialogue, boolean debugMode, AdaptedNPC npc) {
         if (main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
             return;
         }
@@ -167,7 +173,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
     }
 
     @Override
-    public void runDialogue(Player player, String dialogueName, boolean debugMode, NPC npc) {
+    public void runDialogue(Player player, String dialogueName, boolean debugMode, AdaptedNPC npc) {
         runDialogue(player, getDialogue(dialogueName), debugMode, npc);
     }
 
@@ -185,7 +191,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
 
     @Override
     public void runDialogueExpression(Player player, String dialog, String rawNpcName,
-                                      SingleUseConsumer<CompletedType> onComplete, DialogSession session, NPC npc) {
+                                      SingleUseConsumer<CompletedType> onComplete, DialogSession session, AdaptedNPC npc) {
         Matcher matcher = lineRegex.matcher(dialog);
         String npcName = TextUtils.colorize(rawNpcName);
 
@@ -267,7 +273,7 @@ public class ApiImplementation implements CharacterDialogueAPI {
     }
 
     @Override
-    public void runDialogueExpressions(Player player, List<String> lines, ClickType clickType, NPC npc,
+    public void runDialogueExpressions(Player player, List<String> lines, ClickType clickType, AdaptedNPC npc,
                                        String displayName, String dialogueName) {
         if (main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
             return;
