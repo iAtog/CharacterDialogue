@@ -27,7 +27,7 @@ public class ControlUtil {
         Player player = context.getPlayer();
         MethodConfiguration configuration = context.getConfiguration();
         ControlRegistry registry = NPCControlMethod.registries.get(player.getUniqueId());
-        int npcId = npc.getId();
+        String npcId = npc.getId();
 
         if(registry.isOnRegistry(npcId)) {
             context.getSession().sendDebugMessage("NPC (" +npcId+ ") is already cloned.", "FollowMethod");

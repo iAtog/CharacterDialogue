@@ -51,7 +51,7 @@ public class NPCPart implements ArgumentPart {
             return Collections.emptyList();
         }
 
-        AdaptedNPC npc = main.getAdapter().getById(Integer.parseInt(possibleNpc));
+        AdaptedNPC npc = main.getAdapter().getById(possibleNpc);
 
         if (npc == null) {
             return Collections.emptyList();

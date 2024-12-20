@@ -10,7 +10,7 @@ import java.util.List;
 public interface AdaptedNPC {
 
     String getName();
-    int getId();
+    String getId();
     Entity getEntity();
     Location getStoredLocation();
     AdaptedNPC copy();

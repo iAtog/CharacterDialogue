@@ -10,13 +10,9 @@ public abstract class NPCAdapter<T> {
 
     private List<AdaptedNPC> npcs;
 
-    public NPCAdapter() {
-        loadNPCs();
-    }
-
     public abstract AdaptedNPC adapt(T npc);
 
-    public abstract AdaptedNPC getById(int id);
+    public abstract AdaptedNPC getById(String id);
 
     public abstract List<AdaptedNPC> getNPCs();
 

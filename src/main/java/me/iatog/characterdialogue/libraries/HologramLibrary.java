@@ -21,7 +21,7 @@ public class HologramLibrary {
     private boolean holographicDisplays;
     private final boolean decentHolograms;
 
-    private final List<Integer> decentHologramsList;
+    private final List<String> decentHologramsList;
 
     public HologramLibrary(CharacterDialoguePlugin main) {
         this.main = main;
@@ -32,7 +32,7 @@ public class HologramLibrary {
         this.decentHologramsList = new ArrayList<>();
     }
 
-    public boolean hasHologram(int npcId) {
+    public boolean hasHologram(String npcId) {
         if(decentHolograms) {
             return decentHologramsList.contains(npcId);
         } else if(holographicDisplays) {
@@ -42,7 +42,7 @@ public class HologramLibrary {
         return false;
     }
 
-    public void addHologram(List<String> lines, Location location, String npcName, int npcId) {
+    public void addHologram(List<String> lines, Location location, String npcName, String npcId) {
         if(holographicDisplays && decentHolograms) {
             this.holographicDisplays = false;
         }
@@ -73,10 +73,10 @@ public class HologramLibrary {
             }
 
             config.getSection("npc").getRoutesAsStrings(false).forEach((id) -> {
-                main.getApi().loadHologram(Integer.parseInt(id));
+                main.getApi().loadHologram(id);
             });
         } else if (decentHolograms) {
-            for (int id : decentHologramsList) {
+            for (String id : decentHologramsList) {
                 eu.decentsoftware.holograms.api.holograms.Hologram hologram = DHAPI.getHologram(name + id);
 
                 if (hologram == null) {
@@ -89,12 +89,12 @@ public class HologramLibrary {
             decentHologramsList.clear();
 
             config.getSection("npc").getRoutesAsStrings(false).forEach((id) -> {
-                main.getApi().loadHologram(Integer.parseInt(id));
+                main.getApi().loadHologram(id);
             });
         }
     }
 
-    public void hideHologram(Player player, int npcId) {
+    public void hideHologram(Player player, String npcId) {
         if(decentHolograms) {
             eu.decentsoftware.holograms.api.holograms.Hologram hologram = DHAPI.getHologram(name + npcId);
 
@@ -110,7 +110,7 @@ public class HologramLibrary {
         }
     }
 
-    public void showHologram(Player player, int npcId) {
+    public void showHologram(Player player, String npcId) {
         if(decentHolograms) {
             eu.decentsoftware.holograms.api.holograms.Hologram hologram = DHAPI.getHologram(name + npcId);
 

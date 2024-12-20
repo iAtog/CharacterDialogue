@@ -26,7 +26,7 @@ public interface CharacterDialogueAPI {
 
     void reloadHolograms();
 
-    void loadHologram(int npcId);
+    void loadHologram(String npcId);
 
     boolean readDialogBy(Player player, String dialog) throws IOException;
 
@@ -50,11 +50,11 @@ public interface CharacterDialogueAPI {
 
     void runDialogueExpressions(Player player, List<String> lines, String displayName, String dialogueName);
 
-    Dialogue getNPCDialogue(int id);
+    Dialogue getNPCDialogue(String id);
 
     Map<String, Dialogue> getDialogues();
 
-    String getNPCDialogueName(int id);
+    String getNPCDialogueName(String id);
 
     int getBukkitVersion();
 

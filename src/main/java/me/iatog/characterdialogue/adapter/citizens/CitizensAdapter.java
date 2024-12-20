@@ -3,8 +3,7 @@ package me.iatog.characterdialogue.adapter.citizens;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.adapter.AdaptedNPC;
 import me.iatog.characterdialogue.adapter.NPCAdapter;
-import me.iatog.characterdialogue.listeners.NPCInteractListener;
-import me.iatog.characterdialogue.listeners.NPCSpawnListener;
+import me.iatog.characterdialogue.listeners.citizens.CitizensListener;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
@@ -21,8 +20,8 @@ public class CitizensAdapter extends NPCAdapter<NPC> {
     }
 
     @Override
-    public AdaptedNPC getById(int id) {
-        NPC npc = CitizensAPI.getNPCRegistry().getById(id);
+    public AdaptedNPC getById(String id) {
+        NPC npc = CitizensAPI.getNPCRegistry().getById(Integer.parseInt(id));
         return npc == null ? null : adapt(npc);
     }
 
@@ -41,8 +40,7 @@ public class CitizensAdapter extends NPCAdapter<NPC> {
     @Override
     public void registerEvents(CharacterDialoguePlugin main) {
         registerListener(main,
-              new NPCInteractListener(main),
-              new NPCSpawnListener(main)
+              new CitizensListener(main)
         );
     }
 

@@ -14,14 +14,14 @@ public class ControlRegistry {
 
     // Integer = the original npc id
     // FollowData = original and his clone
-    private final Map<Integer, ControlData> npcMap;
+    private final Map<String, ControlData> npcMap;
 
     public ControlRegistry(Player player) {
         this.npcMap = new HashMap<>();
         this.playerId = player.getUniqueId();
     }
 
-    public ControlData get(int npcId) {
+    public ControlData get(String npcId) {
         return npcMap.get(npcId);
     }
 
@@ -29,7 +29,7 @@ public class ControlRegistry {
         this.npcMap.put(original.getId(), new ControlData(original, clone));
     }
 
-    public ControlData removeNPC(int npcId) {
+    public ControlData removeNPC(String npcId) {
         return this.npcMap.remove(npcId);
     }
 
@@ -37,7 +37,7 @@ public class ControlRegistry {
         return this.removeNPC(originalNpc.getId());
     }
 
-    public boolean isOnRegistry(int npcId) {
+    public boolean isOnRegistry(String npcId) {
         return this.npcMap.containsKey(npcId);
     }
 

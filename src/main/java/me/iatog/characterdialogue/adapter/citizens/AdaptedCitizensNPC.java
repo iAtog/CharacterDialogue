@@ -27,8 +27,8 @@ public class AdaptedCitizensNPC implements AdaptedNPC {
     }
 
     @Override
-    public int getId() {
-        return npc.getId();
+    public String getId() {
+        return String.valueOf(npc.getId());
     }
 
     @Override

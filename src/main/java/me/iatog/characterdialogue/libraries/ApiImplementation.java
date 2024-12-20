@@ -18,8 +18,7 @@ import me.iatog.characterdialogue.session.DialogSession;
 import me.iatog.characterdialogue.session.EmptyDialogSession;
 import me.iatog.characterdialogue.util.SingleUseConsumer;
 import me.iatog.characterdialogue.util.TextUtils;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -69,10 +68,11 @@ public class ApiImplementation implements CharacterDialogueAPI {
     }
 
     @Override
-    public void loadHologram(int npcId) {
-        NPC citizensNpc = CitizensAPI.getNPCRegistry().getById(npcId);
+    public void loadHologram(String npcId) {
+       // NPC citizensNpc = CitizensAPI.getNPCRegistry().getById(npcId);
+        AdaptedNPC npc = main.getAdapter().getById(npcId);
 
-        if (citizensNpc == null) {
+        if (npc == null) {
             return;
         }
 
@@ -85,14 +85,14 @@ public class ApiImplementation implements CharacterDialogueAPI {
         DialogHologram hologram = dialogue.getHologram();
 
         if (hologram != null && hologram.isEnabled() && !getHologramLibrary().hasHologram(npcId)) {
-            Location location = citizensNpc.getStoredLocation();
+            Location location = npc.getStoredLocation();
             location.add(0, 2 + hologram.getY(), 0);
             String npcName = dialogue.getDisplayName();
             List<String> lines = hologram.getLines();
 
             hologramLibrary.addHologram(lines, location, npcName, npcId);
 
-            citizensNpc.setAlwaysUseNameHologram(false);
+            //citizensNpc.setAlwaysUseNameHologram(false);
         }
     }
 
@@ -136,12 +136,12 @@ public class ApiImplementation implements CharacterDialogueAPI {
     }
 
     @Override
-    public Dialogue getNPCDialogue(int id) {
+    public Dialogue getNPCDialogue(String id) {
         return getDialogue(getNPCDialogueName(id));
     }
 
     @Override
-    public String getNPCDialogueName(int id) {
+    public String getNPCDialogueName(String id) {
         YamlDocument config = main.getFileFactory().getConfig();
         return config.getString("npc." + id);
     }

@@ -56,7 +56,7 @@ public class NPCControlMethod extends DialogMethod<CharacterDialoguePlugin> impl
         Player player = context.getPlayer();
         MethodConfiguration configuration = context.getConfiguration();
         String action = configuration.getString("action", "start").toUpperCase();
-        int npcId = configuration.getInteger("npcId", npc.getId());
+        String npcId = configuration.getString("npcId", npc.getId());
 
         //NPC targetNpc = CitizensAPI.getNPCRegistry().getById(npcId);
 
