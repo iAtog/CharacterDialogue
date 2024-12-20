@@ -1,47 +1,32 @@
 package me.iatog.characterdialogue.listeners;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
-import me.iatog.characterdialogue.adapter.NPCAdapter;
+import me.iatog.characterdialogue.adapter.AdaptedNPC;
 import me.iatog.characterdialogue.api.CharacterDialogueAPI;
 import me.iatog.characterdialogue.api.dialog.Dialogue;
-import me.iatog.characterdialogue.api.dialog.Dialogue.DialoguePermission;
+import me.iatog.characterdialogue.api.events.AdapterNPCInteractEvent;
+import me.iatog.characterdialogue.api.events.AdapterNPCSpawnEvent;
 import me.iatog.characterdialogue.enums.ClickType;
 import me.iatog.characterdialogue.placeholders.Placeholders;
 import me.iatog.characterdialogue.util.TextUtils;
-import net.citizensnpcs.api.event.NPCClickEvent;
-import net.citizensnpcs.api.event.NPCLeftClickEvent;
-import net.citizensnpcs.api.event.NPCRightClickEvent;
-import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
-public class NPCInteractListener implements Listener {
+public class AdaptedNPCListener implements Listener {
 
     private final CharacterDialoguePlugin main;
 
-    public NPCInteractListener(CharacterDialoguePlugin main) {
+    public AdaptedNPCListener(CharacterDialoguePlugin main) {
         this.main = main;
     }
 
     @EventHandler
-    public void onNPCRightClick(NPCRightClickEvent event) {
-        runEvent(event);
-    }
-
-    @EventHandler
-    public void onNPCLeftClick(NPCLeftClickEvent event) {
-        runEvent(event);
-    }
-
-    private void runEvent(NPCClickEvent event) {
+    public void onInteract(AdapterNPCInteractEvent event) {
         CharacterDialogueAPI api = main.getApi();
-        Player player = event.getClicker();
-        NPCAdapter<NPC> adapter = main.getAdapter();
-
-        NPC npc = event.getNPC();
+        Player player = event.getPlayer();
+        AdaptedNPC npc = event.getNPC();
         Dialogue dialogue = api.getNPCDialogue(npc.getId());
 
         if (dialogue == null || main.getCache().getDialogSessions().containsKey(player.getUniqueId())) {
@@ -49,7 +34,6 @@ public class NPCInteractListener implements Listener {
         }
 
         long currentTime = System.currentTimeMillis();
-        // Cooldown logic
 
         if (player.hasMetadata("dialogueCooldown")) {
             long cooldown = player.getMetadata("dialogueCooldown").get(0).asLong();
@@ -64,13 +48,11 @@ public class NPCInteractListener implements Listener {
 
         ClickType clickType = dialogue.getClickType();
 
-        if ((clickType != ClickType.ALL) &&
-              ((event instanceof NPCRightClickEvent && clickType != ClickType.RIGHT) ||
-                    (event instanceof NPCLeftClickEvent && clickType != ClickType.LEFT))) {
+        if (clickType != ClickType.ALL && clickType != event.getClickType()) {
             return;
         }
 
-        DialoguePermission permissions = dialogue.getPermissions();
+        Dialogue.DialoguePermission permissions = dialogue.getPermissions();
 
         if (permissions != null && permissions.getPermission() != null) {
             String permission = permissions.getPermission();
@@ -88,19 +70,23 @@ public class NPCInteractListener implements Listener {
         }
 
         if (dialogue.isFirstInteractionEnabled() && ! api.wasReadedBy(player, dialogue)) {
-            dialogue.startFirstInteraction(player, true, adapter.adapt(npc));
+            dialogue.startFirstInteraction(player, true, npc);
             return;
         }
 
         event.setCancelled(true);
-        dialogue.start(player, adapter.adapt(npc));
+        dialogue.start(player, npc);
     }
 
-    //@EventHandler
-    private void interactAtNPC(PlayerInteractEntityEvent event) {
-        if (event.getRightClicked().hasMetadata("characterdialogue-npc")) {
-            //event.setCancelled(true);
+    @EventHandler
+    public void onSpawn(AdapterNPCSpawnEvent event) {
+        AdaptedNPC npc = event.getNPC();
+        String id = npc.getId();
+        CharacterDialogueAPI api = main.getApi();
 
+        if (api.getNPCDialogue(id) != null) {
+            api.loadHologram(id);
         }
     }
+
 }
