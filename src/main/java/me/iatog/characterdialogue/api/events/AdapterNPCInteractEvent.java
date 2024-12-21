@@ -12,11 +12,6 @@ public class AdapterNPCInteractEvent extends PlayerEvent implements Cancellable 
 
     private static final HandlerList handlers = new HandlerList();
 
-    @Override
-    public @NotNull HandlerList getHandlers() {
-        return handlers;
-    }
-
     private final AdaptedNPC npc;
     private final ClickType clickType;
     private boolean cancelled;
@@ -43,5 +38,14 @@ public class AdapterNPCInteractEvent extends PlayerEvent implements Cancellable 
     @Override
     public void setCancelled(boolean cancel) {
         this.cancelled = cancel;
+    }
+
+    @Override
+    public @NotNull HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 }

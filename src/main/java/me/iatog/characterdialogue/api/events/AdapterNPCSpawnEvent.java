@@ -9,12 +9,6 @@ import org.jetbrains.annotations.NotNull;
 public class AdapterNPCSpawnEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
-
-    @Override
-    public @NotNull HandlerList getHandlers() {
-        return handlers;
-    }
-
     private final AdaptedNPC npc;
     private final Location location;
 
@@ -29,5 +23,14 @@ public class AdapterNPCSpawnEvent extends Event {
 
     public AdaptedNPC getNPC() {
         return npc;
+    }
+
+    @Override
+    public @NotNull HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 }

@@ -36,8 +36,10 @@ public class NPCPart implements ArgumentPart {
         }
 
         List<String> suggest = new ArrayList<>();
-        for (AdaptedNPC npc : main.getAdapter().getInMemoryNPCs()) {
-            suggest.add(String.valueOf(npc.getId()));
+        for (String npc : main.getAdapter().getInMemoryNPCs()) {
+            if(next.startsWith(npc) || next.isEmpty()) {
+                suggest.add(npc);
+            };
         }
 
         return suggest;

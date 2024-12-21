@@ -3,16 +3,26 @@ package me.iatog.characterdialogue.adapter.citizens;
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.adapter.AdaptedNPC;
 import me.iatog.characterdialogue.adapter.NPCAdapter;
+import me.iatog.characterdialogue.dialogs.method.npc_control.trait.FollowPlayerTrait;
 import me.iatog.characterdialogue.listeners.citizens.CitizensListener;
+import me.iatog.characterdialogue.path.PathTrait;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.api.trait.TraitInfo;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class CitizensAdapter extends NPCAdapter<NPC> {
+
+    public CitizensAdapter() {
+        super();
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(PathTrait.class).withName("path_trait"));
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(FollowPlayerTrait.class));
+    }
 
     @Override
     public AdaptedNPC adapt(NPC npc) {
@@ -26,26 +36,26 @@ public class CitizensAdapter extends NPCAdapter<NPC> {
     }
 
     @Override
-    public List<AdaptedNPC> getNPCs() {
-        List<AdaptedNPC> list = new ArrayList<>();
+    public List<String> getNPCs() {
+        List<String> list = new ArrayList<>();
         NPCRegistry registry = CitizensAPI.getNPCRegistry();
         Iterator<NPC> npcIterator = registry.iterator();
         npcIterator.forEachRemaining(npc -> {
-            list.add(adapt(npc));
+            list.add(String.valueOf(npc.getId()));
         });
 
         return list;
     }
 
     @Override
-    public void registerEvents(CharacterDialoguePlugin main) {
+    public void registerEvents(JavaPlugin main) {
         registerListener(main,
-              new CitizensListener(main)
+              new CitizensListener((CharacterDialoguePlugin) main)
         );
     }
 
     @Override
     public String getName() {
-        return "CitizensAdapter";
+        return "Citizens Adapter";
     }
 }

@@ -11,8 +11,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static me.iatog.characterdialogue.util.TextUtils.colorize;
-
 public class ControlUtil {
 
     private final CharacterDialoguePlugin main;
@@ -49,12 +47,10 @@ public class ControlUtil {
         clone.spawn(spawnLocation);
         registry.addNPC(npc, clone);
         hologramLibrary.hideHologram(player, npc.getId());
-        clone.setName(colorize(context.getSession().getDialogue().getDisplayName()));
-        clone.getEntity().setVisibleByDefault(false);
-        clone.getEntity().setSilent(true);
-
-        player.showEntity(main, clone.getEntity());
-        player.hideEntity(main, npc.getEntity());
+        //clone.setName(colorize(context.getSession().getDialogue().getDisplayName()));
+        clone.hideForAll();
+        clone.show(player);
+        npc.hide(player);
 
         toggleFollow(clone, player, true);
         context.getSession().sendDebugMessage("Now clone of npc is following the player", "FollowMethod");
@@ -76,7 +72,7 @@ public class ControlUtil {
             return;
         }
 
-        player.showEntity(main, data.getOriginal().getEntity());
+        data.getOriginal().show(player);
         data.getCopy().destroy();
         hologramLibrary.showHologram(player, data.getOriginal().getId());
     }

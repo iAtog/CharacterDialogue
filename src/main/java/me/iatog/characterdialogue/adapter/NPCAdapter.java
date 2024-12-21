@@ -1,26 +1,26 @@
 package me.iatog.characterdialogue.adapter;
 
-import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 public abstract class NPCAdapter<T> {
 
-    private List<AdaptedNPC> npcs;
+    private List<String> npcs;
 
     public abstract AdaptedNPC adapt(T npc);
 
     public abstract AdaptedNPC getById(String id);
 
-    public abstract List<AdaptedNPC> getNPCs();
+    public abstract List<String> getNPCs();
 
-    public abstract void registerEvents(CharacterDialoguePlugin main);
+    public abstract void registerEvents(JavaPlugin main);
 
     public abstract String getName();
 
-    protected void registerListener(CharacterDialoguePlugin main, Listener ...listeners) {
+    protected void registerListener(JavaPlugin main, Listener ...listeners) {
         for(Listener listener : listeners) {
             Bukkit.getPluginManager().registerEvents(listener, main);
         }
@@ -30,7 +30,7 @@ public abstract class NPCAdapter<T> {
         npcs = getNPCs();
     }
 
-    public List<AdaptedNPC> getInMemoryNPCs() {
+    public List<String> getInMemoryNPCs() {
         return npcs;
     }
 

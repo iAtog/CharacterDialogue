@@ -1,16 +1,14 @@
 package me.iatog.characterdialogue.listeners.citizens;
 
 import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.adapter.AdapterManager;
 import me.iatog.characterdialogue.adapter.NPCAdapter;
-import me.iatog.characterdialogue.api.events.AdapterNPCInteractEvent;
-import me.iatog.characterdialogue.api.events.AdapterNPCSpawnEvent;
 import me.iatog.characterdialogue.enums.ClickType;
 import net.citizensnpcs.api.event.NPCClickEvent;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.event.NPCSpawnEvent;
 import net.citizensnpcs.api.npc.NPC;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -23,16 +21,12 @@ public class CitizensListener implements Listener {
     }
 
     public void callEvent(NPCClickEvent event, ClickType clickType) {
+        AdapterManager manager = main.getAdapterManager();
         NPCAdapter<NPC> adapter = main.getAdapter();
-        AdapterNPCInteractEvent adapterEvent = new AdapterNPCInteractEvent(
-              event.getClicker(),
-              adapter.adapt(event.getNPC()),
-              clickType
-        );
 
-        Bukkit.getPluginManager().callEvent(adapterEvent);
+        manager.handleInteractEvent(event.getClicker(), adapter.adapt(event.getNPC()), clickType);
 
-        event.setCancelled(adapterEvent.isCancelled());
+        //event.setCancelled(cancelled);
     }
 
     @EventHandler
@@ -48,11 +42,8 @@ public class CitizensListener implements Listener {
     @EventHandler
     public void onNPCSpawn(NPCSpawnEvent event) {
         NPCAdapter<NPC> adapter = main.getAdapter();
-        AdapterNPCSpawnEvent spawnEvent = new AdapterNPCSpawnEvent(
-              adapter.adapt(event.getNPC()),
-              event.getLocation()
-        );
+        AdapterManager manager = main.getAdapterManager();
 
-        Bukkit.getPluginManager().callEvent(spawnEvent);
+        manager.handleSpawnEvent(adapter.adapt(event.getNPC()), event.getLocation());
     }
 }

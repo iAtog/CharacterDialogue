@@ -1,8 +1,14 @@
 package me.iatog.characterdialogue.adapter;
 
-import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.adapter.citizens.CitizensAdapter;
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
+import me.iatog.characterdialogue.adapter.znpcsplus.ZNPCsAdapter;
+import me.iatog.characterdialogue.api.events.AdapterNPCInteractEvent;
+import me.iatog.characterdialogue.api.events.AdapterNPCSpawnEvent;
+import me.iatog.characterdialogue.enums.ClickType;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 public class AdapterManager {
 
@@ -24,12 +30,34 @@ public class AdapterManager {
     public void detectAdapter() {
         if(Bukkit.getPluginManager().isPluginEnabled("Citizens")) {
             this.adapter = new CitizensAdapter();
-            main.getLogger().info("Using Citizens adapter!");
+        } else if(Bukkit.getPluginManager().isPluginEnabled("ZNPCsPlus")) {
+            this.adapter = new ZNPCsAdapter();
         }
 
         if(this.adapter != null) {
             this.adapter.registerEvents(main);
+            this.adapter.loadNPCs();
+            main.getLogger().info("Using " + this.adapter.getNPCs() + "!");
         }
+    }
+
+    public void handleInteractEvent(Player player, AdaptedNPC npc, ClickType clickType) {
+        Bukkit.getScheduler().runTask(main, () -> {
+            AdapterNPCInteractEvent adapterEvent = new AdapterNPCInteractEvent(player, npc, clickType);
+
+            Bukkit.getPluginManager().callEvent(adapterEvent);
+        });
+    }
+
+    public void handleSpawnEvent(AdaptedNPC npc, Location location) {
+        Bukkit.getScheduler().runTask(main, () -> {
+            AdapterNPCSpawnEvent spawnEvent = new AdapterNPCSpawnEvent(
+                  npc,
+                  location
+            );
+
+            Bukkit.getPluginManager().callEvent(spawnEvent);
+        });
     }
 
 }

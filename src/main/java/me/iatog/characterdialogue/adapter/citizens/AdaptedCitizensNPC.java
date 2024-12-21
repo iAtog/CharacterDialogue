@@ -1,5 +1,6 @@
 package me.iatog.characterdialogue.adapter.citizens;
 
+import me.iatog.characterdialogue.CharacterDialoguePlugin;
 import me.iatog.characterdialogue.adapter.AdaptedNPC;
 import me.iatog.characterdialogue.dialogs.method.npc_control.trait.FollowPlayerTrait;
 import me.iatog.characterdialogue.path.PathTrait;
@@ -7,7 +8,6 @@ import me.iatog.characterdialogue.path.RecordLocation;
 import net.citizensnpcs.api.event.SpawnReason;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -31,10 +31,10 @@ public class AdaptedCitizensNPC implements AdaptedNPC {
         return String.valueOf(npc.getId());
     }
 
-    @Override
-    public Entity getEntity() {
-        return npc.getEntity();
-    }
+   // @Override
+    //public Entity getEntity() {
+    //    return npc.getEntity();
+    //}
 
     @Override
     public void setName(String name) {
@@ -91,5 +91,20 @@ public class AdaptedCitizensNPC implements AdaptedNPC {
     public void followPath(List<RecordLocation> locations) {
         PathTrait trait = npc.getOrAddTrait(PathTrait.class);
         trait.setPaths(locations);
+    }
+
+    @Override
+    public void show(Player player) {
+        player.showEntity(CharacterDialoguePlugin.getInstance(), npc.getEntity());
+    }
+
+    @Override
+    public void hide(Player player) {
+        player.hideEntity(CharacterDialoguePlugin.getInstance(), npc.getEntity());
+    }
+
+    @Override
+    public void hideForAll() {
+        npc.getEntity().setVisibleByDefault(false);
     }
 }

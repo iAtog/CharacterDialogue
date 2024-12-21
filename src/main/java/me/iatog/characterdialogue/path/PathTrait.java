@@ -33,10 +33,6 @@ public class PathTrait extends Trait {
         }
     }
 
-    public int getIndex() {
-        return index;
-    }
-
     public void setPaths(List<RecordLocation> paths) {
         this.index = 0;
         this.paths = paths;

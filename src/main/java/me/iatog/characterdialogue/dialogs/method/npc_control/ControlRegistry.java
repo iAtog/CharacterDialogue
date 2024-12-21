@@ -41,6 +41,17 @@ public class ControlRegistry {
         return this.npcMap.containsKey(npcId);
     }
 
+    public AdaptedNPC findCopy(String id) {
+        for (ControlData data : npcMap.values()) {
+            if (data.getCopy().getId().equals(id)) {
+                return data.getCopy();
+            }
+        }
+
+        return null;
+    }
+
+
     public void clearAll() {
         this.npcMap.forEach((id, data) -> {
             data.getCopy().destroy();

@@ -7,6 +7,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public class ExecuteMethodEvent extends PlayerEvent implements Cancellable {
 
@@ -61,6 +62,7 @@ public class ExecuteMethodEvent extends PlayerEvent implements Cancellable {
      *
      * @return A list of handlers handling this event.
      */
+    @NotNull
     @Override
     public final HandlerList getHandlers() {
         return handlers;

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -56,6 +57,7 @@ public class ChoiceSelectEvent extends PlayerEvent implements Cancellable {
      *
      * @return A list of handlers handling this event.
      */
+    @NotNull
     @Override
     public final HandlerList getHandlers() {
         return handlers;

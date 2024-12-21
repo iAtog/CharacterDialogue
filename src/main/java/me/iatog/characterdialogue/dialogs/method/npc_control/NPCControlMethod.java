@@ -7,9 +7,6 @@ import me.iatog.characterdialogue.api.events.DialogueFinishEvent;
 import me.iatog.characterdialogue.dialogs.DialogMethod;
 import me.iatog.characterdialogue.dialogs.MethodConfiguration;
 import me.iatog.characterdialogue.dialogs.MethodContext;
-import me.iatog.characterdialogue.dialogs.method.npc_control.trait.FollowPlayerTrait;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,8 +34,6 @@ public class NPCControlMethod extends DialogMethod<CharacterDialoguePlugin> impl
     public NPCControlMethod(CharacterDialoguePlugin main) {
         super("npc_control", main);
         this.util = new ControlUtil(main);
-
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(FollowPlayerTrait.class));
 
         addConfigurationType("action", ConfigurationType.TEXT);
         addConfigurationType("npcId", ConfigurationType.INTEGER);

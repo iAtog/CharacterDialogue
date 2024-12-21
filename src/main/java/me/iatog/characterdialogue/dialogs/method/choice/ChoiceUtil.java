@@ -24,6 +24,7 @@ import static me.iatog.characterdialogue.util.TextUtils.colorize;
 
 public class ChoiceUtil {
 
+    @SuppressWarnings("deprecation")
     public static BaseComponent[] getSelectText(int index) {
         YamlDocument file = CharacterDialoguePlugin.getInstance().getFileFactory().getLanguage();
         String text = file.getString("select-choice", "&aClick here to select #%str%").replace("%str%", index + "");

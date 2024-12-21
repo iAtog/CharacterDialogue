@@ -16,7 +16,7 @@ public class PathReplayer {
     }
 
     public void startReplay() {
-        npc.getEntity().teleport(paths.getFirst().toLocation());
+        npc.teleport(paths.getFirst().toLocation());
         npc.followPath(paths);
     }
 }

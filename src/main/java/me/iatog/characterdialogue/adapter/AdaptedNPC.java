@@ -2,7 +2,6 @@ package me.iatog.characterdialogue.adapter;
 
 import me.iatog.characterdialogue.path.RecordLocation;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -11,7 +10,7 @@ public interface AdaptedNPC {
 
     String getName();
     String getId();
-    Entity getEntity();
+    //Entity getEntity();
     Location getStoredLocation();
     AdaptedNPC copy();
 
@@ -24,5 +23,8 @@ public interface AdaptedNPC {
     void follow(Player player);
     void unfollow(Player player);
     void followPath(List<RecordLocation> locations);
+    void show(Player player);
+    void hide(Player player);
+    void hideForAll();
 
 }
